@@ -10,10 +10,6 @@
     line-height: 110% !important;
   }
 
-  .stake-tab-buttons {
-    margin-bottom: 0.25rem;
-  }
-
   .stake-table-panel,
   .stake-tab-panel > div.MuiBox-root {
     width: 100%;
@@ -65,17 +61,19 @@
 .stake-top-metrics {
   display: flex;
   width: 100%;
-  padding: 0;
+  padding: 1em;
   text-align: center;
   margin-top: 10px;
   h5 {
-    font-weight: 400;
-  }
-  h4 {
     font-weight: 500;
   }
+  h4 {
+    font-weight: 600;
+  }
   .stake-apy,
-  .stake-tvl,
+  .stake-tvl {
+    white-space: nowrap;
+  }
   .stake-index {
     flex: 1;
     display: flex;
@@ -85,6 +83,11 @@
     // white-space: nowrap;
     overflow: hidden;
   }
+}
+
+.body2 {
+  align-items: center;
+  text-align: center; 
 }
 
 .mobile .stake-top-metrics {
@@ -158,6 +161,10 @@
   max-width: 542px;
   width: 100%;
   margin: 5px !important;
+}
+
+button.MuiButtonBase-root {
+  border-radius: 30px;
 }
 
 .stake-button {

@@ -3,16 +3,22 @@ import fonts from "./fonts";
 import commonSettings, { handleBackdropFilter } from "./global.js";
 
 const lightTheme = {
-  color: "#253449",
+  // changes
+  color: "#FFFFFF",
+  purpleAccent: "#7722FC",
+  backgroundColor: "#0E0D1C",
+  background: "#0E0D1C",
+  paperBg: "#0C0B17",
+  // original (with comments)
   gold: "#F8CC82",
   gray: "#A3A3A3",
   blueish_gray: "#768299",
   textHighlightColor: "#93AEBC", // "#F4D092",
-  backgroundColor: "#AFCDE9",
+  // backgroundColor: "#AFCDE9"
   // background:
   // "radial-gradient(circle at 25% 0%, rgba(227,255,240,.5), rgba(227,255,240,0) 50%), radial-gradient(circle at 80% 80%, rgba(131,165,203,.5), rgba(131,165,203,0) 50%)",
-  background: "linear-gradient(180deg, #AFCDE9 1%, #F7FBE7 100%)",
-  paperBg: "rgba(255, 255, 255, 0.6)",
+  // background: "linear-gradient(180deg, #AFCDE9 1%, #F7FBE7 100%)",
+  // paperBg: "rgba(255, 255, 255, 0.6)",
   modalBg: "#FAFAFAEF",
   popoverBg: "rgba(255, 255, 255, 0.95)",
   menuBg: handleBackdropFilter("rgba(255, 255, 255, 0.5)"),
@@ -61,7 +67,7 @@ export const light = responsiveFontSizes(
         graphStrokeColor: lightTheme.graphStrokeColor,
       },
       typography: {
-        fontFamily: "Square",
+        fontFamily: "Poppins",
       },
       props: {
         MuiSvgIcon: {
@@ -157,13 +163,13 @@ export const light = responsiveFontSizes(
           textColorPrimary: {
             color: lightTheme.blueish_gray,
             "&$selected": {
-              color: lightTheme.color,
+              color: lightTheme.purpleAccent, // MARK: selected Tab
             },
           },
         },
         PrivateTabIndicator: {
           colorPrimary: {
-            backgroundColor: lightTheme.color,
+            backgroundColor: lightTheme.purpleAccent, // MARK: tab underline
           },
         },
         MuiToggleButton: {
@@ -208,7 +214,7 @@ export const light = responsiveFontSizes(
         MuiButton: {
           containedPrimary: {
             color: "#FCFCFC",
-            backgroundColor: lightTheme.primaryButtonBG,
+            backgroundColor: lightTheme.purpleAccent,
             "&:hover": {
               backgroundColor: lightTheme.primaryButtonHoverBG,
               color: lightTheme.primaryButtonHoverColor,
