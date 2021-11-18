@@ -60,6 +60,12 @@ const commonSettings = {
       fontWeight: 500,
       lineHeight: 1,
     },
+    subtitle1: {
+      fontSize: "0.875rem",
+      fontWeight: 500,
+      lineHeight: 1,
+      color: "#FFC768",
+    },
     body2: {
       fontSize: "0.75rem",
       fontWeight: 400,
