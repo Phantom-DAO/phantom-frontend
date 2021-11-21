@@ -476,7 +476,7 @@ function Chart({
             component={Fullscreen}
             color="primary"
             onClick={handleOpen}
-            style={{ fontSize: "1rem", cursor: "pointer" }}
+            style={{ fontSize: "2rem", cursor: "pointer" }}
           />
           <ExpandedChart
             open={open}
@@ -492,11 +492,15 @@ function Chart({
         {loading ? (
           <Skeleton variant="text" width={100} />
         ) : (
-          <Box display="flex">
+          <Box display="flex" style={{ alignItems: "end" }}>
             <Typography variant="h4" style={{ fontWeight: 600, marginRight: 5 }}>
               {headerSubText}
             </Typography>
-            <Typography variant="h4" color="textSecondary" style={{ fontWeight: 400 }}>
+            <Typography
+              variant="h4"
+              color="textSecondary"
+              style={{ fontWeight: 400, fontSize: "0.75rem", paddingBottom: "2px" }}
+            >
               {type !== "multi" && "Today"}
             </Typography>
           </Box>

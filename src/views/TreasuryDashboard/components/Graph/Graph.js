@@ -10,6 +10,7 @@ export const Graph = ({ children }) => <>{children}</>;
 export const TotalValueDepositedGraph = () => {
   const theme = useTheme();
   const { data } = useTreasuryMetrics({ refetchOnMount: false });
+  console.log("graph data", data);
 
   return (
     <Chart
