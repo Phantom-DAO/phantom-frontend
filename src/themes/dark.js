@@ -8,15 +8,16 @@ import commonSettings, { handleBackdropFilter } from "./global.js";
 const darkTheme = {
   color: "#FFFFFF",
   purpleAccent: "#8e55e7",
+  darkPurpleAccent: "#7722FC",
   backgroundColor: "#0E0D1C",
   background: "#0E0D1C",
   paperBg: "#0C0B17",
   gold: "#F8CC82",
   gray: "#A3A3A3",
   textHighlightColor: "#F4D092",
-  modalBg: "#24242699",
+  modalBg: "#0C0B17",
   popoverBg: "rgba(54, 56, 64, 0.99)",
-  menuBg: handleBackdropFilter("rgba(54, 56, 64, 0.5)"),
+  menuBg: handleBackdropFilter("#0C0B17"),
   backdropBg: "rgba(54, 56, 64, 0.5)",
   largeTextColor: "#F4D092",
   activeLinkColor: "#F5DDB4",
@@ -98,7 +99,7 @@ export const dark = responsiveFontSizes(
               backdropFilter: "blur(33px)",
             },
             "&.ohm-popover": {
-              backgroundColor: darkTheme.popoverBg,
+              backgroundColor: darkTheme.paperBg,
               color: darkTheme.color,
               backdropFilter: "blur(15px)",
             },
@@ -185,18 +186,18 @@ export const dark = responsiveFontSizes(
             color: darkTheme.primaryButtonColor,
             backgroundColor: darkTheme.purpleAccent,
             "&:hover": {
-              backgroundColor: darkTheme.primaryButtonHoverBG,
+              backgroundColor: darkTheme.darkPurpleAccent,
               color: darkTheme.primaryButtonHoverColor,
             },
             "&:active": {
-              backgroundColor: darkTheme.primaryButtonHoverBG,
+              backgroundColor: darkTheme.darkPurpleAccent,
               color: darkTheme.primaryButtonHoverColor,
             },
             "@media (hover:none)": {
               color: darkTheme.primaryButtonColor,
               backgroundColor: darkTheme.gold,
               "&:hover": {
-                backgroundColor: darkTheme.primaryButtonHoverBG,
+                backgroundColor: darkTheme.darkPurpleAccent,
               },
             },
           },
@@ -233,7 +234,7 @@ export const dark = responsiveFontSizes(
               borderColor: darkTheme.gold,
               "&:hover": {
                 color: darkTheme.outlinedPrimaryButtonHoverColor,
-                backgroundColor: `${darkTheme.primaryButtonHoverBG} !important`,
+                backgroundColor: `${darkTheme.darkPurpleAccent} !important`,
                 textDecoration: "none !important",
               },
             },
