@@ -19,7 +19,6 @@
     max-width: unset !important;
     width: 100%;
     margin: auto;
-    max-height: 355px;
     .card-header {
       margin-bottom: 1rem;
     }
@@ -34,7 +33,7 @@
   .hero-metrics {
     width: 100%;
     margin-bottom: 23px;
-    text-align: center;
+    text-align: left;
     .ohm-card {
       max-width: unset !important;
       flex-direction: row;
@@ -44,9 +43,19 @@
         font-weight: bold;
       }
       div.metric {
-        margin: 3px;
+        margin: 5px 3px;
         min-width: 140px;
+        border-radius: 10px;
+        padding: 15px;
+        background-color: #0C0B17;
         width: 30%;
+
+        .metric-shift{
+          background-color: #1BB99A;
+          padding: 3px 9px;
+          margin-right: 10px;
+          border-radius: 3px;
+        }
       }
     }
   }
@@ -65,7 +74,11 @@
       align-items: flex-start;
       flex-wrap: wrap;
     }
+    h5.MuiTypography-root {
+      min-width: 60%;
+    }
     div.metric {
+      width: 100% !important;
       text-align: left !important;
     }
   }
@@ -75,7 +88,7 @@
   div.metric {
     white-space: nowrap;
     min-width: 30% !important;
-    max-width: 60%;
+    max-width: 100%;
     text-align: left !important;
     &.market,
     &.price,

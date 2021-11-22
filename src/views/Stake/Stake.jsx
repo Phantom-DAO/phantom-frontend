@@ -428,10 +428,20 @@ function Stake() {
             </div>
           </Grid>
           <div className="waves-left">
-            <SvgIcon style={{ minHeight: 105, minWidth: 248 }} component={WavesLeft} viewBox="0 0 248 105"></SvgIcon>
+            <SvgIcon
+              style={{ minHeight: 105, minWidth: 200 }}
+              htmlColor="black"
+              component={WavesLeft}
+              viewBox="0 0 248 105"
+            />
           </div>
           <div className="waves-right">
-            <SvgIcon style={{ minHeight: 105, minWidth: 248 }} component={WavesRight} viewBox="0 0 248 105"></SvgIcon>
+            <SvgIcon
+              style={{ minHeight: 105, minWidth: 200 }}
+              htmlColor="black"
+              component={WavesRight}
+              viewBox="0 0 248 105"
+            />
           </div>
         </Paper>
       </Zoom>
