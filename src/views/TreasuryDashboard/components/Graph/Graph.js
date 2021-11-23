@@ -10,7 +10,6 @@ export const Graph = ({ children }) => <>{children}</>;
 export const TotalValueDepositedGraph = () => {
   const theme = useTheme();
   const { data } = useTreasuryMetrics({ refetchOnMount: false });
-  console.log("graph data", data);
 
   return (
     <Chart
@@ -23,6 +22,8 @@ export const TotalValueDepositedGraph = () => {
       stopColor={[["#768299", "#98B3E9"]]}
       bulletpointColors={bulletpoints.tvl}
       infoTooltipMessage={tooltipInfoMessages.tvl}
+      strokeDasharray="6 6"
+      strokeDirection="horizontal"
       expandedGraphStrokeColor={theme.palette.graphStrokeColor}
       headerSubText={`${data && formatCurrency(data[0].totalValueLocked)}`}
     />
@@ -57,6 +58,8 @@ export const MarketValueGraph = () => {
       itemNames={tooltipItems.coin}
       itemType={itemType.dollar}
       infoTooltipMessage={tooltipInfoMessages.mvt}
+      strokeDasharray="6 6"
+      strokeDirection="horizontal"
       expandedGraphStrokeColor={theme.palette.graphStrokeColor}
     />
   );
@@ -86,6 +89,8 @@ export const RiskFreeValueGraph = () => {
       itemType={itemType.dollar}
       infoTooltipMessage={tooltipInfoMessages.rfv}
       expandedGraphStrokeColor={theme.palette.graphStrokeColor}
+      strokeDasharray="6 6"
+      strokeDirection="horizontal"
     />
   );
 };
@@ -109,6 +114,8 @@ export const ProtocolOwnedLiquidityGraph = () => {
       expandedGraphStrokeColor={theme.palette.graphStrokeColor}
       headerSubText={`${data && trim(data[0].treasuryOhmDaiPOL, 2)}% `}
       stopColor={[["rgba(128, 204, 131, 1)", "rgba(128, 204, 131, 0)"]]}
+      strokeDasharray="6 6"
+      strokeDirection="vertical"
     />
   );
 };
@@ -139,6 +146,8 @@ export const OHMStakedGraph = () => {
       infoTooltipMessage={tooltipInfoMessages.staked}
       expandedGraphStrokeColor={theme.palette.graphStrokeColor}
       headerSubText={`${staked && trim(staked[0].staked, 2)}% `}
+      strokeDasharray="6 6"
+      strokeDirection="vertical"
     />
   );
 };
@@ -172,6 +181,8 @@ export const APYOverTimeGraph = () => {
       infoTooltipMessage={tooltipInfoMessages.apy}
       headerSubText={`${data && trim(apy[0].apy, 2)}%`}
       expandedGraphStrokeColor={theme.palette.graphStrokeColor}
+      strokeDasharray="6 6"
+      strokeDirection="vertical"
     />
   );
 };
@@ -201,6 +212,8 @@ export const RunwayAvailableGraph = () => {
       itemType={""}
       infoTooltipMessage={tooltipInfoMessages.runway}
       expandedGraphStrokeColor={theme.palette.graphStrokeColor}
+      strokeDasharray="6 6"
+      strokeDirection="vertical"
     />
   );
 };
