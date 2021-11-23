@@ -110,7 +110,7 @@ export const ProtocolOwnedLiquidityGraph = () => {
       dataKey={["treasuryOhmDaiPOL"]}
       bulletpointColors={bulletpoints.pol}
       infoTooltipMessage={tooltipInfoMessages.pol}
-      headerText="Protocol Owned Liquidity OHM-DAI"
+      headerText="Protocol Owned Liquidity PHM-DAI"
       expandedGraphStrokeColor={theme.palette.graphStrokeColor}
       headerSubText={`${data && trim(data[0].treasuryOhmDaiPOL, 2)}% `}
       stopColor={[["rgba(128, 204, 131, 1)", "rgba(128, 204, 131, 0)"]]}
@@ -140,7 +140,7 @@ export const OHMStakedGraph = () => {
       data={staked}
       dataKey={["staked"]}
       dataFormat="percent"
-      headerText="OHM Staked"
+      headerText="PHM Staked"
       stopColor={[["#55EBC7", "#47ACEB"]]}
       bulletpointColors={bulletpoints.staked}
       infoTooltipMessage={tooltipInfoMessages.staked}
@@ -205,7 +205,7 @@ export const RunwayAvailableGraph = () => {
       color={theme.palette.text.primary}
       stroke={colors}
       headerText="Runway Available"
-      headerSubText={`${data && trim(data[0].runwayCurrent, 1)} Days`}
+      headerSubText={`${data && trim(data[0].runwayCurrent, 1)}`}
       dataFormat="days"
       bulletpointColors={runwayBulletpoints}
       itemNames={tooltipItems.runway}
