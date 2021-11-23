@@ -19,9 +19,11 @@ export const TotalValueDepositedGraph = () => {
       itemNames={tooltipItems.tvl}
       dataKey={["totalValueLocked"]}
       headerText="Total Value Deposited"
-      stopColor={[["#768299", "#98B3E9"]]}
+      stopColor={[theme.palette.purpleChart]}
       bulletpointColors={bulletpoints.tvl}
       infoTooltipMessage={tooltipInfoMessages.tvl}
+      strokeDasharray="6 6"
+      strokeDirection="horizontal"
       expandedGraphStrokeColor={theme.palette.graphStrokeColor}
       headerSubText={`${data && formatCurrency(data[0].totalValueLocked)}`}
     />
@@ -44,9 +46,9 @@ export const MarketValueGraph = () => {
         "treasuryLusdMarketValue",
       ]}
       stopColor={[
-        ["#F5AC37", "#EA9276"],
-        ["#768299", "#98B3E9"],
-        ["#DC30EB", "#EA98F1"],
+        theme.palette.purpleChart,
+        theme.palette.yellowChart,
+        theme.palette.greenChart,
         ["#8BFF4D", "#4C8C2A"],
         ["#ff758f", "#c9184a"],
       ]}
@@ -56,6 +58,8 @@ export const MarketValueGraph = () => {
       itemNames={tooltipItems.coin}
       itemType={itemType.dollar}
       infoTooltipMessage={tooltipInfoMessages.mvt}
+      strokeDasharray="6 6"
+      strokeDirection="horizontal"
       expandedGraphStrokeColor={theme.palette.graphStrokeColor}
     />
   );
@@ -72,9 +76,9 @@ export const RiskFreeValueGraph = () => {
       format="currency"
       dataKey={["treasuryDaiRiskFreeValue", "treasuryFraxRiskFreeValue", "treasuryLusdRiskFreeValue"]}
       stopColor={[
-        ["#F5AC37", "#EA9276"],
-        ["#768299", "#98B3E9"],
-        ["#ff758f", "#c9184a"],
+        theme.palette.purpleChart,
+        theme.palette.yellowChart,
+        theme.palette.greenChart,
         ["#000", "#fff"],
         ["#000", "#fff"],
       ]}
@@ -85,6 +89,8 @@ export const RiskFreeValueGraph = () => {
       itemType={itemType.dollar}
       infoTooltipMessage={tooltipInfoMessages.rfv}
       expandedGraphStrokeColor={theme.palette.graphStrokeColor}
+      strokeDasharray="6 6"
+      strokeDirection="horizontal"
     />
   );
 };
@@ -107,7 +113,9 @@ export const ProtocolOwnedLiquidityGraph = () => {
       headerText="Protocol Owned Liquidity OHM-DAI"
       expandedGraphStrokeColor={theme.palette.graphStrokeColor}
       headerSubText={`${data && trim(data[0].treasuryOhmDaiPOL, 2)}% `}
-      stopColor={[["rgba(128, 204, 131, 1)", "rgba(128, 204, 131, 0)"]]}
+      stopColor={[theme.palette.lightBlueChart]}
+      strokeDasharray="6 6"
+      strokeDirection="vertical"
     />
   );
 };
@@ -133,11 +141,13 @@ export const OHMStakedGraph = () => {
       dataKey={["staked"]}
       dataFormat="percent"
       headerText="OHM Staked"
-      stopColor={[["#55EBC7", "#47ACEB"]]}
+      stopColor={[theme.palette.orangeChart]}
       bulletpointColors={bulletpoints.staked}
       infoTooltipMessage={tooltipInfoMessages.staked}
       expandedGraphStrokeColor={theme.palette.graphStrokeColor}
       headerSubText={`${staked && trim(staked[0].staked, 2)}% `}
+      strokeDasharray="6 6"
+      strokeDirection="vertical"
     />
   );
 };
@@ -171,6 +181,8 @@ export const APYOverTimeGraph = () => {
       infoTooltipMessage={tooltipInfoMessages.apy}
       headerSubText={`${data && trim(apy[0].apy, 2)}%`}
       expandedGraphStrokeColor={theme.palette.graphStrokeColor}
+      strokeDasharray="6 6"
+      strokeDirection="vertical"
     />
   );
 };
@@ -200,6 +212,8 @@ export const RunwayAvailableGraph = () => {
       itemType={""}
       infoTooltipMessage={tooltipInfoMessages.runway}
       expandedGraphStrokeColor={theme.palette.graphStrokeColor}
+      strokeDasharray="6 6"
+      strokeDirection="vertical"
     />
   );
 };

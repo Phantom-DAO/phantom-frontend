@@ -60,6 +60,11 @@ export const dark = responsiveFontSizes(
           secondary: darkTheme.gray,
         },
         graphStrokeColor: darkTheme.graphStrokeColor,
+        purpleChart: ["#691FDF", "#9552FF"],
+        greenChart: ["#1DC8A6", "#1DC8A6"],
+        yellowChart: ["#F1B53D", "#F1B53D"],
+        lightBlueChart: ["#3CB9DD", "#1EB9A0"],
+        orangeChart: ["#F1B53D", "#F1B53D"],
         highlight: darkTheme.textHighlightColor,
       },
       typography: {

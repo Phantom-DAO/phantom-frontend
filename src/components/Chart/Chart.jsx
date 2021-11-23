@@ -34,8 +34,16 @@ const formatCurrency = c => {
 const tickCount = 3;
 const expandedTickCount = 5;
 
-const renderExpandedChartStroke = (isExpanded, color) => {
-  return isExpanded ? <CartesianGrid vertical={false} stroke={color} /> : "";
+// use isExpanded for specific changes in graph
+const renderExpandedChartStroke = (isExpanded, color, strokeDirection, strokeDasharray) => {
+  return (
+    <CartesianGrid
+      vertical={strokeDirection === "vertical" ? true : false}
+      horizontal={strokeDirection === "horizontal" ? true : false}
+      stroke={color}
+      strokeDasharray={strokeDasharray}
+    />
+  );
 };
 
 const renderAreaChart = (
@@ -51,6 +59,8 @@ const renderAreaChart = (
   isExpanded,
   expandedGraphStrokeColor,
   isPOL,
+  strokeDasharray,
+  strokeDirection,
 ) => (
   <AreaChart data={data}>
     <defs>
@@ -98,7 +108,7 @@ const renderAreaChart = (
       }
     />
     <Area dataKey={dataKey[0]} stroke="none" fill={`url(#color-${dataKey[0]})`} fillOpacity={1} />
-    {renderExpandedChartStroke(isExpanded, expandedGraphStrokeColor)}
+    {renderExpandedChartStroke(isExpanded, expandedGraphStrokeColor, strokeDirection, strokeDasharray)}
   </AreaChart>
 );
 
@@ -113,6 +123,8 @@ const renderStackedAreaChart = (
   itemType,
   isExpanded,
   expandedGraphStrokeColor,
+  strokeDasharray,
+  strokeDirection,
 ) => (
   <AreaChart data={data}>
     <defs>
@@ -204,7 +216,7 @@ const renderStackedAreaChart = (
       fillOpacity={1}
       stackId="1"
     />
-    {renderExpandedChartStroke(isExpanded, expandedGraphStrokeColor)}
+    {renderExpandedChartStroke(isExpanded, expandedGraphStrokeColor, strokeDirection, strokeDasharray)}
   </AreaChart>
 );
 
@@ -220,6 +232,8 @@ const renderLineChart = (
   isExpanded,
   expandedGraphStrokeColor,
   scale,
+  strokeDasharray,
+  strokeDirection,
 ) => (
   <LineChart data={data}>
     <XAxis
@@ -250,7 +264,7 @@ const renderLineChart = (
       content={<CustomTooltip bulletpointColors={bulletpointColors} itemNames={itemNames} itemType={itemType} />}
     />
     <Line type="monotone" dataKey={dataKey[0]} stroke={stroke ? stroke : "none"} color={color} dot={false} />;
-    {renderExpandedChartStroke(isExpanded, expandedGraphStrokeColor)}
+    {renderExpandedChartStroke(isExpanded, expandedGraphStrokeColor, strokeDirection, strokeDasharray)}
   </LineChart>
 );
 
@@ -265,6 +279,8 @@ const renderMultiLineChart = (
   itemType,
   isExpanded,
   expandedGraphStrokeColor,
+  strokeDasharray,
+  strokeDirection,
 ) => (
   <LineChart data={data}>
     <XAxis
@@ -295,7 +311,7 @@ const renderMultiLineChart = (
     <Line dataKey={dataKey[1]} stroke={stroke[1]} dot={false} />;
     <Line dataKey={dataKey[2]} stroke={stroke[2]} dot={false} />;
     <Line dataKey={dataKey[3]} stroke={stroke[3]} dot={false} />;
-    {renderExpandedChartStroke(isExpanded, expandedGraphStrokeColor)}
+    {renderExpandedChartStroke(isExpanded, expandedGraphStrokeColor, strokeDirection, strokeDasharray)}
   </LineChart>
 );
 
@@ -310,6 +326,8 @@ const renderBarChart = (
   itemType,
   isExpanded,
   expandedGraphStrokeColor,
+  strokeDasharray,
+  strokeDirection,
 ) => (
   <BarChart data={data}>
     <XAxis
@@ -335,7 +353,7 @@ const renderBarChart = (
       content={<CustomTooltip bulletpointColors={bulletpointColors} itemNames={itemNames} itemType={itemType} />}
     />
     <Bar dataKey={dataKey[0]} fill={stroke[0]} />
-    {renderExpandedChartStroke(isExpanded, expandedGraphStrokeColor)}
+    {renderExpandedChartStroke(isExpanded, expandedGraphStrokeColor, strokeDirection, strokeDasharray)}
   </BarChart>
 );
 
@@ -357,6 +375,8 @@ function Chart({
   infoTooltipMessage,
   expandedGraphStrokeColor,
   isPOL,
+  strokeDasharray,
+  strokeDirection,
 }) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -383,6 +403,8 @@ function Chart({
         isExpanded,
         expandedGraphStrokeColor,
         scale,
+        strokeDasharray,
+        strokeDirection,
       );
     if (type === "area")
       return renderAreaChart(
@@ -398,6 +420,8 @@ function Chart({
         isExpanded,
         expandedGraphStrokeColor,
         isPOL,
+        strokeDasharray,
+        strokeDirection,
       );
     if (type === "stack")
       return renderStackedAreaChart(
@@ -411,6 +435,8 @@ function Chart({
         itemType,
         isExpanded,
         expandedGraphStrokeColor,
+        strokeDasharray,
+        strokeDirection,
       );
     if (type === "multi")
       return renderMultiLineChart(
@@ -424,6 +450,8 @@ function Chart({
         itemType,
         isExpanded,
         expandedGraphStrokeColor,
+        strokeDasharray,
+        strokeDirection,
       );
 
     if (type === "bar")
@@ -437,6 +465,8 @@ function Chart({
         itemType,
         isExpanded,
         expandedGraphStrokeColor,
+        strokeDasharray,
+        strokeDirection,
       );
   };
 
@@ -476,7 +506,7 @@ function Chart({
             component={Fullscreen}
             color="primary"
             onClick={handleOpen}
-            style={{ fontSize: "1rem", cursor: "pointer" }}
+            style={{ fontSize: "2rem", cursor: "pointer" }}
           />
           <ExpandedChart
             open={open}
@@ -492,11 +522,15 @@ function Chart({
         {loading ? (
           <Skeleton variant="text" width={100} />
         ) : (
-          <Box display="flex">
+          <Box display="flex" style={{ alignItems: "end" }}>
             <Typography variant="h4" style={{ fontWeight: 600, marginRight: 5 }}>
               {headerSubText}
             </Typography>
-            <Typography variant="h4" color="textSecondary" style={{ fontWeight: 400 }}>
+            <Typography
+              variant="h4"
+              color="textSecondary"
+              style={{ fontWeight: 400, fontSize: "0.75rem", paddingBottom: "2px" }}
+            >
               {type !== "multi" && "Today"}
             </Typography>
           </Box>
