@@ -5,7 +5,7 @@ import externalUrls from "./externalUrls";
 import { ReactComponent as StakeIcon } from "../../assets/icons/stake.svg";
 import { ReactComponent as BondIcon } from "../../assets/icons/bond.svg";
 import { ReactComponent as DashboardIcon } from "../../assets/icons/dashboard.svg";
-import { ReactComponent as OlympusIcon } from "../../assets/icons/olympus-nav-header.svg";
+import { ReactComponent as PhantomIcon } from "../../assets/icons/phantom-nav-header.svg";
 import { ReactComponent as PoolTogetherIcon } from "../../assets/icons/33-together.svg";
 import { Trans } from "@lingui/macro";
 import { trim, shorten } from "../../helpers";
@@ -46,9 +46,9 @@ function NavContent() {
             <Link href="https://olympusdao.finance" target="_blank">
               <SvgIcon
                 color="primary"
-                component={OlympusIcon}
-                viewBox="0 0 151 100"
-                style={{ minWdth: "151px", minHeight: "98px", width: "151px" }}
+                component={PhantomIcon}
+                viewBox="0 0 151 126"
+                style={{ minWdth: "151px", minHeight: "126px", width: "151px" }}
               />
             </Link>
 
@@ -93,7 +93,7 @@ function NavContent() {
                 </Typography>
               </Link>
 
-              <Link
+              {/* <Link
                 component={NavLink}
                 id="33-together-nav"
                 to="/33-together"
@@ -106,7 +106,7 @@ function NavContent() {
                   <SvgIcon color="primary" component={PoolTogetherIcon} />
                   3,3 Together
                 </Typography>
-              </Link>
+              </Link> */}
 
               <Link
                 component={NavLink}

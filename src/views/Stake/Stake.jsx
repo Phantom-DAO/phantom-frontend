@@ -15,6 +15,7 @@ import {
   Typography,
   Zoom,
   Divider,
+  SvgIcon,
 } from "@material-ui/core";
 import NewReleases from "@material-ui/icons/NewReleases";
 import RebaseTimer from "../../components/RebaseTimer/RebaseTimer";
@@ -29,6 +30,8 @@ import { Skeleton } from "@material-ui/lab";
 import ExternalStakePool from "./ExternalStakePool";
 import { error } from "../../slices/MessagesSlice";
 import { ethers } from "ethers";
+import { ReactComponent as WavesLeft } from "../../assets/icons/waves-left.svg";
+import { ReactComponent as WavesRight } from "../../assets/icons/waves-right.svg";
 
 function a11yProps(index) {
   return {
@@ -413,7 +416,6 @@ function Stake() {
                         {isAppLoading ? <Skeleton width="80px" /> : <>{stakingRebasePercentage}%</>}
                       </Typography>
                     </div>
-
                     <div className="data-row">
                       <Typography variant="subtitle1">ROI (5-Day Rate)</Typography>
                       <Typography variant="subtitle1">
@@ -425,6 +427,22 @@ function Stake() {
               )}
             </div>
           </Grid>
+          <div className="waves-left">
+            <SvgIcon
+              style={{ minHeight: 105, minWidth: 200 }}
+              htmlColor="black"
+              component={WavesLeft}
+              viewBox="0 0 248 105"
+            />
+          </div>
+          <div className="waves-right">
+            <SvgIcon
+              style={{ minHeight: 105, minWidth: 200 }}
+              htmlColor="black"
+              component={WavesRight}
+              viewBox="0 0 248 105"
+            />
+          </div>
         </Paper>
       </Zoom>
     </div>
