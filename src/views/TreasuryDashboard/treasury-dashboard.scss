@@ -51,10 +51,17 @@
         width: 30%;
 
         .metric-shift{
-          background-color: #1BB99A;
           padding: 3px 9px;
           margin-right: 10px;
           border-radius: 3px;
+        }
+
+        .gain{
+          background-color: #1BB99A;
+        }
+
+        .loss{
+          background-color: #FF5D48;
         }
       }
     }

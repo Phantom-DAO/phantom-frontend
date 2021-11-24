@@ -18,10 +18,10 @@ Metric.Title = props => (
   </Typography>
 );
 
-Metric.Shift = props => (
+Metric.Shift = ({ value }) => (
   <Box display="flex" alignItems="center">
-    <Typography variant="p" className="metric-shift">
-      {props.children}
+    <Typography variant="p" className={`metric-shift ${value < 0 ? "loss" : "gain"}`}>
+      {`${value}%`}
     </Typography>
     <Typography variant="p">From previous period</Typography>
   </Box>
@@ -33,7 +33,7 @@ export const MarketCap = () => {
     <Metric className="market">
       <Metric.Title>MARKET CAP</Metric.Title>
       <Metric.Value>{marketCap && formatCurrency(marketCap, 0)}</Metric.Value>
-      <Metric.Shift>14%</Metric.Shift>
+      <Metric.Shift value={14} />
     </Metric>
   );
 };
@@ -45,7 +45,7 @@ export const OHMPrice = () => {
     <Metric className="price">
       <Metric.Title>PHM PRICE</Metric.Title>
       <Metric.Value>{marketPrice && formatCurrency(marketPrice, 2)}</Metric.Value>
-      <Metric.Shift>14%</Metric.Shift>
+      <Metric.Shift value={14} />
     </Metric>
   );
 };
@@ -60,7 +60,7 @@ export const CircSupply = () => {
     <Metric className="circ">
       <Metric.Title>CIRCULATING SUPPLY (TOTAL)</Metric.Title>
       <Metric.Value>{isDataLoaded && parseInt(circSupply) + " / " + parseInt(totalSupply)}</Metric.Value>
-      <Metric.Shift>14%</Metric.Shift>
+      <Metric.Shift value={14} />
     </Metric>
   );
 };
@@ -72,7 +72,7 @@ export const BackingPerOHM = () => {
     <Metric className="bpo">
       <Metric.Title>BACKING PER PHM</Metric.Title>
       <Metric.Value>{!isNaN(backingPerOhm) && formatCurrency(backingPerOhm, 2)}</Metric.Value>
-      <Metric.Shift>14%</Metric.Shift>
+      <Metric.Shift value={14} />
     </Metric>
   );
 };
@@ -87,7 +87,7 @@ export const CurrentIndex = () => {
         <InfoTooltip message="The current index tracks the amount of sOHM accumulated since the beginning of staking. Basically, how much sOHM one would have if they staked and held a single OHM from day 1." />
       </Metric.Title>
       <Metric.Value>{currentIndex && trim(currentIndex, 2) + " sOHM"}</Metric.Value>
-      <Metric.Shift>14%</Metric.Shift>
+      <Metric.Shift value={14} />
     </Metric>
   );
 };
@@ -106,7 +106,7 @@ export const WSOHMPrice = () => {
         />
       </Metric.Title>
       <Metric.Value>{wsOhmPrice && formatCurrency(wsOhmPrice, 2)}</Metric.Value>
-      <Metric.Shift>14%</Metric.Shift>
+      <Metric.Shift value={14} />
     </Metric>
   );
 };
