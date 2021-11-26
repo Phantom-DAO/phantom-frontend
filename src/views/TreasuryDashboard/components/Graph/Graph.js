@@ -110,7 +110,7 @@ export const ProtocolOwnedLiquidityGraph = () => {
       dataKey={["treasuryOhmDaiPOL"]}
       bulletpointColors={bulletpoints.pol}
       infoTooltipMessage={tooltipInfoMessages.pol}
-      headerText="Protocol Owned Liquidity OHM-DAI"
+      headerText="Protocol Owned Liquidity PHM-DAI"
       expandedGraphStrokeColor={theme.palette.graphStrokeColor}
       headerSubText={`${data && trim(data[0].treasuryOhmDaiPOL, 2)}% `}
       stopColor={[theme.palette.lightBlueChart]}
@@ -205,7 +205,7 @@ export const RunwayAvailableGraph = () => {
       color={theme.palette.text.primary}
       stroke={colors}
       headerText="Runway Available"
-      headerSubText={`${data && trim(data[0].runwayCurrent, 1)} Days`}
+      headerSubText={`${data && trim(data[0].runwayCurrent, 1)}`}
       dataFormat="days"
       bulletpointColors={runwayBulletpoints}
       itemNames={tooltipItems.runway}

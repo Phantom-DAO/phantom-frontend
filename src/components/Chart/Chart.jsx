@@ -531,7 +531,7 @@ function Chart({
               color="textSecondary"
               style={{ fontWeight: 400, fontSize: "0.75rem", paddingBottom: "2px" }}
             >
-              {type !== "multi" && "Today"}
+              {type !== "multi" ? "Today" : "Days"}
             </Typography>
           </Box>
         )}
