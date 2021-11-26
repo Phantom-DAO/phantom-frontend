@@ -56,24 +56,24 @@ export const bulletpoints = {
     {
       right: 20,
       top: -12,
-      background: "linear-gradient(180deg, #768299 -10%, #98B3E9 100%)",
+      background: "linear-gradient(180deg, #691FDF -10%, #9552FF 100%)",
     },
   ],
   coin: [
     {
       right: 15,
       top: -12,
-      background: "linear-gradient(180deg, #F5AC37 -10%, #EA9276 100%)",
+      background: "linear-gradient(180deg, #F1B53D -10%, #F1B53D 100%)",
     },
     {
       right: 25,
       top: -12,
-      background: "linear-gradient(180deg, #768299 -10%, #98B3E9 100%)",
+      background: "linear-gradient(180deg, #691FDF -10%, #9552FF 100%)",
     },
     {
       right: 29,
       top: -12,
-      background: "linear-gradient(180deg, #DC30EB -10%, #EA98F1 100%)",
+      background: "linear-gradient(180deg, #1CE0BA -10%, #1EBE9F 100%)",
     },
     {
       right: 29,
@@ -90,17 +90,17 @@ export const bulletpoints = {
     {
       right: 15,
       top: -12,
-      background: "linear-gradient(180deg, #F5AC37 -10%, #EA9276 100%)",
+      background: "linear-gradient(180deg, #F1B53D -10%, #F1B53D 100%)",
     },
     {
       right: 25,
       top: -12,
-      background: "linear-gradient(180deg, #768299 -10%, #98B3E9 100%)",
+      background: "linear-gradient(180deg, #691FDF -10%, #9552FF 100%)",
     },
     {
       right: 29,
       top: -12,
-      background: "linear-gradient(180deg, #c9184a -10%, #ff758f 100%)",
+      background: "linear-gradient(180deg, #1DC8A6 -10%, #1DC8A6 100%)",
     },
   ],
   holder: [
@@ -131,19 +131,19 @@ export const bulletpoints = {
     {
       right: 48,
       top: -12,
-      background: "#49A1F2",
+      background: "#F1B53D",
     },
     {
       right: 48,
       top: -12,
-      background: "#c9184a",
+      background: "#7D37CE",
     },
   ],
   staked: [
     {
       right: 45,
       top: -11,
-      background: "linear-gradient(180deg, #55EBC7 -10%, rgba(71, 172, 235, 0) 100%)",
+      background: "linear-gradient(180deg, #FF5D48 -10%, #F1B53D 100%)",
     },
     {
       right: 68,
@@ -156,7 +156,7 @@ export const bulletpoints = {
     {
       right: 15,
       top: -12,
-      background: "linear-gradient(180deg, rgba(56, 223, 63, 1) -10%, rgba(182, 233, 152, 1) 100%)",
+      background: "linear-gradient(180deg, #3CB9DD -10%, #1EB9A0 100%)",
     },
     {
       right: 25,

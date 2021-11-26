@@ -27,8 +27,8 @@ const TreasuryDashboard = memo(() => {
         }}
       >
         <Box className="hero-metrics">
-          <Paper className="ohm-card">
-            <Box display="flex" flexWrap="wrap" justifyContent="space-between" alignItems="center">
+          <Box className="ohm-card">
+            <Box display="flex" flexWrap="wrap" justifyContent="space-between">
               <MarketCap />
               <OHMPrice />
               <WSOHMPrice />
@@ -36,7 +36,7 @@ const TreasuryDashboard = memo(() => {
               <BackingPerOHM />
               <CurrentIndex />
             </Box>
-          </Paper>
+          </Box>
         </Box>
 
         <Zoom in={true}>

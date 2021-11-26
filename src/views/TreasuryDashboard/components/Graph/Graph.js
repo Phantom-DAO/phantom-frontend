@@ -10,7 +10,6 @@ export const Graph = ({ children }) => <>{children}</>;
 export const TotalValueDepositedGraph = () => {
   const theme = useTheme();
   const { data } = useTreasuryMetrics({ refetchOnMount: false });
-
   return (
     <Chart
       type="area"
@@ -19,7 +18,7 @@ export const TotalValueDepositedGraph = () => {
       itemNames={tooltipItems.tvl}
       dataKey={["totalValueLocked"]}
       headerText="Total Value Deposited"
-      stopColor={[["#768299", "#98B3E9"]]}
+      stopColor={[theme.palette.purpleChart]}
       bulletpointColors={bulletpoints.tvl}
       infoTooltipMessage={tooltipInfoMessages.tvl}
       strokeDasharray="6 6"
@@ -46,9 +45,9 @@ export const MarketValueGraph = () => {
         "treasuryLusdMarketValue",
       ]}
       stopColor={[
-        ["#F5AC37", "#EA9276"],
-        ["#768299", "#98B3E9"],
-        ["#DC30EB", "#EA98F1"],
+        theme.palette.purpleChart,
+        theme.palette.yellowChart,
+        theme.palette.greenChart,
         ["#8BFF4D", "#4C8C2A"],
         ["#ff758f", "#c9184a"],
       ]}
@@ -76,9 +75,9 @@ export const RiskFreeValueGraph = () => {
       format="currency"
       dataKey={["treasuryDaiRiskFreeValue", "treasuryFraxRiskFreeValue", "treasuryLusdRiskFreeValue"]}
       stopColor={[
-        ["#F5AC37", "#EA9276"],
-        ["#768299", "#98B3E9"],
-        ["#ff758f", "#c9184a"],
+        theme.palette.purpleChart,
+        theme.palette.yellowChart,
+        theme.palette.greenChart,
         ["#000", "#fff"],
         ["#000", "#fff"],
       ]}
@@ -113,7 +112,7 @@ export const ProtocolOwnedLiquidityGraph = () => {
       headerText="Protocol Owned Liquidity PHM-DAI"
       expandedGraphStrokeColor={theme.palette.graphStrokeColor}
       headerSubText={`${data && trim(data[0].treasuryOhmDaiPOL, 2)}% `}
-      stopColor={[["rgba(128, 204, 131, 1)", "rgba(128, 204, 131, 0)"]]}
+      stopColor={[theme.palette.lightBlueChart]}
       strokeDasharray="6 6"
       strokeDirection="vertical"
     />
@@ -140,8 +139,8 @@ export const OHMStakedGraph = () => {
       data={staked}
       dataKey={["staked"]}
       dataFormat="percent"
-      headerText="PHM Staked"
-      stopColor={[["#55EBC7", "#47ACEB"]]}
+      headerText="OHM Staked"
+      stopColor={[theme.palette.orangeChart]}
       bulletpointColors={bulletpoints.staked}
       infoTooltipMessage={tooltipInfoMessages.staked}
       expandedGraphStrokeColor={theme.palette.graphStrokeColor}
