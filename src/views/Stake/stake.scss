@@ -37,6 +37,18 @@
     text-align: center;
     font-style: italic;
   }
+
+  .ohm-card .waves-left{
+    position: absolute;
+    bottom: -3%;
+    left: -3%;
+  }
+
+  .ohm-card .waves-right{
+    position: absolute;
+    bottom: -3%;
+    right: -3%;
+  }
 }
 
 .migrate-sohm-button {
