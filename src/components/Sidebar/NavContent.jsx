@@ -2,10 +2,11 @@ import { useCallback, useState } from "react";
 import { NavLink } from "react-router-dom";
 import Social from "./Social";
 import externalUrls from "./externalUrls";
-import { ReactComponent as StakeIcon } from "../../assets/icons/stake.svg";
-import { ReactComponent as BondIcon } from "../../assets/icons/bond.svg";
-import { ReactComponent as DashboardIcon } from "../../assets/icons/dashboard.svg";
 import { ReactComponent as PhantomIcon } from "../../assets/icons/phantom-nav-header.svg";
+import ListAltOutlined from "@material-ui/icons/ListAltOutlined";
+import LayersOutlinedIcon from "@material-ui/icons/LayersOutlined";
+import SpeedOutlined from "@material-ui/icons/SpeedOutlined";
+import AllInclusiveOutlined from "@material-ui/icons/AllInclusiveOutlined";
 import { ReactComponent as PoolTogetherIcon } from "../../assets/icons/33-together.svg";
 import { Trans } from "@lingui/macro";
 import { trim, shorten } from "../../helpers";
@@ -24,6 +25,9 @@ function NavContent() {
   const checkPage = useCallback((match, location, page) => {
     const currentPath = location.pathname.replace("/", "");
     if (currentPath.indexOf("dashboard") >= 0 && page === "dashboard") {
+      return true;
+    }
+    if (currentPath.indexOf("whitelist") >= 0 && page === "whitelist") {
       return true;
     }
     if (currentPath.indexOf("stake") >= 0 && page === "stake") {
@@ -73,8 +77,24 @@ function NavContent() {
                 className={`button-dapp-menu ${isActive ? "active" : ""}`}
               >
                 <Typography variant="h6">
-                  <SvgIcon color="primary" component={DashboardIcon} />
+                  <SvgIcon color="primary" component={SpeedOutlined} />
                   <Trans>Dashboard</Trans>
+                </Typography>
+              </Link>
+
+              <Link
+                component={NavLink}
+                id="dash-nav"
+                to="/whitelist"
+                isActive={(match, location) => {
+                  return checkPage(match, location, "claim");
+                }}
+                className={`button-dapp-menu ${isActive ? "active" : ""}`}
+              >
+                <Typography variant="h6">
+                  <SvgIcon color="primary" component={ListAltOutlined} />
+
+                  <Trans>Whitelist Claim</Trans>
                 </Typography>
               </Link>
 
@@ -88,7 +108,7 @@ function NavContent() {
                 className={`button-dapp-menu ${isActive ? "active" : ""}`}
               >
                 <Typography variant="h6">
-                  <SvgIcon color="primary" component={StakeIcon} />
+                  <SvgIcon color="primary" component={LayersOutlinedIcon} />
                   <Trans>Stake</Trans>
                 </Typography>
               </Link>
@@ -118,7 +138,7 @@ function NavContent() {
                 className={`button-dapp-menu ${isActive ? "active" : ""}`}
               >
                 <Typography variant="h6">
-                  <SvgIcon color="primary" component={BondIcon} />
+                  <SvgIcon color="primary" component={AllInclusiveOutlined} />
                   <Trans>Bond</Trans>
                 </Typography>
               </Link>
