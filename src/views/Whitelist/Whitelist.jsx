@@ -2,7 +2,6 @@ import { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Box, Button, Grid, Paper, Typography, Zoom, Divider, SvgIcon } from "@material-ui/core";
 
-import { changeApproval, changeStake } from "../../slices/StakeThunk";
 import "./whitelist.scss";
 import { useWeb3Context } from "src/hooks/web3Context";
 import { isPendingTxn, txnButtonText } from "src/slices/PendingTxnsSlice";
@@ -21,39 +20,25 @@ function Whitelist() {
 
   const isAppLoading = useSelector(state => state.app.loading);
 
-  const ohmBalance = useSelector(state => {
-    return state.account.balances && state.account.balances.ohm;
+  const phmBalance = useSelector(state => {
+    return state.account.balances && state.account.balances.phm;
   });
   const pendingTransactions = useSelector(state => {
     return state.pendingTransactions;
   });
-  const stakeAllowance = useSelector(state => {
-    return state.account.staking && state.account.staking.ohmStake;
+  const claimAllowance = useSelector(state => {
+    return state.account.claim && state.account.claim.fphmClaim;
   });
 
   const onSeekApproval = async token => {
     await dispatch(changeApproval({ address, token, provider, networkID: chainID }));
   };
 
-  const onChangeStake = async action => {
-    // 1st catch if quantity > balance
-    let gweiValue = ethers.utils.parseUnits(quantity, "gwei");
-    if (action === "stake" && gweiValue.gt(ethers.utils.parseUnits(ohmBalance, "gwei"))) {
-      return dispatch(error("You cannot stake more than your OHM balance."));
-    }
+  const hasAllowance = useCallback(() => {
+    return claimAllowance > 0;
+  }, [claimAllowance]);
 
-    await dispatch(changeStake({ address, action, value: quantity.toString(), provider, networkID: chainID }));
-  };
-
-  const hasAllowance = useCallback(
-    token => {
-      if (token === "ohm") return stakeAllowance > 0;
-      return 0;
-    },
-    [stakeAllowance],
-  );
-
-  const isAllowanceDataLoading = stakeAllowance == null;
+  const isAllowanceDataLoading = hasAllowance == null;
 
   let claimButton = [];
 

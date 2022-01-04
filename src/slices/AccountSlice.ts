@@ -14,6 +14,9 @@ import { FuseProxy, IERC20, SOhmv2, WsOHM } from "src/typechain";
 
 interface IUserBalances {
   balances: {
+    phm: string;
+    fphm: string;
+    aphm: string;
     ohm: string;
     sohm: string;
     fsohm: string;
@@ -61,6 +64,9 @@ export const getBalances = createAsyncThunk(
 
     return {
       balances: {
+        phm: ethers.utils.formatUnits(ohmBalance, "gwei"),
+        fphm: ethers.utils.formatUnits(sohmBalance, "gwei"),
+        aphm: ethers.utils.formatUnits(fsohmBalance, "gwei"),
         ohm: ethers.utils.formatUnits(ohmBalance, "gwei"),
         sohm: ethers.utils.formatUnits(sohmBalance, "gwei"),
         fsohm: ethers.utils.formatUnits(fsohmBalance, "gwei"),
@@ -76,10 +82,18 @@ interface IUserAccountDetails {
   staking: {
     ohmStake: number;
     ohmUnstake: number;
+    phmStake: number;
+    phmUnstake: number;
+  };
+  claim: {
+    fphmClaim: number;
+    fphmClaimed: number;
   };
   wrapping: {
     sohmWrap: number;
     wsohmUnwrap: number;
+    fphmWrap: number;
+    aphmUnwrap: number;
   };
 }
 
@@ -103,10 +117,18 @@ export const loadAccountDetails = createAsyncThunk(
       staking: {
         ohmStake: +stakeAllowance,
         ohmUnstake: +unstakeAllowance,
+        phmStake: +stakeAllowance,
+        phmUnstake: +unstakeAllowance,
+      },
+      claim: {
+        fphmClaim: +stakeAllowance,
+        fphmClaimed: +unstakeAllowance,
       },
       wrapping: {
         ohmWrap: +wrapAllowance,
         ohmUnwrap: +unwrapAllowance,
+        phmWrap: +wrapAllowance,
+        phmUnwrap: +unwrapAllowance,
       },
       pooling: {
         sohmPool: +poolAllowance,
@@ -179,9 +201,10 @@ interface IAccountSlice extends IUserAccountDetails, IUserBalances {
 const initialState: IAccountSlice = {
   loading: false,
   bonds: {},
-  balances: { ohm: "", sohm: "", wsohmAsSohm: "", wsohm: "", fsohm: "", pool: "" },
-  staking: { ohmStake: 0, ohmUnstake: 0 },
-  wrapping: { sohmWrap: 0, wsohmUnwrap: 0 },
+  balances: { phm: "", fphm: "", aphm: "", ohm: "", sohm: "", wsohmAsSohm: "", wsohm: "", fsohm: "", pool: "" },
+  staking: { ohmStake: 0, ohmUnstake: 0, phmStake: 0, phmUnstake: 0 },
+  claim: { fphmClaim: 0, fphmClaimed: 0 },
+  wrapping: { sohmWrap: 0, wsohmUnwrap: 0, fphmWrap: 0, aphmUnwrap: 0 },
 };
 
 const accountSlice = createSlice({
