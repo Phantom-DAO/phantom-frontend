@@ -5,7 +5,7 @@ import "./auction.scss";
 const Auction = () => {
   const [zoomed, setZoomed] = useState(false);
   return (
-    <div id="stake-view">
+    <div id="auction-view">
       <Zoom in={true} onEntered={() => setZoomed(true)}>
         <Paper className={`ohm-card`}>Auction Page</Paper>
       </Zoom>
