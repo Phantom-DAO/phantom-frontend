@@ -169,11 +169,12 @@ const Auction = () => {
                   <Box
                     sx={{
                       display: "flex",
+                      marginTop: theme.spacing(10),
                       padding: theme.spacing(1, 0),
                       justifyContent: "space-between",
-                      position: "absolute",
+                      justifySelf: "space-end",
                       bottom: 0,
-                      width: "90%",
+                      width: "100%",
                     }}
                   >
                     <Box>
