@@ -1,4 +1,19 @@
-import { Box, Divider, Grid, IconButton, Link, Paper, SvgIcon, Typography, useTheme, Zoom } from "@material-ui/core";
+import {
+  Box,
+  Button,
+  Divider,
+  Grid,
+  IconButton,
+  InputAdornment,
+  Link,
+  Paper,
+  Slider,
+  SvgIcon,
+  TextField,
+  Typography,
+  useTheme,
+  Zoom,
+} from "@material-ui/core";
 import {
   Folder as FolderIcon,
   Twitter as TwitterIcon,
@@ -9,11 +24,15 @@ import { useState } from "react";
 import "./auction.scss";
 import aPhmLogo from "./../../assets/icons/token-aPHM-alt.png";
 import { ReactComponent as DiscordIcon } from "./../../assets/icons/discord.svg";
+import { ReactComponent as DotIcon } from "./../../assets/icons/dot.svg";
 import curvesImage from "./../../assets/images/Curves.png";
 
 const Auction = () => {
   const [zoomed, setZoomed] = useState(false);
   const theme = useTheme();
+
+  const [commitment, setCommitment] = useState(0);
+
   return (
     <div id="auction-view">
       <Zoom in={true} onEntered={() => setZoomed(true)}>
@@ -44,7 +63,7 @@ const Auction = () => {
               <Typography variant="h6" color="textSecondary">
                 TIME LEFT
               </Typography>
-              <Typography variant="h4" style={{ fontWeight: "bold", color: "orange" }}>
+              <Typography variant="h4" style={{ fontWeight: "bold", color: "#FFC768" }}>
                 1D 17H 0Min
               </Typography>
             </Box>
@@ -59,6 +78,7 @@ const Auction = () => {
                   borderColor: theme.palette.text,
                   borderRadius: "10px",
                   position: "relative",
+                  minHeight: "100%",
                 }}
               >
                 <Box
@@ -105,14 +125,13 @@ const Auction = () => {
                   sx={{
                     backgroundColor: "#000000",
                     borderRadius: "10px",
-                    position: "relative",
                     borderTopLeftRadius: "0",
                     borderTopRightRadius: "0",
                     padding: theme.spacing(2),
                   }}
                 >
-                  <Typography variant="body1" color="textSecondary">
-                    Phantom is a treasury-backed cccelerator on Fantom. Everything you know and love about
+                  <Typography variant="body1" color="textSecondary" style={{ lineHeight: "1.3125rem" }}>
+                    Phantom is a treasury-backed accelerator on Fantom. Everything you know and love about
                     community-owned high APY protocols except one important difference. A portion of Phantom’s treasury
                     is dedicated to an Accelerator program that accepts up-and-coming DeFi startups, NFTs and more.
                   </Typography>
@@ -152,6 +171,9 @@ const Auction = () => {
                       display: "flex",
                       padding: theme.spacing(1, 0),
                       justifyContent: "space-between",
+                      position: "absolute",
+                      bottom: 0,
+                      width: "90%",
                     }}
                   >
                     <Box>
@@ -183,9 +205,7 @@ const Auction = () => {
                       <Typography variant="h6" color="textSecondary">
                         Auction Type
                       </Typography>
-                      <Box>
-                        <Typography variant="body1">Dutch Auction</Typography>
-                      </Box>
+                      <Typography variant="body1">Dutch Auction</Typography>
                     </Box>
                   </Box>
                 </Box>
@@ -199,9 +219,196 @@ const Auction = () => {
                   border: "solid 1px",
                   borderColor: theme.palette.text,
                   borderRadius: "10px",
+                  minHeight: "100%",
                 }}
               >
-                right
+                <Grid container spacing={2} justifyContent="flex-start">
+                  <Grid item xs={6} md={3}>
+                    <Typography variant="body1" color="textSecondary" style={{ marginBottom: theme.spacing(1) }}>
+                      AMOUNT FOR SALE
+                    </Typography>
+                    <Typography variant="body1">333,333 aPHM</Typography>
+                  </Grid>
+                  <Grid item xs={6} md={3}>
+                    <Typography variant="body1" color="textSecondary" style={{ marginBottom: theme.spacing(1) }}>
+                      RAISED
+                    </Typography>
+                    <Typography variant="body1">9,999,999.99 FRAX</Typography>
+                  </Grid>
+                  <Grid item xs={6} md={3}>
+                    <Typography variant="body1" color="textSecondary" style={{ marginBottom: theme.spacing(1) }}>
+                      REMAINING
+                    </Typography>
+                    <Typography variant="body1">9,999,999.99 FRAX</Typography>
+                  </Grid>
+                  <Box
+                    component={Grid}
+                    item
+                    xs={6}
+                    md={3}
+                    sx={{
+                      textAlign: "right",
+                    }}
+                  >
+                    <Typography variant="body1" color="textSecondary" style={{ marginBottom: theme.spacing(1) }}>
+                      STATUS
+                    </Typography>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        textAlign: "right",
+                        justifyContent: "flex-end",
+                      }}
+                    >
+                      <SvgIcon>
+                        <DotIcon />
+                      </SvgIcon>
+                      <Typography variant="body1">Ongoing</Typography>
+                    </Box>
+                  </Box>
+                </Grid>
+                <Box
+                  sx={{
+                    width: "100%",
+                    minHeight: "400px",
+                    backgroundColor: "#000000",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginBottom: theme.spacing(2),
+                  }}
+                >
+                  GRAPH
+                </Box>
+                <Grid container spacing={2} justifyContent="flex-start">
+                  <Grid item xs={6} md={4}>
+                    <Typography variant="body1" color="textSecondary" style={{ marginBottom: theme.spacing(1) }}>
+                      AMOUNT
+                    </Typography>
+                    <Typography variant="body1">1.5 aPHM (minimum)</Typography>
+                  </Grid>
+                  <Grid item xs={6} md={4}>
+                    <Typography variant="body1" color="textSecondary" style={{ marginBottom: theme.spacing(1) }}>
+                      YOUR REMAINING CAP
+                    </Typography>
+                    <Typography variant="body1">16,666.65 aPHM</Typography>
+                  </Grid>
+                  <Box
+                    item
+                    xs={6}
+                    md={4}
+                    component={Grid}
+                    sx={{
+                      textAlign: "right",
+                    }}
+                  >
+                    <Typography variant="body1" color="textSecondary" style={{ marginBottom: theme.spacing(1) }}>
+                      MAX
+                    </Typography>
+                    <Typography variant="body1">4.5 aPHM</Typography>
+                  </Box>
+                </Grid>
+                <Box
+                  sx={{
+                    marginTop: theme.spacing(1),
+                    "& .MuiSlider-rail": {
+                      color: "#342915",
+                      minHeight: "5px",
+                    },
+                    "& .MuiSlider-track": {
+                      color: "#FFC768",
+                      minHeight: "5px",
+                    },
+                    "& .MuiSlider-thumb": {
+                      color: "#FFC768",
+                      border: "solid 1px #000000",
+                    },
+                  }}
+                >
+                  <Slider defaultValue={2} getAriaValueText={val => `${val} FRAX`} />
+                </Box>
+                <Box
+                  sx={{
+                    marginTop: theme.spacing(1),
+                    "& .MuiInput-underline::before, & .MuiInput-underline::after": {
+                      visibility: "hidden",
+                      content: "",
+                      display: "none",
+                    },
+                    "& fieldset": {
+                      borderRadius: "30px",
+                    },
+                    "& .MuiInputBase-root": {
+                      backgroundColor: "rgba(255, 255, 255, 0.1)",
+                      paddingLeft: "10px",
+                    },
+                  }}
+                >
+                  <Box
+                    component={TextField}
+                    type="number"
+                    value={commitment}
+                    onChange={e => {
+                      // need numeric check
+                      setCommitment(e.target.value);
+                    }}
+                    InputProps={{
+                      style: {
+                        borderRadius: "30px",
+                      },
+                      endAdornment: (
+                        <Box
+                          component={InputAdornment}
+                          position="start"
+                          sx={{
+                            position: "absolute",
+                            right: "-1.5%",
+                            zIndex: 10,
+                            display: "flex",
+                            alignItems: "center",
+                          }}
+                        >
+                          <Button
+                            variant="contained"
+                            color="secondary"
+                            style={{
+                              backgroundColor: "#161429",
+                              borderRadius: "10px",
+                              padding: "2px 10px",
+                              margin: "2px 10px",
+                              height: "auto",
+                              width: "auto",
+                              fontSize: "14px",
+                              color: "white",
+                            }}
+                          >
+                            MAX
+                          </Button>
+                          <Button
+                            color="primary"
+                            variant="contained"
+                            style={{ margin: 0, backgroundColor: "#7722FC", color: "white" }}
+                          >
+                            COMMIT FRAX
+                          </Button>
+                        </Box>
+                      ),
+                    }}
+                    sx={{
+                      borderRadius: "20px",
+                      width: "100%",
+                    }}
+                  />
+                </Box>
+                <Box sx={{ marginTop: theme.spacing(1) }}>
+                  <Typography variant="body2" color="textSecondary" style={{ lineHeight: "1.3125rem" }}>
+                    Your commitment is for the minimum amount of aPHM. As the auction price drops, your commitment will
+                    entitle you to claim even more tokens at the end. Final price per token is determined at the end of
+                    the auction. Everyone who commits before the end of the auction, claims tokens at the same final
+                    price.
+                  </Typography>
+                </Box>
               </Box>
             </Grid>
             <Grid item xs={12}>
