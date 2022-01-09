@@ -32,6 +32,7 @@ const Auction = () => {
   const theme = useTheme();
 
   const [commitment, setCommitment] = useState(0);
+  const [auctionStatus, setAuctionStatus] = useState("S");
 
   return (
     <div id="auction-view">
@@ -262,26 +263,62 @@ const Auction = () => {
                         justifyContent: "flex-end",
                       }}
                     >
-                      <SvgIcon>
+                      <SvgIcon style={{ color: auctionStatus === "ongoing" ? "green" : "red" }}>
                         <DotIcon />
                       </SvgIcon>
-                      <Typography variant="body1">Ongoing</Typography>
+                      <Typography variant="body1">{auctionStatus === "ongoing" ? "Ongoing" : "Finished"} </Typography>
                     </Box>
                   </Box>
                 </Grid>
-                <Box
-                  sx={{
-                    width: "100%",
-                    minHeight: "400px",
-                    backgroundColor: "#000000",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    marginBottom: theme.spacing(2),
-                  }}
-                >
-                  GRAPH
-                </Box>
+
+                {auctionStatus === "ongoing" ? (
+                  <Box
+                    sx={{
+                      width: "100%",
+                      minHeight: "400px",
+                      backgroundColor: "#000000",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      marginBottom: theme.spacing(2),
+                    }}
+                  >
+                    GRAPH
+                  </Box>
+                ) : (
+                  <Box
+                    sx={{
+                      width: "100%",
+                      minHeight: "400px",
+                      background: "radial-gradient(50% 50% at 50% 50%, #1D0443 0%, #010101 100%)",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      marginBottom: theme.spacing(2),
+                      textAlign: "center",
+                    }}
+                  >
+                    <Box>
+                      <Typography variant="h6">THIS AUCTION HAS</Typography>
+                      <Typography variant="h1" style={{ fontWeight: "bold" }}>
+                        FINISHED
+                      </Typography>
+                    </Box>
+                    <Box sx={{ margin: theme.spacing(4, 0) }}>
+                      <Typography variant="h6" style={{ color: "#FFC768", lineHeight: "27px", fontWeight: "bold" }}>
+                        Auction finished successfully
+                      </Typography>
+                      <Typography style={{ lineHeight: "27px" }}>You have 333.33 aPHM available to claim</Typography>
+                    </Box>
+                    <Box>
+                      <Button variant="contained" color="primary">
+                        Claim
+                      </Button>
+                    </Box>
+                  </Box>
+                )}
+
                 <Grid container spacing={2} justifyContent="flex-start">
                   <Grid item xs={6} md={4}>
                     <Typography variant="body1" color="textSecondary" style={{ marginBottom: theme.spacing(1) }}>
@@ -386,11 +423,7 @@ const Auction = () => {
                           >
                             MAX
                           </Button>
-                          <Button
-                            color="primary"
-                            variant="contained"
-                            style={{ margin: 0, backgroundColor: "#7722FC", color: "white" }}
-                          >
+                          <Button color="primary" variant="contained" style={{ margin: 0 }}>
                             COMMIT FRAX
                           </Button>
                         </Box>
