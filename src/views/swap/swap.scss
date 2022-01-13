@@ -1,0 +1,31 @@
+#swap-view {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+  
+  .swap {
+    display: flex;
+    width: 100%;
+    padding: 1em;
+    text-align: center;
+    margin-top: 10px;
+    h5 {
+      font-weight: 500;
+    }
+    h4 {
+      font-weight: 600;
+    }
+    .swap-token,
+    .swap-balance,
+    .swap-unlocked {
+      white-space: nowrap;
+    }
+  }
+  
+  .body2 {
+    align-items: center;
+    text-align: center; 
+  }
