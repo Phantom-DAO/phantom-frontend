@@ -25,8 +25,8 @@ function Swap() {
                       <Typography variant="h5" color="textSecondary">
                         SWAP
                       </Typography>
-                      <Typography variant="h1">image aPHM to PHM</Typography>
-                      <Typography variant="h1">image fPHM to PHM</Typography>
+                      <Typography variant="h4">image aPHM to PHM</Typography>
+                      <Typography variant="h4">image fPHM to PHM</Typography>
                     </div>
                   </Grid>
                   <Grid item xs={12} sm={4} md={4} lg={4}>
@@ -34,8 +34,8 @@ function Swap() {
                       <Typography variant="h5" color="textSecondary">
                         BALANCE
                       </Typography>
-                      <Typography variant="h1">aphm balance 3333.33</Typography>
-                      <Typography variant="h1">aphm unlocked 333.33</Typography>
+                      <Typography variant="h4">aphm balance 3333.33</Typography>
+                      <Typography variant="h4">aphm unlocked 333.33</Typography>
                     </div>
                   </Grid>
                   <Grid item xs={12} sm={4} md={4} lg={4}>
@@ -43,17 +43,8 @@ function Swap() {
                       <Typography variant="h5" color="textSecondary">
                         UNLOCKED
                       </Typography>
-                      <Typography variant="h1">aphm unlocked 333.33</Typography>
-                      <Typography variant="h1">fphm unlocked 33.33</Typography>
-                    </div>
-                  </Grid>
-                  <Grid item xs={12} sm={4} md={4} lg={4}>
-                    <div className="swap-button">
-                      <Typography variant="h5" color="textSecondary">
-                        space
-                      </Typography>
-                      <Typography variant="h1">aphm button</Typography>
-                      <Typography variant="h1">fphm button</Typography>
+                      <Typography variant="h4">aphm unlocked 333.33</Typography>
+                      <Typography variant="h4">fphm unlocked 33.33</Typography>
                     </div>
                   </Grid>
                 </Grid>
