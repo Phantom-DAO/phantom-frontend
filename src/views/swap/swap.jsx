@@ -50,6 +50,12 @@ function Swap() {
                       <Typography variant="h4">fphm unlocked 33.33</Typography>
                     </div>
                   </Grid>
+                  <Grid item xs={12} sm={4} md={4} lg={4}>
+                    <div className="swap-button">
+                      <Typography variant="h4">button</Typography>
+                      <Typography variant="h4">button</Typography>
+                    </div>
+                  </Grid>
                 </Grid>
               </div>
             </Grid>
