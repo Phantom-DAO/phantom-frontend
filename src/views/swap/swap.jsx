@@ -1,4 +1,3 @@
-import { useSelector } from "react-redux";
 import {
   Box,
   Grid,
@@ -18,15 +17,6 @@ import { ReactComponent as WavesRight } from "../../assets/icons/waves-right.svg
 //const fPHMImg = getfPHMTokenImage("");
 
 function Swap() {
-
-//    const dispatch = useDispatch();
-//    const { provider, address, connected, connect, chainID } = useWeb3Context();
-  
-//    const [zoomed, setZoomed] = useState(false);
-//    const [view, setView] = useState(0);
-//    const [quantity, setQuantity] = useState("");
-  
-//    const isAppLoading = useSelector(state => state.app.loading);
 
     //TODO: 2 Task Setup correct return and verify functions for lines 41-57
     //aPHM token current balance
