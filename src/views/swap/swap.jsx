@@ -60,28 +60,6 @@ function Swap() {
               </div>
             </Grid>
           </Grid>
-          <Grid container direction="column" spacing={7}>
-            <Grid item>
-              <div className="waves-left">
-                <SvgIcon
-                  style={{ minHeight: 105, minWidth: 200 }}
-                  htmlColor="black"
-                  component={WavesLeft}
-                  viewBox="0 0 248 105"
-                />
-              </div>
-            </Grid>
-            <Grid item>
-              <div className="waves-right">
-                <SvgIcon
-                  style={{ minHeight: 105, minWidth: 200 }}
-                  htmlColor="black"
-                  component={WavesRight}
-                  viewBox="0 0 248 105"
-                />
-              </div>
-            </Grid>
-          </Grid>
         </Paper>
       </Zoom>
     </div>
