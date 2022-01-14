@@ -35,6 +35,9 @@ function NavContent() {
     if (currentPath.indexOf("33-together") >= 0 && page === "33-together") {
       return true;
     }
+    if (currentPath.indexOf("auction") >= 0 && page === "auction") {
+      return true;
+    }
     return false;
   }, []);
 
@@ -75,6 +78,21 @@ function NavContent() {
                 <Typography variant="h6">
                   <SvgIcon color="primary" component={DashboardIcon} />
                   <Trans>Dashboard</Trans>
+                </Typography>
+              </Link>
+
+              <Link
+                component={NavLink}
+                id="auction-nav"
+                to="/auction"
+                isActive={(match, location) => {
+                  return checkPage(match, location, "auction");
+                }}
+                className={`button-dapp-menu ${isActive ? "active" : ""}`}
+              >
+                <Typography variant="h6">
+                  <SvgIcon color="primary" component={StakeIcon} />
+                  <Trans>Auction</Trans>
                 </Typography>
               </Link>
 
