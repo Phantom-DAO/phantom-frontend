@@ -11,7 +11,7 @@ import AuctionDetails from "./AuctionDetails";
 const Auction = () => {
   const theme = useTheme();
 
-  const [auctionStatus, setAuctionStatus] = useState("finished"); // ongoing || finished
+  const [auctionStatus, setAuctionStatus] = useState("ongoing"); // ongoing || finished
 
   function createData(address, amountCommitted, claimable, txHash, blockNumber) {
     return {
