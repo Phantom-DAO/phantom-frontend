@@ -83,7 +83,7 @@ function Swap() {
                       </Grid>
     
                       <Grid item xs={12} sm={4} md={4} lg={4}>
-                        <div className="token-balance">
+                        <div className="swap-balance">
                           <Typography variant="h5" color="textSecondary">
                             BALANCE
                           </Typography>
@@ -97,7 +97,7 @@ function Swap() {
                       </Grid>
     
                       <Grid item xs={12} sm={4} md={4} lg={4}>
-                        <div className="token-unlocked">
+                        <div className="swap-unlocked">
                           <Typography variant="h5" color="textSecondary">
                             UNLOCKED
                           </Typography>
@@ -147,8 +147,6 @@ function Swap() {
           </Zoom>
         </div>
       );    
-
-
-    
-
 }
+
+export default Swap;
