@@ -1,4 +1,5 @@
 import { Box, Grid, Paper, Typography, Zoom, SvgIcon } from "@material-ui/core";
+import "./swap.scss";
 
 // TODO: 1 Implementation
 //const aPHMImg = getaPHMTokenImage("");
