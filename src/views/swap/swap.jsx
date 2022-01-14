@@ -15,9 +15,7 @@ function Swap() {
             <Grid item>
               <Box className="card-header">
                 <Typography variant="h3">Swap tokens</Typography>
-                <Typography variant="h5">
-                        Swap your aPHM or fPHM tokens
-                </Typography>
+                <Typography variant="h5">Swap your aPHM or fPHM tokens</Typography>
               </Box>
             </Grid>
             <Grid item>
@@ -25,27 +23,21 @@ function Swap() {
                 <Grid container spacing={2} alignItems="flex-end">
                   <Grid item xs={12} sm={4} md={4} lg={4}>
                     <div className="swap-tokens">
-                      <Typography variant="h5">
-                        SWAP
-                      </Typography>
+                      <Typography variant="h5">SWAP</Typography>
                       <Typography variant="h4">image aPHM to PHM</Typography>
                       <Typography variant="h4">image fPHM to PHM</Typography>
                     </div>
                   </Grid>
                   <Grid item xs={12} sm={4} md={4} lg={4}>
                     <div className="swap-balance">
-                      <Typography variant="h5">
-                        BALANCE
-                      </Typography>
+                      <Typography variant="h5">BALANCE</Typography>
                       <Typography variant="h4">aphm balance 3333.33</Typography>
                       <Typography variant="h4">aphm unlocked 333.33</Typography>
                     </div>
                   </Grid>
                   <Grid item xs={12} sm={4} md={4} lg={4}>
                     <div className="swap-unlocked">
-                      <Typography variant="h5">
-                        UNLOCKED
-                      </Typography>
+                      <Typography variant="h5">UNLOCKED</Typography>
                       <Typography variant="h4">aphm unlocked 333.33</Typography>
                       <Typography variant="h4">fphm unlocked 33.33</Typography>
                     </div>
