@@ -17,7 +17,7 @@ import { loadAppDetails } from "./slices/AppSlice";
 import { loadAccountDetails, calculateUserBondDetails } from "./slices/AccountSlice";
 import { info } from "./slices/MessagesSlice";
 
-import { Stake, ChooseBond, Bond, Wrap, TreasuryDashboard, PoolTogether, Swap } from "./views";
+import { Stake, ChooseBond, Bond, Wrap, TreasuryDashboard, PoolTogether, Auction, Swap } from "./views";
 import Sidebar from "./components/Sidebar/Sidebar.jsx";
 import TopBar from "./components/TopBar/TopBar.jsx";
 import NavDrawer from "./components/Sidebar/NavDrawer.jsx";
@@ -220,6 +220,10 @@ function App() {
 
             <Route path="/swap">
               <Swap />
+            </Route>
+
+            <Route path="/auction">
+              <Auction />
             </Route>
 
             <Route path="/wrap">
