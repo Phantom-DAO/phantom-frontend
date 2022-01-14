@@ -14,7 +14,10 @@ function Swap() {
           <Grid container direction="column" spacing={7}>
             <Grid item>
               <Box className="card-header">
-                <Typography variant="h5">Swap tokens</Typography>
+                <Typography variant="h3">Swap tokens</Typography>
+                <Typography variant="h5">
+                        Swap your aPHM or fPHM tokens
+                </Typography>
               </Box>
             </Grid>
             <Grid item>
@@ -22,7 +25,7 @@ function Swap() {
                 <Grid container spacing={2} alignItems="flex-end">
                   <Grid item xs={12} sm={4} md={4} lg={4}>
                     <div className="swap-tokens">
-                      <Typography variant="h5" color="textSecondary">
+                      <Typography variant="h5">
                         SWAP
                       </Typography>
                       <Typography variant="h4">image aPHM to PHM</Typography>
@@ -31,7 +34,7 @@ function Swap() {
                   </Grid>
                   <Grid item xs={12} sm={4} md={4} lg={4}>
                     <div className="swap-balance">
-                      <Typography variant="h5" color="textSecondary">
+                      <Typography variant="h5">
                         BALANCE
                       </Typography>
                       <Typography variant="h4">aphm balance 3333.33</Typography>
@@ -40,7 +43,7 @@ function Swap() {
                   </Grid>
                   <Grid item xs={12} sm={4} md={4} lg={4}>
                     <div className="swap-unlocked">
-                      <Typography variant="h5" color="textSecondary">
+                      <Typography variant="h5">
                         UNLOCKED
                       </Typography>
                       <Typography variant="h4">aphm unlocked 333.33</Typography>
