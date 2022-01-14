@@ -17,29 +17,6 @@
   left: 0px;
   top: 92px;
 
-  h3 {
-    font-family: Poppins;
-    font-style: normal;
-    font-weight: 600;
-    font-size: 27px;
-    line-height: 40px;
-  }
-  h5 {
-    font-family: Poppins;
-    font-style: normal;
-    font-weight: 500;
-    font-size: 14px;
-    line-height: 21px;
-    text-transform: uppercase;
-    opacity: 0.5;
-  }
-  h4 {
-    font-family: Poppins;
-    font-style: normal;
-    font-weight: 500;
-    font-size: 18px;
-    line-height: 27px;
-  }
   .swap-token {
     position: static;
     left: 0%;
@@ -70,4 +47,27 @@
 .body2 {
     align-items: center;
     text-align: center; 
+    h3 {
+      font-family: Poppins;
+      font-style: normal;
+      font-weight: 600;
+      font-size: 27px;
+      line-height: 40px;
+    }
+    h5 {
+      font-family: Poppins;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 21px;
+      text-transform: uppercase;
+      opacity: 0.5;
+    }
+    h4 {
+      font-family: Poppins;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 18px;
+      line-height: 27px;
+    }    
 }

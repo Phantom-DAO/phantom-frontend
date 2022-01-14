@@ -1,6 +1,4 @@
 import { Box, Grid, Paper, Typography, Zoom, SvgIcon } from "@material-ui/core";
-import { ReactComponent as WavesLeft } from "../../assets/icons/waves-left.svg";
-import { ReactComponent as WavesRight } from "../../assets/icons/waves-right.svg";
 
 // TODO: 1 Implementation
 //const aPHMImg = getaPHMTokenImage("");
