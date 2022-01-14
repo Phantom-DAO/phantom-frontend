@@ -6,9 +6,6 @@ import {
   Zoom,
   SvgIcon,
 } from "@material-ui/core";
-// TODO: 1 Task
-// add get phantom tokens function to helpers
-//import { getOhmTokenImage, getTokenImage, trim } from "../../helpers";
 import { ReactComponent as WavesLeft } from "../../assets/icons/waves-left.svg";
 import { ReactComponent as WavesRight } from "../../assets/icons/waves-right.svg";
 
@@ -17,25 +14,6 @@ import { ReactComponent as WavesRight } from "../../assets/icons/waves-right.svg
 //const fPHMImg = getfPHMTokenImage("");
 
 function Swap() {
-
-    //TODO: 2 Task Setup correct return and verify functions for lines 41-57
-    //aPHM token current balance
-    // const aPHMBalance = useSelector(state => {
-    //     return state.account.balances.aphm;
-    // });
-    // //aPHM token  current unlocked  
-    // const aPHMUnlocked = useSelector(state => {
-    //     return state.account.unlocked.aphm;
-    // });
-    
-    // //fPHM token  current balance
-    // const fPHMBalance = useSelector(state => {
-    //     return state.account.balances.fphm;
-    // });
-    // //fPHM token  current unloacked
-    // const fPHMUnlocked = useSelector(state => {
-    //     return state.account.unlocked.fphm;
-    // });
 
   return (
     <div id="swap-view">
