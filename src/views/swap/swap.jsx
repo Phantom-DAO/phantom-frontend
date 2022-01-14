@@ -9,7 +9,7 @@ import { ReactComponent as WavesRight } from "../../assets/icons/waves-right.svg
 function Swap() {
   return (
     <div id="swap-view">
-      <Zoom in={true} onEntered={() => setZoomed(true)}>
+      <Zoom in={true}>
         <Paper className={`swap-card`}>
           <Grid container direction="column" spacing={7}>
             <Grid item>
