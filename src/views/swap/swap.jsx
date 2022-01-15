@@ -65,8 +65,12 @@ function Swap() {
                   <Grid item xs={12} sm={4} md={4} lg={4}>
                     <div className="swap-unlocked">
                       <Typography variant="h5">UNLOCKED</Typography>
-                      <Typography variant="h4"></Typography>
-                      <Typography variant="h4"></Typography>
+                      <Typography variant="h4">
+                        {isAppLoading ? <Skeleton width="80px" /> : <>{trim(ohmBalance, 4)} OHM</>}
+                      </Typography>
+                      <Typography variant="h4">
+                        {isAppLoading ? <Skeleton width="80px" /> : <>{trim(sohmBalance, 4)} sOHM</>}
+                      </Typography>
                     </div>
                   </Grid>
                   <Grid item xs={12} sm={4} md={4} lg={4}>
