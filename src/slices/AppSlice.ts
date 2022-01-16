@@ -17,38 +17,6 @@ const initialState = {
 export const loadAppDetails = createAsyncThunk(
   "app/loadAppDetails",
   async ({ networkID, provider }: IBaseAsyncThunk, { dispatch }) => {
-    const protocolMetricsQuery = `
-  query {
-    _meta {
-      block {
-        number
-      }
-    }
-    protocolMetrics(first: 1, orderBy: timestamp, orderDirection: desc) {
-      timestamp
-      ohmCirculatingSupply
-      sOhmCirculatingSupply
-      totalSupply
-      ohmPrice
-      marketCap
-      totalValueLocked
-      treasuryMarketValue
-      nextEpochRebase
-      nextDistributedOhm
-    }
-  }
-`;
-
-    const graphData = await apollo(protocolMetricsQuery);
-
-    if (!graphData || graphData == null) {
-      console.error("Returned a null response when querying TheGraph");
-      return;
-    }
-
-    const stakingTVL = parseFloat(graphData.data.protocolMetrics[0].totalValueLocked);
-    // NOTE (appleseed): marketPrice from Graph was delayed, so get CoinGecko price
-    // const marketPrice = parseFloat(graphData.data.protocolMetrics[0].ohmPrice);
     let marketPrice;
     try {
       const originalPromiseResult = await dispatch(
@@ -61,31 +29,22 @@ export const loadAppDetails = createAsyncThunk(
       return;
     }
 
-    const marketCap = parseFloat(graphData.data.protocolMetrics[0].marketCap);
-    const circSupply = parseFloat(graphData.data.protocolMetrics[0].ohmCirculatingSupply);
-    const totalSupply = parseFloat(graphData.data.protocolMetrics[0].totalSupply);
-    const treasuryMarketValue = parseFloat(graphData.data.protocolMetrics[0].treasuryMarketValue);
-    // const currentBlock = parseFloat(graphData.data._meta.block.number);
-
     if (!provider) {
       console.error("failed to connect to provider, please connect your wallet");
       return {
-        stakingTVL,
         marketPrice,
-        marketCap,
-        circSupply,
-        totalSupply,
-        treasuryMarketValue,
       };
     }
     const currentBlock = await provider.getBlockNumber();
 
+    //TODO: replace with PhantomStaking and ABI
     const stakingContract = new ethers.Contract(
       addresses[networkID].STAKING_ADDRESS as string,
       OlympusStakingv2ABI,
       provider,
     ) as OlympusStakingv2;
 
+    //TODO: replace with sPHMto and ABI
     const sohmMainContract = new ethers.Contract(
       addresses[networkID].SOHM_ADDRESS as string,
       sOHMv2,
@@ -93,28 +52,25 @@ export const loadAppDetails = createAsyncThunk(
     ) as SOhmv2;
 
     // Calculating staking
-    const epoch = await stakingContract.epoch();
-    const stakingReward = epoch.distribute;
-    const circ = await sohmMainContract.circulatingSupply();
-    const stakingRebase = Number(stakingReward.toString()) / Number(circ.toString());
-    const fiveDayRate = Math.pow(1 + stakingRebase, 5 * 3) - 1;
-    const stakingAPY = Math.pow(1 + stakingRebase, 365 * 3) - 1;
+    // const epoch = await stakingContract.epoch();
+    // const stakingReward = epoch.distribute;
+    // const circ = await sohmMainContract.circulatingSupply();
+    // const stakingRebase = Number(stakingReward.toString()) / Number(circ.toString());
+    // const fiveDayRate = Math.pow(1 + stakingRebase, 5 * 3) - 1;
+    // const stakingAPY = Math.pow(1 + stakingRebase, 365 * 3) - 1;
 
     // Current index
-    const currentIndex = await stakingContract.index();
+    const currentIndex = 2;
 
     return {
       currentIndex: ethers.utils.formatUnits(currentIndex, "gwei"),
       currentBlock,
-      fiveDayRate,
-      stakingAPY,
-      stakingTVL,
-      stakingRebase,
-      marketCap,
-      marketPrice,
-      circSupply,
-      totalSupply,
-      treasuryMarketValue,
+      // fiveDayRate,
+      // stakingAPY,
+      // stakingTVL,
+      // stakingRebase,
+      // marketCap,
+      // marketPrice,
     } as IAppData;
   },
 );
@@ -179,14 +135,11 @@ interface IAppData {
   readonly currentIndex?: string;
   readonly currentBlock?: number;
   readonly fiveDayRate?: number;
-  readonly marketCap: number;
   readonly marketPrice: number;
   readonly stakingAPY?: number;
   readonly stakingRebase?: number;
-  readonly stakingTVL: number;
+  // readonly stakingTVL: number;
   readonly totalSupply: number;
-  readonly treasuryBalance?: number;
-  readonly treasuryMarketValue?: number;
 }
 
 const appSlice = createSlice({
