@@ -36,7 +36,7 @@ function Swap() {
         <Paper className={`swap-card`}>
           <Grid container direction="column" spacing={7}>
             <Grid item>
-              <Box className="card-header">
+              <Box className="swap-header">
                 <Typography variant="h3">Swap tokens</Typography>
                 <Typography variant="h5">Swap your aPHM or fPHM tokens</Typography>
               </Box>
