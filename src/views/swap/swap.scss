@@ -4,8 +4,9 @@ display: flex;
 padding: 0px;
 
 position: absolute;
-/*width: 1236px;*/
-left: 509px;
+/*width: 1236px;
+left: 509*/
+left: 26%;
 
 }
 
@@ -101,7 +102,6 @@ left: 509px;
     right: 13.75%;
     top: 0%;
     bottom: 0%;
-    align-items: flex-end;
   }
   .swap-unlocked {
     position: static;
@@ -109,7 +109,6 @@ left: 509px;
     right: 12.14%;
     top: 0%;
     bottom: 0%;
-    align-items: flex-end;
   }
   .swap-button{
     position: static;
