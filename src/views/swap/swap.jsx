@@ -44,14 +44,14 @@ function Swap() {
             <Grid item>
               <div className="swap">
                 <Grid container spacing={1} alignItems="flex-end">
-                  <Grid item xs={12}>
+                  <Grid>
                     <div className="swap-tokens">
                       <Typography variant="h5">SWAP</Typography>
                       <Typography variant="h4">image aPHM to PHM</Typography>
                       <Typography variant="h4">image fPHM to PHM</Typography>
                     </div>
                   </Grid>
-                  <Grid item xs={4}>
+                  <Grid item>
                     <div className="swap-balance">
                       <Typography variant="h5">BALANCE</Typography>
                       <Typography variant="h4">
@@ -62,7 +62,7 @@ function Swap() {
                       </Typography>
                     </div>
                   </Grid>
-                  <Grid item xs={4}>
+                  <Grid item>
                     <div className="swap-unlocked">
                       <Typography variant="h5">UNLOCKED</Typography>
                       <Typography variant="h4">
@@ -73,7 +73,7 @@ function Swap() {
                       </Typography>
                     </div>
                   </Grid>
-                  <Grid item xs={4}>
+                  <Grid item>
                     <div className="swap-button">
                       <Typography variant="h4">button</Typography>
                       <Typography variant="h4">button</Typography>
