@@ -34,7 +34,7 @@ function Swap() {
     <div id="swap-view">
       <Zoom in={true}>
         <Paper className={`swap-card`}>
-          <Grid container direction="column" spacing={1}>
+          <Grid container direction="column" spacing={12}>
             <Grid item xs={12} sm={12} md={8} lg={4}>
               <Box className="swap-header">
                 <Typography variant="h3">Swap tokens</Typography>
