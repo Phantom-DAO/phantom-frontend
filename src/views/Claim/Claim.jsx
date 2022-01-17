@@ -23,11 +23,11 @@ function Swap() {
   const [quantity, setQuantity] = useState("");
   const isAppLoading = useSelector(state => state.app.loading);
 
-  const aphmBalance = useSelector(state => {
-    return state.account.balances && state.account.balances.aphm;
+  const ohmBalance = useSelector(state => {
+    return state.account.balances && state.account.balances.ohm;
   });
-  const fphmBalance = useSelector(state => {
-    return state.account.balances && state.account.balances.fphm;
+  const sohmBalance = useSelector(state => {
+    return state.account.balances && state.account.balances.sohm;
   });
 
   return (
@@ -55,10 +55,10 @@ function Swap() {
                     <div className="swap-balance">
                       <Typography variant="h5">BALANCE</Typography>
                       <Typography variant="h4">
-                        {isAppLoading ? <Skeleton width="80px" /> : <>{trim(aphmBalance, 4)} OHM</>}
+                        {isAppLoading ? <Skeleton width="80px" /> : <>{trim(ohmBalance, 4)} OHM</>}
                       </Typography>
                       <Typography variant="h4">
-                        {isAppLoading ? <Skeleton width="80px" /> : <>{trim(fphmBalance, 4)} sOHM</>}
+                        {isAppLoading ? <Skeleton width="80px" /> : <>{trim(sohmBalance, 4)} sOHM</>}
                       </Typography>
                     </div>
                   </Grid>
@@ -66,10 +66,10 @@ function Swap() {
                     <div className="swap-unlocked">
                       <Typography variant="h5">UNLOCKED</Typography>
                       <Typography variant="h4">
-                        {isAppLoading ? <Skeleton width="80px" /> : <>{trim(aphmBalance, 4)} OHM</>}
+                        {isAppLoading ? <Skeleton width="80px" /> : <>{trim(ohmBalance, 4)} OHM</>}
                       </Typography>
                       <Typography variant="h4">
-                        {isAppLoading ? <Skeleton width="80px" /> : <>{trim(fphmBalance, 4)} sOHM</>}
+                        {isAppLoading ? <Skeleton width="80px" /> : <>{trim(sohmBalance, 4)} sOHM</>}
                       </Typography>
                     </div>
                   </Grid>
