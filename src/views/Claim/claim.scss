@@ -1,18 +1,13 @@
-#swap-view {
+#claim-view {
 /* Auto layout */
 display: flex;
 flex-direction: column;
-align-items: flex-start;
+align-items: center;
 padding: 0px;
-
-position: absolute;
-width: 1236px;
-left: 509px;
-background-color: transparent;
  
 }
 
-.swap-header {
+.claim-header {
   position: static;
   left: 0%;
   bottom: 24px;
@@ -41,7 +36,7 @@ background-color: transparent;
 }
 
 
-.swap {
+.claim {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -92,28 +87,13 @@ background-color: transparent;
     font-size: 18px;
     line-height: 27px;
   } 
-  .swap-token {
-    position: static;
-    left: 0%;
-    right: 32.69%;
-    top: 0%;
-    bottom: 0%;
-  }
-  .swap-balance {
+  .claim-balance {
     position: static;
     left: 67.31%;
     right: 16.35%;
     top: 0%;
     bottom: 0%;
-  }
-  .swap-unlocked {
-    position: static;
-    left: 83.65%;
-    right: 0%;
-    top: 0%;
-    bottom: 0%;
-  }
-  .swap-button{
+  .claim-button{
     position: static;
     width: 172px;
   }

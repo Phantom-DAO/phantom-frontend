@@ -1,5 +1,5 @@
 import { Box, Grid, Paper, Typography, Zoom, SvgIcon } from "@material-ui/core";
-import "./swap.scss";
+import "./claim.scss";
 
 // for wallet access see const in swap function
 import { useWeb3Context } from "src/hooks/web3Context";
@@ -31,51 +31,29 @@ function Swap() {
   });
 
   return (
-    <div id="swap-view">
+    <div id="claim-view">
       <Zoom in={true}>
-        <Paper className={`swap-card`}>
+        <Paper className={`claim-card`}>
           <Grid container direction="column" spacing={7}>
             <Grid item>
-              <Box className="swap-header">
-                <Typography variant="h3">Swap tokens</Typography>
-                <Typography variant="h5">Swap your aPHM or fPHM tokens</Typography>
+              <Box className="claim-header">
+                <Typography variant="h1">Phantom</Typography>
+                <Typography variant="h5">Claim your whitelist allocation</Typography>
               </Box>
             </Grid>
             <Grid item>
-              <div className="swap">
+              <div className="claim">
                 <Grid container spacing={2} alignItems="flex-end">
                   <Grid item xs={12} sm={4} md={4} lg={4}>
-                    <div className="swap-tokens">
-                      <Typography variant="h5">SWAP</Typography>
-                      <Typography variant="h4">image aPHM to PHM</Typography>
-                      <Typography variant="h4">image fPHM to PHM</Typography>
-                    </div>
-                  </Grid>
-                  <Grid item xs={12} sm={4} md={4} lg={4}>
-                    <div className="swap-balance">
-                      <Typography variant="h5">BALANCE</Typography>
+                    <div className="claim-balance">
+                      <Typography variant="h5">YOUR ALLOCATION</Typography>
                       <Typography variant="h4">
                         {isAppLoading ? <Skeleton width="80px" /> : <>{trim(ohmBalance, 4)} OHM</>}
                       </Typography>
-                      <Typography variant="h4">
-                        {isAppLoading ? <Skeleton width="80px" /> : <>{trim(sohmBalance, 4)} sOHM</>}
-                      </Typography>
                     </div>
                   </Grid>
                   <Grid item xs={12} sm={4} md={4} lg={4}>
-                    <div className="swap-unlocked">
-                      <Typography variant="h5">UNLOCKED</Typography>
-                      <Typography variant="h4">
-                        {isAppLoading ? <Skeleton width="80px" /> : <>{trim(ohmBalance, 4)} OHM</>}
-                      </Typography>
-                      <Typography variant="h4">
-                        {isAppLoading ? <Skeleton width="80px" /> : <>{trim(sohmBalance, 4)} sOHM</>}
-                      </Typography>
-                    </div>
-                  </Grid>
-                  <Grid item xs={12} sm={4} md={4} lg={4}>
-                    <div className="swap-button">
-                      <Typography variant="h4">button</Typography>
+                    <div className="claim-button">
                       <Typography variant="h4">button</Typography>
                     </div>
                   </Grid>
@@ -89,4 +67,4 @@ function Swap() {
   );
 }
 
-export default Swap;
+export default Claim;
