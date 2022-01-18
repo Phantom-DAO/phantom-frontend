@@ -222,6 +222,10 @@ function App() {
               <Swap />
             </Route>
 
+            <Route path="/claim">
+              <Claim />
+            </Route>
+
             <Route path="/auction">
               <Auction />
             </Route>
