@@ -51,7 +51,7 @@ function Swap() {
                       <Typography variant="h4">image fPHM to PHM</Typography>
                     </div>
                   </Grid>
-                  <Grid item xs={8} sm={3} md={3} lg={3}>
+                  <Grid item xs={12} sm={4} md={4} lg={4}>
                     <div className="swap-balance">
                       <Typography variant="h5">BALANCE</Typography>
                       <Typography variant="h4">
@@ -62,7 +62,7 @@ function Swap() {
                       </Typography>
                     </div>
                   </Grid>
-                  <Grid item xs={8} sm={3} md={3} lg={3}>
+                  <Grid item xs={12} sm={4} md={4} lg={4}>
                     <div className="swap-unlocked">
                       <Typography variant="h5">UNLOCKED</Typography>
                       <Typography variant="h4">
@@ -73,7 +73,7 @@ function Swap() {
                       </Typography>
                     </div>
                   </Grid>
-                  <Grid item xs={4} sm={1} md={1} lg={1}>
+                  <Grid item xs={12} sm={4} md={4} lg={4}>
                     <div className="swap-button">
                       <Typography variant="h4">button</Typography>
                       <Typography variant="h4">button</Typography>
