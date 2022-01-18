@@ -23,16 +23,16 @@ function Swap() {
   const [quantity, setQuantity] = useState("");
   const isAppLoading = useSelector(state => state.app.loading);
 
-  const aphmBalance = useSelector(state => {
-    return state.account.balances && state.account.balances.aphm;
+  const ohmBalance = useSelector(state => {
+    return state.account.balances && state.account.balances.ohm;
   });
-  const fphmBalance = useSelector(state => {
-    return state.account.balances && state.account.balances.fphm;
+  const sohmBalance = useSelector(state => {
+    return state.account.balances && state.account.balances.sohm;
   });
 
   return (
     <div id="swap-view">
-      <Zoom in={true} onEntered={() => setZoomed(true)}>
+      <Zoom in={true}>
         <Paper className={`swap-card`}>
           <Grid container direction="column" spacing={7}>
             <Grid item>
@@ -44,36 +44,36 @@ function Swap() {
             <Grid item>
               <div className="swap">
                 <Grid container spacing={2} alignItems="flex-end">
-                  <Grid item xs={12} sm={5} md={5} lg={5}>
+                  <Grid item xs={12} sm={4} md={4} lg={4}>
                     <div className="swap-tokens">
                       <Typography variant="h5">SWAP</Typography>
                       <Typography variant="h4">image aPHM to PHM</Typography>
                       <Typography variant="h4">image fPHM to PHM</Typography>
                     </div>
                   </Grid>
-                  <Grid item xs={12} sm={3} md={3} lg={3}>
+                  <Grid item xs={12} sm={4} md={4} lg={4}>
                     <div className="swap-balance">
                       <Typography variant="h5">BALANCE</Typography>
                       <Typography variant="h4">
-                        {isAppLoading ? <Skeleton width="80px" /> : <>{trim(aphmBalance, 4)} OHM</>}
+                        {isAppLoading ? <Skeleton width="80px" /> : <>{trim(ohmBalance, 4)} OHM</>}
                       </Typography>
                       <Typography variant="h4">
-                        {isAppLoading ? <Skeleton width="80px" /> : <>{trim(fphmBalance, 4)} sOHM</>}
+                        {isAppLoading ? <Skeleton width="80px" /> : <>{trim(sohmBalance, 4)} sOHM</>}
                       </Typography>
                     </div>
                   </Grid>
-                  <Grid item xs={12} sm={3} md={3} lg={3}>
+                  <Grid item xs={12} sm={4} md={4} lg={4}>
                     <div className="swap-unlocked">
                       <Typography variant="h5">UNLOCKED</Typography>
                       <Typography variant="h4">
-                        {isAppLoading ? <Skeleton width="80px" /> : <>{trim(aphmBalance, 4)} OHM</>}
+                        {isAppLoading ? <Skeleton width="80px" /> : <>{trim(ohmBalance, 4)} OHM</>}
                       </Typography>
                       <Typography variant="h4">
-                        {isAppLoading ? <Skeleton width="80px" /> : <>{trim(fphmBalance, 4)} sOHM</>}
+                        {isAppLoading ? <Skeleton width="80px" /> : <>{trim(sohmBalance, 4)} sOHM</>}
                       </Typography>
                     </div>
                   </Grid>
-                  <Grid item xs={12} sm={2} md={2} lg={2}>
+                  <Grid item xs={12} sm={4} md={4} lg={4}>
                     <div className="swap-button">
                       <Typography variant="h4">button</Typography>
                       <Typography variant="h4">button</Typography>

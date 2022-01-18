@@ -1,123 +1,125 @@
 #swap-view {
-/* Auto layout */
-display: flex;
-padding: 0px;
-
-position: absolute;
-width: 1236px;
-/*left: 509*/
-left: 26%;
-
-}
-
-.swap-header {
-  position: static;
-  left: 0%;
-  bottom: 24px;
-   
-  /* Inside auto layout */
-  flex: none;
-  order: 0;
-  flex-grow: 0;
-  margin: 24px 0px;
-
-  h3 {
-    font-family: Poppins;
-    font-style: normal;
-    font-weight: 600;
-    font-size: 27px;
-    line-height: 40px;
-  }
-  h5 {
-    font-family: Poppins;
-    font-style: normal;
-    font-weight: 500;
-    font-size: 14px;
-    line-height: 21px;
-    opacity: 0.5;
-  }
-}
-
-
-.swap {
+  /* Auto layout */
   display: flex;
   flex-direction: column;
-  padding: 24px;
+  align-items: flex-start;
+  padding: 0px;
   
-  position: static;
-  /*width: 1236px;*/
-  left: 0px;
-
-
-  /* Phantom-module-background */
-  background: #0C0B17;
-
-  /* Border */
-  border: 1px solid rgba(255, 255, 255, 0.1);
-
-  /* Phantom-purple-glow */
-  box-shadow: 0px 0px 64px rgba(119, 34, 252, 0.1);
-  border-radius: 12px;
-
-  /* Inside auto layout */
-  flex: none;
-  order: 1;
-  align-self: stretch;
-  flex-grow: 0;
-  margin: 24px 0px;
-
-  h3 {
-    font-family: Poppins;
-    font-style: normal;
-    font-weight: 600;
-    font-size: 27px;
-    line-height: 40px;
+  position: absolute;
+  width: 1236px;
+  left: 509px;
+  background-color: transparent;
+   
   }
-  h5 {
-    font-family: Poppins;
-    font-style: normal;
-    font-weight: 500;
-    font-size: 14px;
-    line-height: 21px;
-    text-transform: uppercase;
-    opacity: 0.5;
-  }
-  h4 {
-    font-family: Poppins;
-    font-style: normal;
-    font-weight: 500;
-    font-size: 18px;
-    line-height: 27px;
-  } 
-  .swap-token {
+  
+  .swap-header {
     position: static;
     left: 0%;
-    right: 56.63%;
-    top: 0%;
-    bottom: 0%;
-  }
-  .swap-balance {
-    position: static;
-    left: 56.63%;
-    right: 13.75%;
-    top: 0%;
-    bottom: 0%;
-  }
-  .swap-unlocked {
-    position: static;
-    left: 70.38%;
-    right: 12.14%;
-    top: 0%;
-    bottom: 0%;
-  }
-  .swap-button{
-    position: static;
-    left: 82.52;
-    right: 100%;
-  }
-}
+    bottom: 24px;
+     
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+    margin: 24px 0px;
   
-.body2 {
-    align-items: center;
-    text-align: center;   
-}
+    h3 {
+      font-family: Poppins;
+      font-style: normal;
+      font-weight: 600;
+      font-size: 27px;
+      line-height: 40px;
+    }
+    h5 {
+      font-family: Poppins;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 21px;
+      opacity: 0.5;
+    }
+  }
+  
+  
+  .swap {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 24px;
+    
+    position: static;
+    width: 1236px;
+    left: 0px;
+  
+  
+    /* Phantom-module-background */
+    background: #0C0B17;
+  
+    /* Border */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  
+    /* Phantom-purple-glow */
+    box-shadow: 0px 0px 64px rgba(119, 34, 252, 0.1);
+    border-radius: 12px;
+  
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    align-self: stretch;
+    flex-grow: 0;
+    margin: 24px 0px;
+  
+    h3 {
+      font-family: Poppins;
+      font-style: normal;
+      font-weight: 600;
+      font-size: 27px;
+      line-height: 40px;
+    }
+    h5 {
+      font-family: Poppins;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 21px;
+      text-transform: uppercase;
+      opacity: 0.5;
+    }
+    h4 {
+      font-family: Poppins;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 18px;
+      line-height: 27px;
+    } 
+    .swap-token {
+      position: static;
+      left: 0%;
+      right: 32.69%;
+      top: 0%;
+      bottom: 0%;
+    }
+    .swap-balance {
+      position: static;
+      left: 67.31%;
+      right: 16.35%;
+      top: 0%;
+      bottom: 0%;
+    }
+    .swap-unlocked {
+      position: static;
+      left: 83.65%;
+      right: 0%;
+      top: 0%;
+      bottom: 0%;
+    }
+    .swap-button{
+      position: static;
+      width: 172px;
+    }
+  }
+    
+  .body2 {
+      align-items: center;
+      text-align: center;   
+  }
