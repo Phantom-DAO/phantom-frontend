@@ -44,14 +44,14 @@ function Swap() {
             <Grid item>
               <div className="swap">
                 <Grid container spacing={2} alignItems="flex-end">
-                  <Grid item xs={5} sm={5} md={5} lg={5}>
+                  <Grid item xs={12} sm={5} md={5} lg={5}>
                     <div className="swap-tokens">
                       <Typography variant="h5">SWAP</Typography>
                       <Typography variant="h4">image aPHM to PHM</Typography>
                       <Typography variant="h4">image fPHM to PHM</Typography>
                     </div>
                   </Grid>
-                  <Grid item xs={3} sm={3} md={3} lg={3}>
+                  <Grid item xs={12} sm={3} md={3} lg={3}>
                     <div className="swap-balance">
                       <Typography variant="h5">BALANCE</Typography>
                       <Typography variant="h4">
@@ -62,7 +62,7 @@ function Swap() {
                       </Typography>
                     </div>
                   </Grid>
-                  <Grid item xs={3} sm={3} md={3} lg={3}>
+                  <Grid item xs={12} sm={3} md={3} lg={3}>
                     <div className="swap-unlocked">
                       <Typography variant="h5">UNLOCKED</Typography>
                       <Typography variant="h4">
@@ -73,7 +73,7 @@ function Swap() {
                       </Typography>
                     </div>
                   </Grid>
-                  <Grid item xs={2} sm={2} md={2} lg={2}>
+                  <Grid item xs={12} sm={2} md={2} lg={2}>
                     <div className="swap-button">
                       <Typography variant="h4">button</Typography>
                       <Typography variant="h4">button</Typography>
