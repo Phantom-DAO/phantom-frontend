@@ -31,7 +31,6 @@ function Claim() {
     </Button>,
   );
 
-
   const ohmBalance = useSelector(state => {
     return state.account.balances && state.account.balances.ohm;
   });
@@ -73,7 +72,7 @@ function Claim() {
                     <Grid item xs={4} sm={1} md={1} lg={1}>
                       <div className="claim-button">
                         <Typography variant="h4">
-                          <Button variant="contained" color="primary" className="claim-button" onClick="" key={1}>
+                          <Button variant="contained" color="primary" className="claim-button" onClick="" key="">
                             Claim
                           </Button>
                         </Typography>
