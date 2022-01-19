@@ -23,6 +23,15 @@ function Claim() {
   const [quantity, setQuantity] = useState("");
   const isAppLoading = useSelector(state => state.app.loading);
 
+  let modalButton = [];
+
+  modalButton.push(
+    <Button variant="contained" color="primary" className="connect-button" onClick={connect} key={1}>
+      Connect Wallet
+    </Button>,
+  );
+
+
   const ohmBalance = useSelector(state => {
     return state.account.balances && state.account.balances.ohm;
   });
@@ -34,7 +43,7 @@ function Claim() {
     <div id="claim-view">
       <Zoom in={true}>
         <Paper className={`claim-card`}>
-          <Grid container direction="column" spacing={7}>
+          <Grid container direction="column" spacing={1}>
             <Grid item>
               <Box className="claim-header">
                 <Typography variant="h1">Phantom</Typography>
@@ -43,21 +52,32 @@ function Claim() {
             </Grid>
             <Grid item>
               <div className="claim">
-                <Grid container spacing={2} alignItems="flex-end">
-                  <Grid item xs={12} sm={4} md={4} lg={4}>
-                    <div className="claim-balance">
-                      <Typography variant="h5">YOUR ALLOCATION</Typography>
-                      <Typography variant="h4">
-                        {isAppLoading ? <Skeleton width="80px" /> : <>{trim(ohmBalance, 4)} OHM</>}
-                      </Typography>
+                {!address ? (
+                  <div className="stake-wallet-notification">
+                    <div className="wallet-menu" id="wallet-menu">
+                      {modalButton}
                     </div>
+                    <Typography variant="h6">Connect your wallet to stake</Typography>
+                  </div>
+                ) : (
+                 <>
+                  <Grid container spacing={2} alignItems="flex-end">
+                    <Grid item xs={4} sm={1} md={1} lg={1}>
+                      <div className="claim-balance">
+                        <Typography variant="h5">YOUR ALLOCATION</Typography>
+                        <Typography variant="h4">
+                          {isAppLoading ? <Skeleton width="80px" /> : <>{trim(ohmBalance, 4)} OHM</>}
+                        </Typography>
+                      </div>
+                    </Grid>
+                    <Grid item xs={4} sm={1} md={1} lg={1}>
+                      <div className="claim-button">
+                        <Typography variant="h4">button</Typography>
+                      </div>
+                    </Grid>
                   </Grid>
-                  <Grid item xs={12} sm={4} md={4} lg={4}>
-                    <div className="claim-button">
-                      <Typography variant="h4">button</Typography>
-                    </div>
-                  </Grid>
-                </Grid>
+                 </>
+                )}
               </div>
             </Grid>
           </Grid>
