@@ -68,18 +68,7 @@ function Claim() {
             </Grid>
             <Grid item>
               <div className="claim">
-              {!address ? (
-                  <div className="stake-wallet-notification">
-                    <div className="wallet-menu" id="wallet-menu">
-                      {modalButton}
-                    </div>
-                    <Typography variant="h6">Connect your wallet to stake</Typography>
-                  </div>
-                ) : (
-                 <>
 
-                 </>
-                )} 
               </div>
             </Grid>
           </Grid>
