@@ -68,6 +68,11 @@ function Claim() {
             </Grid>
             <Grid item>
               <div className="claim">
+                {!address ? (
+                  <Typography variant="h5">no wallet</Typography>
+                ) : (
+                  <Typography variant="h5">wallet connected</Typography>
+                )}
 
               </div>
             </Grid>
