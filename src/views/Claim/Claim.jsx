@@ -68,10 +68,10 @@ function Claim() {
             </Grid>
             <Grid item>
               <div className="claim">
-                {!address ? (
-                  <Typography variant="h5">no wallet</Typography>
+                {address ? (
+                  <Typography variant="h5">wallet</Typography>
                 ) : (
-                  <Typography variant="h5">wallet connected</Typography>
+                  <Typography variant="h5">no wallet</Typography>
                 )}
 
               </div>
