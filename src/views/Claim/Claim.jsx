@@ -72,7 +72,11 @@ function Claim() {
                     </Grid>
                     <Grid item xs={4} sm={1} md={1} lg={1}>
                       <div className="claim-button">
-                        <Typography variant="h4">button</Typography>
+                        <Typography variant="h4">
+                          <Button variant="contained" color="primary" className="claim-button" onClick="" key={1}>
+                            Claim
+                          </Button>
+                        </Typography>
                       </div>
                     </Grid>
                   </Grid>
