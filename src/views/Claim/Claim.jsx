@@ -1,4 +1,4 @@
-import { Box, Grid, Paper, Typography, Zoom, SvgIcon } from "@material-ui/core";
+import { Box, Button, Grid, Paper, Typography, Zoom, SvgIcon } from "@material-ui/core";
 import "./claim.scss";
 
 // for wallet access see const in swap function
@@ -51,7 +51,36 @@ function Claim() {
             </Grid>
             <Grid item>
               <div className="claim">
- 
+              {!address ? (
+                  <div className="stake-wallet-notification">
+                    <div className="wallet-menu" id="wallet-menu">
+                      {modalButton}
+                    </div>
+                    <Typography variant="h6">Connect your wallet to stake</Typography>
+                  </div>
+                ) : (
+                 <>
+                  <Grid container spacing={2} alignItems="flex-end">
+                    <Grid item xs={4} sm={1} md={1} lg={1}>
+                      <div className="claim-balance">
+                        <Typography variant="h5">YOUR ALLOCATION</Typography>
+                        <Typography variant="h4">
+                          {isAppLoading ? <Skeleton width="80px" /> : <>{trim(ohmBalance, 4)} OHM</>}
+                        </Typography>
+                      </div>
+                    </Grid>
+                    <Grid item xs={4} sm={1} md={1} lg={1}>
+                      <div className="claim-button">
+                        <Typography variant="h4">
+                          <Button variant="contained" color="primary" className="claim-button" onClick="" key="">
+                            Claim
+                          </Button>
+                        </Typography>
+                      </div>
+                    </Grid>
+                  </Grid>
+                 </>
+                )} 
               </div>
             </Grid>
           </Grid>
