@@ -40,13 +40,13 @@ function Claim() {
   const [quantity, setQuantity] = useState("");
   const isAppLoading = useSelector(state => state.app.loading);
 
-  let modalButton = [];
+  // let modalButton = [];
 
-  modalButton.push(
-    <Button variant="contained" color="primary" className="connect-button" onClick={connect} key={1}>
-      Connect Wallet
-    </Button>,
-  );
+  // modalButton.push(
+  //   <Button variant="contained" color="primary" className="connect-button" onClick={connect} key={1}>
+  //     Connect Wallet
+  //   </Button>,
+  // );
 
   const ohmBalance = useSelector(state => {
     return state.account.balances && state.account.balances.ohm;
@@ -68,25 +68,25 @@ function Claim() {
             </Grid>
             <Grid item>
               <div className="claim">
-              <Grid container spacing={2} alignItems="flex-end">
-                <Grid item xs={4} sm={1} md={1} lg={1}>
-                  <div className="claim-balance">
-                    <Typography variant="h5">YOUR ALLOCATION</Typography>
-                    <Typography variant="h4">
-                      {isAppLoading ? <Skeleton width="80px" /> : <>{trim(ohmBalance, 4)} OHM</>}
-                    </Typography>
-                  </div>
+                <Grid container spacing={2} alignItems="flex-end">
+                  <Grid item xs={4} sm={1} md={1} lg={1}>
+                    <div className="claim-balance">
+                      <Typography variant="h5">YOUR ALLOCATION</Typography>
+                      <Typography variant="h4">
+                        {isAppLoading ? <Skeleton width="80px" /> : <>{trim(ohmBalance, 4)} OHM</>}
+                      </Typography>
+                    </div>
+                  </Grid>
+                  <Grid item xs={4} sm={1} md={1} lg={1}>
+                    <div className="claim-button">
+                      <Typography variant="h4">
+                        <Button variant="contained" color="primary" className="claim-button" onClick="" key="">
+                          Claim
+                        </Button>
+                      </Typography>
+                    </div>
+                  </Grid>
                 </Grid>
-                <Grid item xs={4} sm={1} md={1} lg={1}>
-                  <div className="claim-button">
-                    <Typography variant="h4">
-                      <Button variant="contained" color="primary" className="claim-button" onClick="" key="">
-                        Claim
-                      </Button>
-                    </Typography>
-                  </div>
-                </Grid>
-              </Grid>
               </div>
             </Grid>
           </Grid>
