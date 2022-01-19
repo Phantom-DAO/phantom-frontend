@@ -51,7 +51,7 @@ function Claim() {
             </Grid>
             <Grid item>
               <div className="claim">
-                {!address ? (
+              {!address ? (
                   <div className="stake-wallet-notification">
                     <div className="wallet-menu" id="wallet-menu">
                       {modalButton}
