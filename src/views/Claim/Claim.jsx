@@ -16,7 +16,7 @@ import { getOhmTokenImage, getTokenImage, trim } from "../../helpers";
 //const aPHMImg = getaPHMTokenImage("");
 //const fPHMImg = getfPHMTokenImage("");
 
-function Swap() {
+function Claim() {
   const { provider, address, connected, connect, chainID } = useWeb3Context();
   const [zoomed, setZoomed] = useState(false);
   const [view, setView] = useState(0);
