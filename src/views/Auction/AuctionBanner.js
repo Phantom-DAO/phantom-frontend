@@ -9,7 +9,8 @@ import {
 import aPhmLogo from "./../../assets/icons/token-aPHM-alt.png";
 import { ReactComponent as DiscordIcon } from "./../../assets/icons/discord.svg";
 import curvesImage from "./../../assets/images/Curves.png";
-const AuctionBanner = () => {
+
+const AuctionBanner = ({ tokenPrice }) => {
   const theme = useTheme();
   return (
     <Box
@@ -60,7 +61,7 @@ const AuctionBanner = () => {
         <Typography variant="h5" color="textSecondary">
           CURRENT PRICE
         </Typography>
-        <Typography variant="h5">2,222 FRAX</Typography>
+        <Typography variant="h5">{Math.round(tokenPrice * 100) / 100} FRAX</Typography>
       </Box>
       <Box
         sx={{

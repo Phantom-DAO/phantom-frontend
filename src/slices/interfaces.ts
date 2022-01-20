@@ -66,3 +66,9 @@ export interface IRedeemAllBondsAsyncThunk extends IBaseAsyncThunk {
   readonly address: string;
   readonly autostake: boolean;
 }
+
+// Auction Slice
+
+export interface ICommitTokensAsyncThunk extends IBaseAddressAsyncThunk {
+  readonly quantity: string;
+}

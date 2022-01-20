@@ -11,11 +11,11 @@ import { NodeHelper } from "src/helpers/NodeHelper";
  * @returns string
  */
 function getTestnetURI() {
-  return process.env.REACT_APP_TESTNET_RPC_URL || "";
+  return process.env.REACT_APP_TESTNET_RPC_URL || "https://rpc.testnet.fantom.network/";
 }
 
 function getMainnetURI() {
-  return process.env.REACT_APP_RPC_URL || "";
+  return process.env.REACT_APP_RPC_URL || "https://rpc.ftm.tools/";
 }
 
 /**

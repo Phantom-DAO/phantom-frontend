@@ -1,6 +1,7 @@
 import { EPOCH_INTERVAL, BLOCK_RATE_SECONDS, addresses } from "../constants";
 import { BigNumber, ethers } from "ethers";
 import axios from "axios";
+import moment from "moment";
 import { abi as PairContractABI } from "../abi/PairContract.json";
 import { abi as RedeemHelperABI } from "../abi/RedeemHelper.json";
 
@@ -219,4 +220,44 @@ export const toBN = (num: number) => {
 
 export const bnToNum = (bigNum: BigNumber) => {
   return Number(bigNum.toString());
+};
+
+// format number - add thousands/decimals specific separators
+export const formatNumber = (number: number, decimals: number, dec_point: string, thousands_sep: string) => {
+  let n = !isFinite(+number) ? 0 : +number,
+    prec = !isFinite(+decimals) ? 0 : Math.abs(decimals),
+    sep = typeof thousands_sep === "undefined" ? "," : thousands_sep,
+    dec = typeof dec_point === "undefined" ? "." : dec_point,
+    toFixedFix = (n: number, prec: number) => {
+      // Fix for IE parseFloat(0.55).toFixed(0) = 0;
+      let k = Math.pow(10, prec);
+      return Math.round(n * k) / k;
+    },
+    s = (prec ? toFixedFix(n, prec) : Math.round(n)).toString().split(".");
+  if (s[0].length > 3) {
+    s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep);
+  }
+  if ((s[1] || "").length < prec) {
+    s[1] = s[1] || "";
+    s[1] += new Array(prec - s[1].length + 1).join("0");
+  }
+  return s.join(dec);
+};
+
+export const durationAsString = (start: number, end: number) => {
+  const duration = moment.duration(moment(end).diff(moment(start)));
+
+  //Get Days
+  const days = Math.floor(duration.asDays()); // .asDays returns float but we are interested in full days only
+  const daysFormatted = days ? `${days}D ` : ""; // if no full days then do not display it at all
+
+  //Get Hours
+  const hours = duration.hours();
+  const hoursFormatted = `${hours}H `;
+
+  //Get Minutes
+  const minutes = duration.minutes();
+  const minutesFormatted = `${minutes}Min`;
+
+  return [daysFormatted, hoursFormatted, minutesFormatted].join("");
 };
