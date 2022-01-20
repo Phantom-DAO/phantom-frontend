@@ -70,7 +70,7 @@ function Claim() {
               <div className="claim">
                 {!address ? (
                   <Grid container spacing={2} alignItems="flex-end">
-                    <Grid item xs={4} sm={1} md={1} lg={1}>
+                    <Grid item xs={8} sm={2} md={2} lg={2}>
                       <div className="stake-wallet-notification">
                         {/* <div className="wallet-menu" id="wallet-menu">
                           <Button variant="contained" color="primary" className="connect-button" onClick={connect} key={1}>
