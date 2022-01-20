@@ -73,8 +73,8 @@ function Claim() {
                     <Grid item xs={8} sm={2} md={2} lg={2}>
                       <div className="claim-wallet-notification">
                         <div className="wallet-menu" id="wallet-menu">
-                          <Button variant="contained" color="primary" className="connect-button">
-                          {/* onClick={connect} key={1} */}
+                          <Button>
+                          {/* variant="contained" color="primary" className="connect-button" onClick={connect} key={1} */}
                             Connect Wallet
                           </Button>
                         </div>
