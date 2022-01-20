@@ -72,11 +72,11 @@ function Claim() {
                   <Grid container spacing={2} alignItems="flex-end">
                     <Grid item xs={4} sm={1} md={1} lg={1}>
                       <div className="stake-wallet-notification">
-                        <div className="wallet-menu" id="wallet-menu">
+                        {/* <div className="wallet-menu" id="wallet-menu">
                           <Button variant="contained" color="primary" className="connect-button" onClick={connect} key={1}>
                             Connect Wallet
                           </Button>
-                        </div>
+                        </div> */}
                         <Typography variant="h6">Connect your wallet to stake</Typography>
                       </div>
                     </Grid>
@@ -94,9 +94,10 @@ function Claim() {
                     <Grid item xs={4} sm={1} md={1} lg={1}>
                       <div className="claim-button">
                         <Typography variant="h4">
-                          <Button variant="contained" color="primary" className="claim-button" onClick="" key="">
+                          {/* <Button variant="contained" color="primary" className="claim-button" onClick="" key="">
                             Claim
-                          </Button>
+                          </Button> */}
+                          button
                         </Typography>
                       </div>
                     </Grid>
