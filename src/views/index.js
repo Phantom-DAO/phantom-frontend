@@ -5,6 +5,5 @@ export { default as Swap } from "./swap/swap";
 export { default as Claim } from "./Claim/Claim";
 export { default as Wrap } from "./Wrap/Wrap";
 export { default as Dashboard } from "./Dashboard/Dashboard";
-export { default as PoolTogether } from "./33Together/33Together.jsx";
 export { default as TreasuryDashboard } from "./TreasuryDashboard/TreasuryDashboard";
 export { default as Auction } from "./Auction/Auction";
