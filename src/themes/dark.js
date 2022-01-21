@@ -105,9 +105,9 @@ export const dark = responsiveFontSizes(
             },
             "&.claim-card": {
               backgroundColor: darkTheme.paperBg,
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              boxShadow: '0px 0px 64px rgba(119, 34, 252, 0.1)',
-              borderRadius: '12px'
+              border: "1px solid rgba(255, 255, 255, 0.1)",
+              boxShadow: "0px 0px 64px rgba(119, 34, 252, 0.1)",
+              borderRadius: "12px",
             },
           },
         },

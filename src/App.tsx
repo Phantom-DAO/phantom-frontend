@@ -27,7 +27,7 @@ import NotFound from "./views/404/NotFound";
 import { dark as darkTheme } from "./themes/dark.js";
 import { light as lightTheme } from "./themes/light.js";
 import { girth as gTheme } from "./themes/girth.js";
-import WhiteList from './Whitelist'
+import WhiteList from "./Whitelist";
 import "./style.scss";
 
 // 😬 Sorry for all the console logging
@@ -195,13 +195,13 @@ function App() {
     return (
       <ThemeProvider theme={themeMode}>
         <CssBaseline />
-        <Claim/>
+        <Claim />
       </ThemeProvider>
     );
   } else {
     return (
       <ThemeProvider theme={themeMode}>
-              {console.log("im finally here")}
+        {console.log("im finally here")}
         <CssBaseline />
         {/* {isAppLoading && <LoadingSplash />} */}
         <div className={`app ${isSmallerScreen && "tablet"} ${isSmallScreen && "mobile"} ${theme}`}>
