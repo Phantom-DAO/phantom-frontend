@@ -43,9 +43,9 @@ function Claim() {
   let modalButton = [];
 
   modalButton.push(
-    <Button variant="contained" color="primary" className="connect-button" onClick={connect} key={1}>
+    <Button variant="contained" color="primary" className="connect-button" onClick="" key={1}>
       Connect Wallet
-    </Button>
+    </Button>,
   );
 
   const ohmBalance = useSelector(state => {
