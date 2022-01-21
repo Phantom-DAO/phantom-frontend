@@ -97,3 +97,15 @@ padding: 0px;
     align-items: center;
     text-align: center;   
 }
+
+.claim-wallet-notification {
+  text-align: center;
+  .wallet-menu {
+    text-align: center;
+    .connect-button {
+      max-width: 300px !important;
+      min-width: 240px !important;
+      margin-bottom: 15px;
+    }
+  }
+}
