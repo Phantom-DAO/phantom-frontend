@@ -69,16 +69,12 @@ function Claim() {
             <Grid item>
               <div className="claim">
                 {!address ? (
-                  <Grid container spacing={2} alignItems="flex-end">
-                    <Grid item xs={8} sm={4} md={4} lg={4}>
                       <div className="claim-wallet-notification">
                         <div className="wallet-menu" id="wallet-menu">
                           {modalButton}
                         </div>
                         <Typography variant="h5">Connect your wallet to stake</Typography>
                       </div>
-                    </Grid>
-                  </Grid>
                 ) : (
                   <Grid container spacing={2} direction="row" alignItems="flex-end">
                     <Grid item xs={4} sm={1} md={1} lg={1}>
