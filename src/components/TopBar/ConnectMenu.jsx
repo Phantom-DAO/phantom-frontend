@@ -64,7 +64,7 @@ function ConnectMenu({ theme }) {
       <Button
         id="wallet-button"
         className={buttonStyles}
-        variant="contained"
+        variant="outlined"
         color="secondary"
         size="large"
         style={pendingTransactions.length > 0 ? { color: primaryColor } : {}}

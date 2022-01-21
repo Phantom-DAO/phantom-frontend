@@ -180,10 +180,11 @@ function App() {
     setIsSidebarExpanded(false);
   };
 
-  let themeMode = theme === "light" ? lightTheme : theme === "dark" ? darkTheme : gTheme;
+  // let themeMode = theme === "light" ? lightTheme : theme === "dark" ? darkTheme : gTheme;
+  let themeMode = darkTheme;
 
   useEffect(() => {
-    themeMode = theme === "light" ? lightTheme : darkTheme;
+    themeMode = darkTheme;
   }, [theme]);
 
   useEffect(() => {
@@ -235,6 +236,10 @@ function App() {
 
               <Route path="/auction">
                 <Auction />
+              </Route>
+
+              <Route path="/swap">
+                <Swap />
               </Route>
 
               <Route path="/wrap">

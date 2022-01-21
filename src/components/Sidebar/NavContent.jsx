@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 import Social from "./Social";
 import externalUrls from "./externalUrls";
 import { ReactComponent as StakeIcon } from "../../assets/icons/stake.svg";
+import { ReactComponent as SwapIcon } from "../../assets/icons/swap-icon.svg";
 import { ReactComponent as BondIcon } from "../../assets/icons/bond.svg";
 import { ReactComponent as DashboardIcon } from "../../assets/icons/dashboard.svg";
 import { ReactComponent as PhantomIcon } from "../../assets/icons/phantom-nav-header.svg";
@@ -36,6 +37,9 @@ function NavContent() {
       return true;
     }
     if (currentPath.indexOf("auction") >= 0 && page === "auction") {
+      return true;
+    }
+    if (currentPath.indexOf("swap") >= 0 && page === "swap") {
       return true;
     }
     return false;
@@ -165,6 +169,20 @@ function NavContent() {
                   ))}
                 </div>
               </div>
+              <Link
+                component={NavLink}
+                id="swap-nav"
+                to="/swap"
+                isActive={(match, location) => {
+                  return checkPage(match, location, "swap");
+                }}
+                className={`button-dapp-menu ${isActive ? "active" : ""}`}
+              >
+                <Typography variant="h6">
+                  <SvgIcon color="primary" component={SwapIcon} />
+                  <Trans>Swap</Trans>
+                </Typography>
+              </Link>
             </div>
           </div>
         </div>
