@@ -73,11 +73,11 @@ function Claim() {
                     <Grid item xs={8} sm={4} md={4} lg={4}>
                       <div className="claim-wallet-notification">
                         <div className="wallet-menu" id="wallet-menu">
-                          <Button variant="contained" color="primary" className="connect-button" onClick={connect} key={1}>
+                          <Button variant="contained" color="primary" className="connect-button">
                             Connect Wallet
                           </Button>
                         </div>
-                        <Typography variant="h6">Connect your wallet to stake</Typography>
+                        <Typography variant="h5">Connect your wallet to stake</Typography>
                       </div>
                     </Grid>
                   </Grid>
