@@ -1,3 +1,6 @@
+// Start of imports
+// stake.jsx is template
+// core import not all libs in use
 import {
   Box,
   Button,
@@ -16,28 +19,44 @@ import {
   SvgIcon,
 } from "@material-ui/core";
 
+// css formatting
 import "./claim.scss";
 
 // for wallet access see const in swap function
 import { useWeb3Context } from "src/hooks/web3Context";
+import { ethers } from "ethers";
+
+
+import {ConnectButton} from "compoents/ConnectButton";
 
 // maintain state for some settings
 import { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+// 
 import { Skeleton } from "@material-ui/lab";
+
+// get images (svg)
+// use trim on balance in return
 import { getOhmTokenImage, getTokenImage, trim } from "../../helpers";
+
+// end of imports
 
 // TODO: 1 Implementation
 // add getimage to ./helpers/index.tsx
 //const aPHMImg = getaPHMTokenImage("");
 //const fPHMImg = getfPHMTokenImage("");
 
+// start claim code
 function Claim() {
+  // set constants
+  // get wallet values from web3context
   const { provider, address, connected, connect, chainID } = useWeb3Context();
-  const [zoomed, setZoomed] = useState(false);
-  const [view, setView] = useState(0);
-  const [quantity, setQuantity] = useState("");
+  // not implemented in this page (yet)
+  //const [zoomed, setZoomed] = useState(false);
+  //const [view, setView] = useState(0);
+  //const [quantity, setQuantity] = useState("");
+
   const isAppLoading = useSelector(state => state.app.loading);
 
   const ohmBalance = useSelector(state => {
@@ -63,9 +82,7 @@ function Claim() {
                 {!address ? (
                   <div className="claim-wallet-notification">
                     <div className="wallet-menu" id="wallet-menu">
-                      <Button variant="contained" color="primary" className="connect-button" onClick="">
-                        Connect Wallet
-                      </Button>
+                      {ConnectButton}
                     </div>
                     <Typography variant="h5">Connect your wallet to stake</Typography>
                   </div>
