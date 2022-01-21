@@ -1,29 +1,13 @@
 import { Box, Button, Grid, Paper, Typography, Zoom } from "@material-ui/core";
-
 import "./claim.scss";
-
 import { useWeb3Context } from "src/hooks/web3Context";
-
-//import { ethers } from "ethers";
-
 import { useSelector } from "react-redux"; 
-
 import { Skeleton } from "@material-ui/lab";
-
 import { trim } from "../../helpers";
 
-// end of imports
-
 function Claim() {
-  const { provider, address, connected, chainID } = useWeb3Context();
-  //const wConnect = ConnectButton;
-  // not implemented in this page (yet)
-  //const [zoomed, setZoomed] = useState(false);
-  //const [view, setView] = useState(0);
-  //const [quantity, setQuantity] = useState("");
-
+  const { provider, address, connect, connected, chainID } = useWeb3Context();
   const isAppLoading = useSelector(state => state.app.loading);
-
   const ohmBalance = useSelector(state => {
     return state.account.balances && state.account.balances.ohm;
   });
@@ -44,7 +28,7 @@ function Claim() {
                 {!address ? (
                   <div className="claim-wallet-notification">
                     <div className="wallet-menu" id="wallet-menu">
-                      {/* {wConnect} */}Connect
+                      Connect
                     </div>
                     <Typography variant="h5">Connect your wallet to stake</Typography>
                   </div>
