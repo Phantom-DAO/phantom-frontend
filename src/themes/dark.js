@@ -12,7 +12,7 @@ const darkTheme = {
   backgroundColor: "#0E0D1C",
   background: "#0E0D1C",
   paperBg: "#0C0B17",
-  gold: "#F8CC82",
+  gold: "#FFC768",
   gray: "#A3A3A3",
   textHighlightColor: "#F4D092",
   modalBg: "#0C0B17",
@@ -228,7 +228,7 @@ export const dark = responsiveFontSizes(
             },
           },
           outlinedPrimary: {
-            color: darkTheme.color,
+            color: darkTheme.gold,
             borderColor: darkTheme.gold,
             "&:hover": {
               color: "#333",
