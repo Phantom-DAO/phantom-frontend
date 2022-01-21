@@ -27,7 +27,7 @@ import { useWeb3Context } from "src/hooks/web3Context";
 import { ethers } from "ethers";
 
 // use connect button from library
-import { ConnectButton } from "src/components/ConnectButton";
+import ConnectButton from "src/components/ConnectButton";
 
 // maintain state for some settings
 import { useCallback, useState } from "react";
