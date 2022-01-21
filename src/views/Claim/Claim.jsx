@@ -75,7 +75,7 @@ function Claim() {
                         <div className="wallet-menu" id="wallet-menu">
                           {/* <Button> */}
                           {/* variant="contained" color="primary" className="connect-button" onClick={connect} key={1} */}
-                            Connect Wallet
+                          Connect Wallet
                           {/* </Button> */}
                         </div>
                         <Typography variant="h6">Connect your wallet to stake</Typography>

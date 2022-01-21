@@ -76,7 +76,6 @@ function OhmMenu() {
 
   const SOHM_ADDRESS = addresses[networkID].SOHM_ADDRESS;
   const OHM_ADDRESS = addresses[networkID].OHM_ADDRESS;
-  const PT_TOKEN_ADDRESS = addresses[networkID].PT_TOKEN_ADDRESS;
   const WSOHM_ADDRESS = addresses[networkID].WSOHM_ADDRESS;
   const handleClick = event => {
     setAnchorEl(anchorEl ? null : event.currentTarget);
@@ -195,20 +194,6 @@ function OhmMenu() {
                             style={{ height: "25px", width: "25px" }}
                           />
                           <Typography variant="body1">wsOHM</Typography>
-                        </Button>
-                      )}
-                      {PT_TOKEN_ADDRESS && (
-                        <Button
-                          variant="contained"
-                          color="secondary"
-                          onClick={addTokenToWallet("33T", PT_TOKEN_ADDRESS, address)}
-                        >
-                          <SvgIcon
-                            component={t33TokenImg}
-                            viewBox="0 0 1000 1000"
-                            style={{ height: "25px", width: "25px" }}
-                          />
-                          <Typography variant="body1">33T</Typography>
                         </Button>
                       )}
                     </Box>
