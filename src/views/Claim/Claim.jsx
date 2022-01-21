@@ -4,19 +4,10 @@
 import {
   Box,
   Button,
-  FormControl,
   Grid,
-  InputAdornment,
-  InputLabel,
-  Link,
-  OutlinedInput,
   Paper,
-  Tab,
-  Tabs,
   Typography,
   Zoom,
-  Divider,
-  SvgIcon,
 } from "@material-ui/core";
 
 // css formatting
@@ -27,16 +18,14 @@ import { useWeb3Context } from "src/hooks/web3Context";
 //import { ethers } from "ethers";
 
 // use connect button from library
-import ConnectButton from "src/components/ConnectButton";
 
 // maintain state for some settings
-import { useCallback, useState } from "react";
-import { useDispatch, useSelector } from "react-redux"; 
+import { useSelector } from "react-redux"; 
 import { Skeleton } from "@material-ui/lab";
 
 // get images (svg)
 // use trim on balance in return
-import { getOhmTokenImage, getTokenImage, trim } from "../../helpers";
+import { trim } from "../../helpers";
 
 // end of imports
 
@@ -61,9 +50,9 @@ function Claim() {
   const ohmBalance = useSelector(state => {
     return state.account.balances && state.account.balances.ohm;
   });
-  const sohmBalance = useSelector(state => {
-    return state.account.balances && state.account.balances.sohm;
-  });
+  // const sohmBalance = useSelector(state => {
+  //   return state.account.balances && state.account.balances.sohm;
+  // });
 
   return (
     <div id="claim-view">
