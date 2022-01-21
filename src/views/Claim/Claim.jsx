@@ -36,7 +36,7 @@ const Claim = () => {
         }
     }
 };
-
+  
   return (
     <div id="claim-view">
     {address ? (
