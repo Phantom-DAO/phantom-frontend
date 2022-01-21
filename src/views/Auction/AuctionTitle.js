@@ -24,13 +24,13 @@ const AuctionTitle = ({ endTime, auctionStatus }) => {
     >
       <Box>
         <Typography variant="h3" color="textPrimary" style={{ fontWeight: "bold" }}>
-          aPHM Auction
+          Bootstrap auction
         </Typography>
         <Typography variant="h6" color="textSecondary">
-          Commit FRAX to claim aPHM
+          Commit FRAX to claim aPHM and join the phamily
         </Typography>
       </Box>
-      {auctionStatus === "ongoing" && (
+      {auctionStatus === "ongoing" && Boolean(endTime) && (
         <Box sx={{ textAlign: "right" }}>
           <Typography variant="h6" color="textSecondary">
             TIME LEFT

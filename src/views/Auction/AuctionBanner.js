@@ -1,4 +1,5 @@
 import { Box, Divider, IconButton, Link, SvgIcon, Typography, Paper, useTheme } from "@material-ui/core";
+import { Skeleton } from "@material-ui/lab";
 
 import {
   Folder as FolderIcon,
@@ -10,14 +11,13 @@ import aPhmLogo from "./../../assets/icons/token-aPHM-alt.png";
 import { ReactComponent as DiscordIcon } from "./../../assets/icons/discord.svg";
 import curvesImage from "./../../assets/images/Curves.png";
 
-const AuctionBanner = ({ tokenPrice }) => {
+const AuctionBanner = ({ auctionStatus, tokenPrice }) => {
   const theme = useTheme();
   return (
     <Box
       component={Paper}
       sx={{
-        border: "solid 1px",
-        borderColor: theme.palette.text,
+        boxShadow: "0px 0px 64px rgba(119, 34, 252, 0.1)",
         borderRadius: "10px",
         position: "relative",
         minHeight: "100%",
@@ -25,7 +25,7 @@ const AuctionBanner = ({ tokenPrice }) => {
     >
       <Box
         sx={{
-          backgroundColor: "#000000",
+          backgroundColor: "#0C0B17",
           borderRadius: "10px",
           position: "relative",
           borderBottomLeftRadius: "0",
@@ -51,7 +51,8 @@ const AuctionBanner = ({ tokenPrice }) => {
       <Box
         sx={{
           textAlign: "center",
-          backgroundColor: "#161429",
+          background:
+            "linear-gradient(90deg, rgba(22, 20, 41, 0) 0%, #161429 26.64%, #161429 74.23%, rgba(22, 20, 41, 0) 100%)",
           padding: theme.spacing(2, 0),
           borderRadius: "10px",
           borderTopLeftRadius: "0",
@@ -61,21 +62,47 @@ const AuctionBanner = ({ tokenPrice }) => {
         <Typography variant="h5" color="textSecondary">
           CURRENT PRICE
         </Typography>
-        <Typography variant="h5">{Math.round(tokenPrice * 100) / 100} FRAX</Typography>
+        {auctionStatus === "notstarted" ? (
+          <Typography variant="h5">Not available yet</Typography>
+        ) : tokenPrice ? (
+          <Typography variant="h5">{Math.round(tokenPrice * 100) / 100} FRAX</Typography>
+        ) : (
+          <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
+            <Skeleton width="100px" height="40px" />
+          </Box>
+        )}
       </Box>
       <Box
         sx={{
-          backgroundColor: "#000000",
+          backgroundColor: "#0C0B17",
           borderRadius: "10px",
           borderTopLeftRadius: "0",
           borderTopRightRadius: "0",
           padding: theme.spacing(2),
         }}
       >
-        <Typography variant="body1" color="textSecondary" style={{ lineHeight: "1.3125rem" }}>
-          Phantom is a treasury-backed accelerator on Fantom. Everything you know and love about community-owned high
-          APY protocols except one important difference. A portion of Phantom’s treasury is dedicated to an Accelerator
-          program that accepts up-and-coming DeFi startups, NFTs and more.
+        <Typography
+          variant="body1"
+          color="textSecondary"
+          style={{ lineHeight: "1.3125rem", marginBottom: theme.spacing(2) }}
+        >
+          Phantom is a community-owned web3 version of Y-Combinator on Fantom.
+        </Typography>
+        <Typography
+          variant="body1"
+          color="textSecondary"
+          style={{ lineHeight: "1.3125rem", marginBottom: theme.spacing(2) }}
+        >
+          A portion of Phantom’s treasury is dedicated to an Accelerator program that accepts up-and-coming DeFi,
+          Metaverse, Gaming & Education startups.
+        </Typography>
+        <Typography
+          variant="body1"
+          color="textSecondary"
+          style={{ lineHeight: "1.3125rem", marginBottom: theme.spacing(2) }}
+        >
+          Care about adding positive net value to the web3 ecosystem? Backing founders building cool shit? This is for
+          you.
         </Typography>
         <Box
           sx={{

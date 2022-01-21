@@ -45,9 +45,10 @@ export const addresses: IAddresses = {
     PhantomStorage: "0xdc3ECa41F1020748BBe734C1d934cE64a1B4b2Fa",
     PhantomTreasury: "0x613d30088a48CC8BCC6390D0f66f6dd6b8AE76c7",
     PhantomVault: "0xaEABE773466BEe5B246128b487971FE12F520dC3",
-    /* PhantomAuction: "0xe57da0f3e0db8abc47e984d317938028aa0e0b70", // ended */
+
+    /*PhantomAuction: "0xe57da0f3e0db8abc47e984d317938028aa0e0b70", // ended */
     PhantomAuction: "0x8588762f41169425c233931ba306abf247013832", // 20jan-30jan (ongoing)
-    /* PhantomAuction: "0x4358A55CEdE788aAC2F7ec7bE3e91cf6D4A841fb", // 30jan-14feb */
+    /*PhantomAuction: "0x4358A55CEdE788aAC2F7ec7bE3e91cf6D4A841fb", // 30jan-14feb*/
 
     aPHM: "0x0cEd05DEe6471F8bbcaeA61F93615b159EF26197",
     fPHM: "0xE7B53E8A2EaC1Be321AC66bDbD8874Bbe78C155A",

@@ -1,11 +1,12 @@
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { addresses } from "../constants";
 import { abi as ierc20Abi } from "../abi/IERC20.json";
+import { abi as AuctionAbi } from "../abi/auction.json";
 import { abi as sOHMv2 } from "../abi/sOhmv2.json";
 import { abi as fuseProxy } from "../abi/FuseProxy.json";
 import { abi as wsOHM } from "../abi/wsOHM.json";
 
-import { setAll } from "../helpers";
+import { bnToNum, setAll } from "../helpers";
 
 import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "src/store";
@@ -92,6 +93,9 @@ export const loadAccountDetails = createAsyncThunk(
   async ({ networkID, provider, address }: IBaseAddressAsyncThunk, { dispatch }) => {
     const fraxContract = new ethers.Contract(addresses[networkID].frax, ierc20Abi, provider);
     const fraxAllowance = await fraxContract.allowance(address, addresses[networkID].PhantomAuction);
+
+    const auctionContract = new ethers.Contract(addresses[networkID].PhantomAuction as string, AuctionAbi, provider);
+    const tokensClaimable = await auctionContract.tokensClaimable(address);
     // const ohmContract = new ethers.Contract(addresses[networkID].OHM_ADDRESS as string, ierc20Abi, provider) as IERC20;
     // const stakeAllowance = await ohmContract.allowance(address, addresses[networkID].STAKING_HELPER_ADDRESS);
 
@@ -107,7 +111,8 @@ export const loadAccountDetails = createAsyncThunk(
 
     return {
       auction: {
-        fraxAllowance: +fraxAllowance,
+        fraxAllowance: bnToNum(fraxAllowance) / Math.pow(10, 18),
+        tokensClaimable: bnToNum(tokensClaimable) / Math.pow(10, 18),
       },
       // staking: {
       //   ohmStake: +stakeAllowance,

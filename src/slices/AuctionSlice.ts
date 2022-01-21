@@ -7,16 +7,23 @@ import { abi as ierc20ABI } from "../abi/IERC20.json";
 import { addresses } from "../constants";
 import { bnToNum, setAll } from "../helpers";
 import { RootState } from "src/store";
-import { IBaseAsyncThunk, IJsonRPCError, ICommitTokensAsyncThunk, IBaseAddressAsyncThunk } from "./interfaces";
+import {
+  IBaseAsyncThunk,
+  IJsonRPCError,
+  ICommitTokensAsyncThunk,
+  IFraxApprovalAsyncThunk,
+  IBaseAddressAsyncThunk,
+} from "./interfaces";
 import { error, info } from "../slices/MessagesSlice";
 import { fetchAccountSuccess, getBalances } from "./AccountSlice";
 import { clearPendingTxn, fetchPendingTxns, getStakingTypeText } from "./PendingTxnsSlice";
+import { loadAccountDetails } from "./AccountSlice";
 
 export interface IAuctionDetails {
   tokenPrice: number;
   auctionSuccessful: boolean;
-  tokensClaimable: number;
   totalTokensCommitted: number;
+  commitedFrax: number;
   auctionEnded: boolean;
   isOpen: boolean;
   startPrice: number;
@@ -28,33 +35,34 @@ export interface IAuctionDetails {
 
 export const loadAuctionDetails = createAsyncThunk(
   "auction/loadAuctionDetails",
-  async ({ provider, networkID, address }: IBaseAddressAsyncThunk): Promise<IAuctionDetails> => {
+  async ({ provider, networkID }: IBaseAsyncThunk): Promise<IAuctionDetails> => {
     const auctionContract = new ethers.Contract(addresses[networkID].PhantomAuction as string, AuctionAbi, provider);
     const [
       tokenPrice,
       auctionSuccessful,
-      tokensClaimable,
       totalTokensCommitted,
       auctionEnded,
       isOpen,
       marketPrice,
       marketInfo,
+      marketStatus,
     ] = await Promise.all([
-      auctionContract.priceFunction(), // @TODO: check if tokenPrice is tokenPrice(), priceFunction(), or clearingPrice()
+      auctionContract.clearingPrice(),
       auctionContract.auctionSuccessful(),
-      auctionContract.tokensClaimable(address),
       auctionContract.totalTokensCommitted(),
       auctionContract.auctionEnded(),
       auctionContract.isOpen(),
       auctionContract.marketPrice(),
       auctionContract.marketInfo(),
+      auctionContract.marketStatus(),
     ]);
     const price = bnToNum(tokenPrice) / Math.pow(10, 18);
+
     return {
       tokenPrice: Math.round(price * 100) / 100,
       auctionSuccessful,
-      tokensClaimable: bnToNum(tokensClaimable) / Math.pow(10, 18),
       totalTokensCommitted: bnToNum(totalTokensCommitted) / Math.pow(10, 18),
+      commitedFrax: bnToNum(marketStatus.commitmentsTotal) / Math.pow(10, 18),
       auctionEnded,
       isOpen,
       startPrice: bnToNum(marketPrice.startPrice) / Math.pow(10, 18),
@@ -66,8 +74,43 @@ export const loadAuctionDetails = createAsyncThunk(
   },
 );
 
+export const claimTokens = createAsyncThunk(
+  "auction/claimTokens",
+  async ({ provider, networkID, address }: IBaseAddressAsyncThunk, { dispatch }): Promise<void> => {
+    if (!provider) {
+      dispatch(error("Please connect your wallet!"));
+      return;
+    }
+
+    const signer = provider.getSigner();
+    const auctionContract = new ethers.Contract(
+      addresses[networkID].PhantomAuction as string,
+      AuctionAbi as any,
+      signer,
+    );
+
+    let commitTx;
+    try {
+      commitTx = await auctionContract["withdrawTokens(address)"](address.toLowerCase());
+      dispatch(fetchPendingTxns({ txnHash: commitTx.hash, text: "Pending...", type: "claim_tokens" }));
+
+      await commitTx.wait();
+    } catch (e: unknown) {
+      const rpcError = e as IJsonRPCError;
+      dispatch(error(rpcError.message));
+      return;
+    } finally {
+      if (commitTx) {
+        dispatch(clearPendingTxn(commitTx.hash));
+      }
+    }
+    dispatch(loadAuctionDetails({ networkID, provider }));
+    dispatch(loadAccountDetails({ networkID, provider, address }));
+  },
+);
+
 export const commitTokens = createAsyncThunk(
-  "auction/loadAuctionDetails",
+  "auction/commitTokens",
   async ({ provider, networkID, quantity, address }: ICommitTokensAsyncThunk, { dispatch }): Promise<void> => {
     if (!provider) {
       dispatch(error("Please connect your wallet!"));
@@ -80,11 +123,12 @@ export const commitTokens = createAsyncThunk(
       AuctionAbi as any,
       signer,
     );
+
     let commitTx;
     try {
       // @todo: might need to remove gasLimit
-      commitTx = await auctionContract.commitTokens(ethers.utils.parseUnits(quantity.toString(), "gwei"), true, {
-        gasLimit: 300000,
+      commitTx = await auctionContract.commitTokens(ethers.utils.parseEther(quantity.toString()), true, {
+        gasLimit: 150000,
       });
       dispatch(fetchPendingTxns({ txnHash: commitTx.hash, text: "Pending...", type: "commit_tokens" }));
       await commitTx.wait();
@@ -106,17 +150,13 @@ export const commitTokens = createAsyncThunk(
       }
     }
     dispatch(getBalances({ address, networkID, provider }));
-    dispatch(loadAuctionDetails({ address, networkID, provider }));
+    dispatch(loadAuctionDetails({ networkID, provider }));
   },
 );
 
-function alreadyApprovedToken(allowance: BigNumber) {
-  return BigNumber.from("0").gt(allowance);
-}
-
 export const changeFraxApproval = createAsyncThunk(
   "stake/changeFraxApproval",
-  async ({ provider, address, networkID }: IBaseAddressAsyncThunk, { dispatch }) => {
+  async ({ provider, address, networkID, value }: IFraxApprovalAsyncThunk, { dispatch }) => {
     if (!provider) {
       dispatch(error("Please connect your wallet!"));
       return;
@@ -126,28 +166,14 @@ export const changeFraxApproval = createAsyncThunk(
     const fraxContract = new ethers.Contract(addresses[networkID].frax as string, ierc20ABI, signer);
 
     let approveTx;
-    let fraxAllowance = await fraxContract.allowance(address, addresses[networkID].PhantomAuction);
-
-    // return early if approval has already happened
-    if (alreadyApprovedToken(fraxAllowance)) {
-      dispatch(info("Approval completed."));
-      return dispatch(
-        fetchAccountSuccess({
-          auction: {
-            fraxAllowance: +fraxAllowance,
-          },
-        }),
-      );
-    }
-
     try {
       approveTx = await fraxContract.approve(
         addresses[networkID].PhantomAuction,
-        ethers.utils.parseUnits("1000000000", "gwei").toString(),
+        ethers.utils.parseEther(value.toString()).toString(),
       );
 
       if (approveTx) {
-        dispatch(fetchPendingTxns({ txnHash: approveTx.hash, text: "", type: "approve_frax" }));
+        dispatch(fetchPendingTxns({ txnHash: approveTx.hash, text: "Pending...", type: "approve_tokens" }));
         await approveTx.wait();
       }
     } catch (e: unknown) {
@@ -160,12 +186,12 @@ export const changeFraxApproval = createAsyncThunk(
     }
 
     // go get fresh allowances
-    fraxAllowance = await fraxContract.allowance(address, addresses[networkID].PhantomAuction);
+    let fraxAllowance = await fraxContract.allowance(address, addresses[networkID].PhantomAuction);
 
     return dispatch(
       fetchAccountSuccess({
         auction: {
-          fraxAllowance: +fraxAllowance,
+          fraxAllowance: bnToNum(fraxAllowance) / Math.pow(10, 18),
         },
       }),
     );
@@ -180,8 +206,8 @@ interface IAuctionSlice extends IAuctionDetails {
 const initialState: IAuctionSlice = {
   tokenPrice: 0,
   auctionSuccessful: true,
-  tokensClaimable: 0,
   totalTokensCommitted: 0,
+  commitedFrax: 0,
   auctionEnded: false,
   isOpen: true,
   startPrice: 0,

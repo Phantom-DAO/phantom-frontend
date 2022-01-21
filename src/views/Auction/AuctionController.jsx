@@ -1,15 +1,16 @@
 import { Box, Grid, Typography, useTheme, Button, Slider, TextField, InputAdornment } from "@material-ui/core";
 import { useState } from "react";
+import { ethers } from "ethers";
 import { useDispatch, useSelector } from "react-redux";
 import { Skeleton } from "@material-ui/lab";
 import { changeFraxApproval } from "../../slices/AuctionSlice";
 import { useWeb3Context } from "src/hooks/web3Context";
-import { isPendingTxn, txnButtonText } from "src/slices/PendingTxnsSlice";
+import { txnButtonText } from "src/slices/PendingTxnsSlice";
 
 const AuctionController = ({ tokenPrice, fraxBalance, onCommitTokens }) => {
   const theme = useTheme();
   const dispatch = useDispatch();
-  const { provider, address, connected, connect, chainID } = useWeb3Context();
+  const { provider, address, chainID } = useWeb3Context();
   const [fraxCommitment, setFraxCommitment] = useState(0);
   const [sliderValue, setSliderValue] = useState(0);
   const maxTokensCommitment = Math.round((fraxBalance / tokenPrice) * 10) / 10;
@@ -18,6 +19,9 @@ const AuctionController = ({ tokenPrice, fraxBalance, onCommitTokens }) => {
   const pendingTransactions = useSelector(state => state.pendingTransactions);
   const fraxAllowance = useSelector(state => state.account.auction && state.account.auction.fraxAllowance);
   const isAllowanceDataLoading = fraxAllowance === undefined;
+  const commitmentGwei = ethers.utils.parseUnits((Math.round((fraxCommitment || 0) * 1000) / 1000).toString(), "gwei");
+  const allowanceGwei = ethers.utils.parseUnits((Math.round((fraxAllowance || 0) * 1000) / 1000).toString(), "gwei");
+  const needsFraxApproval = commitmentGwei.gt(allowanceGwei);
 
   const handleSliderChange = (_, value) => {
     setSliderValue(value);
@@ -31,7 +35,7 @@ const AuctionController = ({ tokenPrice, fraxBalance, onCommitTokens }) => {
   };
 
   const onSeekApproval = async () => {
-    await dispatch(changeFraxApproval({ address, provider, networkID: chainID }));
+    await dispatch(changeFraxApproval({ address, provider, networkID: chainID, value: fraxCommitment }));
   };
 
   return (
@@ -147,18 +151,7 @@ const AuctionController = ({ tokenPrice, fraxBalance, onCommitTokens }) => {
                   >
                     MAX
                   </Button>
-                  {fraxAllowance > 0 ? (
-                    <Button
-                      color="primary"
-                      variant="contained"
-                      style={{ margin: 0 }}
-                      onClick={() => {
-                        onCommitTokens(fraxCommitment);
-                      }}
-                    >
-                      {txnButtonText(pendingTransactions, "commit_tokens", "COMMIT FRAX")}
-                    </Button>
-                  ) : (
+                  {needsFraxApproval ? (
                     <Button
                       color="primary"
                       variant="contained"
@@ -168,6 +161,17 @@ const AuctionController = ({ tokenPrice, fraxBalance, onCommitTokens }) => {
                       }}
                     >
                       {txnButtonText(pendingTransactions, "approve_tokens", "APPROVE FRAX")}
+                    </Button>
+                  ) : (
+                    <Button
+                      color="primary"
+                      variant="contained"
+                      style={{ margin: 0 }}
+                      onClick={() => {
+                        onCommitTokens(fraxCommitment);
+                      }}
+                    >
+                      {txnButtonText(pendingTransactions, "commit_tokens", "COMMIT FRAX")}
                     </Button>
                   )}
                 </Box>

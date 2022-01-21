@@ -1,11 +1,10 @@
 import { Box, Grid, useTheme, Zoom } from "@material-ui/core";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 
 import { useWeb3Context } from "../../hooks/web3Context";
-import { loadAuctionDetails, commitTokens } from "../../slices/AuctionSlice";
-import { getBalances } from "../../slices/AccountSlice";
+import { commitTokens, loadAuctionDetails } from "../../slices/AuctionSlice";
 import { error } from "../../slices/MessagesSlice";
 import CommitmentsTable from "./CommitmentsTable";
 import AuctionBanner from "./AuctionBanner";
@@ -40,29 +39,16 @@ const Auction = () => {
   const theme = useTheme();
   const dispatch = useDispatch();
   const {
-    connect,
-    hasCachedProvider,
     provider,
     chainID,
-    connected,
     address = "0x3DCa07E1…5451f885", // @todo: remove default
   } = useWeb3Context();
-
-  useEffect(() => {
-    if (hasCachedProvider()) {
-      connect().then(async provider => {
-        const chainID = await provider.getNetwork().then(network => network.chainId);
-        const address = await provider.getSigner().getAddress();
-        dispatch(loadAuctionDetails({ provider, networkID: chainID, address }));
-      });
-    }
-  }, []);
 
   const {
     tokenPrice,
     totalTokens,
-    tokensClaimable,
     totalTokensCommitted,
+    commitedFrax,
     auctionEnded,
     isOpen,
     loading,
@@ -71,8 +57,19 @@ const Auction = () => {
     startTime,
     endTime,
   } = useSelector(state => state.auction);
+  const tokensClaimable = useSelector(state => state.account.auction && state.account.auction.tokensClaimable);
   const fraxBalance = useSelector(state => state.account?.balances?.frax);
-  const auctionStatus = auctionEnded && !isOpen ? "finished" : "ongoing";
+  const auctionStatus = "finished"; //auctionEnded && !isOpen ? "finished" : !auctionEnded && !isOpen ? "notstarted" : "ongoing";
+
+  useEffect(() => {
+    if (auctionStatus === "nostarted") {
+      // query auction data when it starts
+      const msDiff = new Date(startTime * 1000).getTime() - new Date().getTime();
+      setTimeout(() => {
+        dispatch(loadAuctionDetails({ provider, networkID: chainID }));
+      }, msDiff);
+    }
+  }, [auctionStatus]);
 
   const onCommitTokens = async quantity => {
     if (isNaN(quantity) || quantity === 0 || quantity === "") {
@@ -84,7 +81,7 @@ const Auction = () => {
       return dispatch(error("You cannot commit more than your FRAX balance."));
     }
 
-    await dispatch(commitTokens({ address, quantity: quantity * Math.pow(10, 9), provider, networkID: chainID }));
+    await dispatch(commitTokens({ address, quantity: quantity, provider, networkID: chainID }));
   };
 
   return (
@@ -99,7 +96,7 @@ const Auction = () => {
           <AuctionTitle endTime={endTime} auctionStatus={auctionStatus} />
           <Grid container spacing={2}>
             <Grid item xs={12} md={4}>
-              <AuctionBanner tokenPrice={tokenPrice} />
+              <AuctionBanner auctionStatus={auctionStatus} tokenPrice={tokenPrice} />
             </Grid>
             <Grid item xs={12} md={8}>
               <AuctionDetails
@@ -109,9 +106,11 @@ const Auction = () => {
                 totalTokens={totalTokens}
                 tokensClaimable={tokensClaimable}
                 totalTokensCommitted={totalTokensCommitted}
+                commitedFrax={commitedFrax}
                 startPrice={startPrice}
                 minimumPrice={minimumPrice}
                 fraxBalance={fraxBalance}
+                startTime={startTime}
                 onCommitTokens={onCommitTokens}
               />
             </Grid>

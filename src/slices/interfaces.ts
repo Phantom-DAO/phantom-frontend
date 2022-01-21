@@ -72,3 +72,7 @@ export interface IRedeemAllBondsAsyncThunk extends IBaseAsyncThunk {
 export interface ICommitTokensAsyncThunk extends IBaseAddressAsyncThunk {
   readonly quantity: string;
 }
+
+export interface IFraxApprovalAsyncThunk extends IBaseAddressAsyncThunk {
+  readonly value: string;
+}
