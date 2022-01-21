@@ -26,7 +26,7 @@ import "./claim.scss";
 import { useWeb3Context } from "src/hooks/web3Context";
 import { ethers } from "ethers";
 
-
+// use connect button from library
 import { ConnectButton } from "src/components/ConnectButton";
 
 // maintain state for some settings
@@ -52,6 +52,7 @@ function Claim() {
   // set constants
   // get wallet values from web3context
   const { provider, address, connected, connect, chainID } = useWeb3Context();
+  const wConnect = ConnectButton();
   // not implemented in this page (yet)
   //const [zoomed, setZoomed] = useState(false);
   //const [view, setView] = useState(0);
@@ -82,7 +83,7 @@ function Claim() {
                 {!address ? (
                   <div className="claim-wallet-notification">
                     <div className="wallet-menu" id="wallet-menu">
-                      {ConnectButton}
+                      {wConnect}
                     </div>
                     <Typography variant="h5">Connect your wallet to stake</Typography>
                   </div>
