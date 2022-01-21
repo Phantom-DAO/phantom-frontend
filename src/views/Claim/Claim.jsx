@@ -1,6 +1,3 @@
-// Start of imports
-// stake.jsx is template
-// core import not all libs in use
 import {
   Box,
   Button,
@@ -9,24 +6,12 @@ import {
   Typography,
   Zoom,
 } from "@material-ui/core";
-
-// css formatting
 import "./claim.scss";
-
-// for wallet access see const in swap function
 import { useWeb3Context } from "src/hooks/web3Context";
 //import { ethers } from "ethers";
-
-// use connect button from library
-
-// maintain state for some settings
 import { useSelector } from "react-redux"; 
 import { Skeleton } from "@material-ui/lab";
-
-// get images (svg)
-// use trim on balance in return
 import { trim } from "../../helpers";
-
 // end of imports
 
 // TODO: 1 Implementation
