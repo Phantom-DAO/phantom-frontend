@@ -1,92 +1,78 @@
-import { useCallback, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  Box,
-  Button,
-  FormControl,
-  Grid,
-  InputAdornment,
-  InputLabel,
-  Link,
-  OutlinedInput,
-  Paper,
-  Tab,
-  Tabs,
-  Typography,
-  Zoom,
-  Divider,
-  SvgIcon,
-} from "@material-ui/core";
-import NewReleases from "@material-ui/icons/NewReleases";
-import RebaseTimer from "../../components/RebaseTimer/RebaseTimer";
-import TabPanel from "../../components/TabPanel";
-import { getOhmTokenImage, getTokenImage, trim } from "../../helpers";
-import { changeApproval, changeStake } from "../../slices/StakeThunk";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { Box, Grid, Paper, Typography, useTheme, Zoom, Button, Link, useMediaQuery } from "@material-ui/core";
 import { useWeb3Context } from "src/hooks/web3Context";
-import { isPendingTxn, txnButtonText } from "src/slices/PendingTxnsSlice";
-import { Skeleton } from "@material-ui/lab";
-import { error } from "../../slices/MessagesSlice";
-import { ethers } from "ethers";
-import { ReactComponent as WavesLeft } from "../../assets/icons/waves-left.svg";
-import { ReactComponent as WavesRight } from "../../assets/icons/waves-right.svg";
-import "./claim.scss";
+import { useState } from "react";
+import { ReactComponent as PhantomTitle } from "../../assets/icons/phantom-title.svg";
+import { ReactComponent as TokenGold } from "../../assets/icons/token-gold.svg";
 
-function Claim() {
-  const { provider, address, connect, connected, chainID } = useWeb3Context();
-  const isAppLoading = useSelector(state => state.app.loading);
-  const ohmBalance = useSelector(state => {
-    return state.account.balances && state.account.balances.ohm;
-  });
+import "./claim.scss";
+import Greeting from "./Greeting.jsx";
+import AllocationCard from "./AllocationCard";
+
+const Claim = () => {
+  const theme = useTheme();
+  const { provider, address, connected, connect, disconnect, chainID } = useWeb3Context();
+  const isMobileScreen = useMediaQuery("(max-width: 700px)");
+  const [status, setStatus] = useState("not-claimed");
+
+  const addTokenToWallet = (tokenSymbol: string, tokenAddress: string, decimals: number, image: string) => async () => {
+    const tokenImage = getTokenUrl(tokenSymbol.toLowerCase());
+
+    if (window.ethereum) {
+      try {
+        await window.ethereum.request({
+          method: "wallet_watchAsset",
+          params: {
+            type: "ERC20",
+            options: {
+              address: tokenAddress,
+              symbol: tokenSymbol,
+              decimals: TOKEN_DECIMALS,
+              image: tokenImage,
+            },
+          },
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
 
   return (
     <div id="claim-view">
+      {address ? (
+        <div className="disconnect-button">
+          <Button variant="outlined" color="secondary" size="medium" onClick={disconnect}>
+            Disconnect
+          </Button>
+        </div>
+      ) : (
+        <></>
+      )}
+
       <Zoom in={true}>
-        <Paper className={`claim-card`}>
-          <Grid container direction="column" spacing={1}>
-            <Grid item>
-              <Box className="claim-header">
-                <Typography variant="h1">Phantom</Typography>
-                <Typography variant="h5">Claim your whitelist allocation</Typography>
+        <Grid direction="column" container alignItems="center" justifyContent="center">
+          <PhantomTitle className="title" height={isMobileScreen && "50px"} />
+          <Box className="subtitle">
+            <Typography variant="h4">Claim your whitelist allocation</Typography>
+          </Box>
+
+          <Box className="content">
+            {!address ? (
+              <Box sx={{ display: "flex", justifyContent: "center" }}>
+                <Button variant="contained" color="primary" className="connect-button" onClick={connect} key={1}>
+                  Connect Wallet
+                </Button>
               </Box>
-            </Grid>
-            <Grid item>
-              <div className="claim">
-                {!address ? (
-                  <div className="claim-wallet-notification">
-                    <div className="wallet-menu" id="wallet-menu">
-                      Connect
-                    </div>
-                    <Typography variant="h5">Connect your wallet to stake</Typography>
-                  </div>
-                ) : (
-                  <Grid container spacing={2} direction="row" alignItems="flex-end">
-                    <Grid item xs={4} sm={1} md={1} lg={1}>
-                      <div className="claim-balance">
-                        <Typography variant="h5">YOUR ALLOCATION</Typography>
-                        <Typography variant="h4">
-                          {isAppLoading ? <Skeleton width="80px" /> : <>{trim(ohmBalance, 4)} OHM</>}
-                        </Typography>
-                      </div>
-                    </Grid>
-                    <Grid item xs={4} sm={1} md={1} lg={1}>
-                      <div className="claim-menu">
-                        <Typography variant="h4">
-                          <Button variant="contained" color="primary" className="claim-button" onClick="">
-                            Connect Wallet
-                          </Button>
-                        </Typography>
-                      </div>
-                    </Grid>
-                  </Grid>
-                )}
-              </div>
-            </Grid>
-          </Grid>
-        </Paper>
+            ) : status !== "claimed" ? (
+              <AllocationCard status={status} setStatus={setStatus} />
+            ) : (
+              <Greeting isMobileScreen={isMobileScreen} />
+            )}
+          </Box>
+        </Grid>
       </Zoom>
     </div>
   );
-}
+};
 
 export default Claim;
