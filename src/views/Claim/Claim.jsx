@@ -1,9 +1,36 @@
-import { Box, Button, Grid, Paper, Typography, Zoom } from "@material-ui/core";
-import "./claim.scss";
+import { useCallback, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  Box,
+  Button,
+  FormControl,
+  Grid,
+  InputAdornment,
+  InputLabel,
+  Link,
+  OutlinedInput,
+  Paper,
+  Tab,
+  Tabs,
+  Typography,
+  Zoom,
+  Divider,
+  SvgIcon,
+} from "@material-ui/core";
+import NewReleases from "@material-ui/icons/NewReleases";
+import RebaseTimer from "../../components/RebaseTimer/RebaseTimer";
+import TabPanel from "../../components/TabPanel";
+import { getOhmTokenImage, getTokenImage, trim } from "../../helpers";
+import { changeApproval, changeStake } from "../../slices/StakeThunk";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useWeb3Context } from "src/hooks/web3Context";
-import { useSelector } from "react-redux"; 
+import { isPendingTxn, txnButtonText } from "src/slices/PendingTxnsSlice";
 import { Skeleton } from "@material-ui/lab";
-import { trim } from "../../helpers";
+import { error } from "../../slices/MessagesSlice";
+import { ethers } from "ethers";
+import { ReactComponent as WavesLeft } from "../../assets/icons/waves-left.svg";
+import { ReactComponent as WavesRight } from "../../assets/icons/waves-right.svg";
+import "./claim.scss";
 
 function Claim() {
   const { provider, address, connect, connected, chainID } = useWeb3Context();
