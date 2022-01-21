@@ -46,10 +46,7 @@ function Claim() {
     <Button variant="contained" color="primary" className="connect-button" onClick="" key="">
       Connect Wallet
     </Button>,
-    <Button variant="contained" color="primary" className="claim-button" onClick="" key="">
-      Claim
-    </Button>,
-  );
+   );
 
   const ohmBalance = useSelector(state => {
     return state.account.balances && state.account.balances.ohm;
@@ -74,7 +71,7 @@ function Claim() {
                 {!address ? (
                       <div className="claim-wallet-notification">
                         <div className="wallet-menu" id="wallet-menu">
-                          {modalButton[0]}
+                          {modalButton}
                         </div>
                         <Typography variant="h5">Connect your wallet to stake</Typography>
                       </div>
@@ -91,7 +88,7 @@ function Claim() {
                     <Grid item xs={4} sm={1} md={1} lg={1}>
                       <div className="claim-button">
                         <Typography variant="h4">
-                          {modalButton[1]}
+                          Button
                         </Typography>
                       </div>
                     </Grid>
