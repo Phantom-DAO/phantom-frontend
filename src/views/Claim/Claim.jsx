@@ -1,28 +1,20 @@
-import {
-  Box,
-  Button,
-  Grid,
-  Paper,
-  Typography,
-  Zoom,
-} from "@material-ui/core";
+import { Box, Button, Grid, Paper, Typography, Zoom } from "@material-ui/core";
+
 import "./claim.scss";
+
 import { useWeb3Context } from "src/hooks/web3Context";
+
 //import { ethers } from "ethers";
+
 import { useSelector } from "react-redux"; 
+
 import { Skeleton } from "@material-ui/lab";
+
 import { trim } from "../../helpers";
+
 // end of imports
 
-// TODO: 1 Implementation
-// add getimage to ./helpers/index.tsx
-//const aPHMImg = getaPHMTokenImage("");
-//const fPHMImg = getfPHMTokenImage("");
-
-// start claim code
 function Claim() {
-  // set constants
-  // get wallet values from web3context
   const { provider, address, connected, chainID } = useWeb3Context();
   //const wConnect = ConnectButton;
   // not implemented in this page (yet)
@@ -35,9 +27,6 @@ function Claim() {
   const ohmBalance = useSelector(state => {
     return state.account.balances && state.account.balances.ohm;
   });
-  // const sohmBalance = useSelector(state => {
-  //   return state.account.balances && state.account.balances.sohm;
-  // });
 
   return (
     <div id="claim-view">
