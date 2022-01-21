@@ -50,7 +50,7 @@ function Claim() {
   // set constants
   // get wallet values from web3context
   const { provider, address, connected, chainID } = useWeb3Context();
-  const wConnect = ConnectButton;
+  //const wConnect = ConnectButton;
   // not implemented in this page (yet)
   //const [zoomed, setZoomed] = useState(false);
   //const [view, setView] = useState(0);
