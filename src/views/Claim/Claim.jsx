@@ -81,7 +81,7 @@ function Claim() {
                 {!address ? (
                   <div className="claim-wallet-notification">
                     <div className="wallet-menu" id="wallet-menu">
-                      {wConnect}
+                      {/* {wConnect} */}Connect
                     </div>
                     <Typography variant="h5">Connect your wallet to stake</Typography>
                   </div>
