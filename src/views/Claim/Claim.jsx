@@ -24,16 +24,14 @@ import "./claim.scss";
 
 // for wallet access see const in swap function
 import { useWeb3Context } from "src/hooks/web3Context";
-import { ethers } from "ethers";
+//import { ethers } from "ethers";
 
 // use connect button from library
 import ConnectButton from "src/components/ConnectButton";
 
 // maintain state for some settings
 import { useCallback, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-
-// 
+import { useDispatch, useSelector } from "react-redux"; 
 import { Skeleton } from "@material-ui/lab";
 
 // get images (svg)
@@ -51,7 +49,7 @@ import { getOhmTokenImage, getTokenImage, trim } from "../../helpers";
 function Claim() {
   // set constants
   // get wallet values from web3context
-  const { provider, address, connected, connect, chainID } = useWeb3Context();
+  const { provider, address, connected, chainID } = useWeb3Context();
   const wConnect = ConnectButton();
   // not implemented in this page (yet)
   //const [zoomed, setZoomed] = useState(false);
