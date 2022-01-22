@@ -1,15 +1,57 @@
-import { Box, Grid, Paper, Typography, useTheme, Zoom, Button, Link } from "@material-ui/core";
+import { Box, Button, CircularProgress, Paper, Typography } from "@material-ui/core";
+import { Skeleton } from "@material-ui/lab";
+import { useDispatch, useSelector } from "react-redux";
 import { useWeb3Context } from "src/hooks/web3Context";
-import { useEffect, useState } from "react";
-import { ReactComponent as PhantomTitle } from "../../assets/icons/phantom-title.svg";
 import { ReactComponent as TokenGold } from "../../assets/icons/token-gold.svg";
+import usePhantomLaunch from "../../hooks/usePhantomLaunch";
+import { claimFPHM } from "../../slices/ClaimSlice";
+import { success } from "../../slices/MessagesSlice";
+import "./claim.scss";
 import LoaderButton from "./LoaderButton";
 
-import "./claim.scss";
+const AllocationCard = ({ status, setStatus, onClaimSuccess }) => {
+  const web3Context = useWeb3Context();
+  const PhantomLaunch = usePhantomLaunch();
+  const { address, connect, provider, chainID } = useWeb3Context();
+  const claimState = useSelector(s => s.claim);
 
-const AllocationCard = ({ status, setStatus }) => {
+  const dispatch = useDispatch();
+  const handleClaim = async () => {
+    await dispatch(claimFPHM({ address, provider, networkID: chainID })).unwrap();
+    if (!claimState.error) {
+      dispatch(success("You have claimed your fPHM allocation successfully."));
+      onClaimSuccess();
+    }
+  };
+
   return (
     <>
+      {claimState.error && (
+        <Paper
+          style={{
+            padding: "2px",
+            paddingLeft: "8px",
+            background: "#461919",
+            marginBottom: "10px",
+          }}
+        >
+          <Box
+            sx={{
+              color: "tomato",
+              wordBreak: "break-all",
+              whiteSpace: "pre-line",
+            }}
+          >
+            <pre
+              style={{
+                whiteSpace: "pre-line",
+              }}
+            >
+              {JSON.stringify(claimState.error, null, 4)}
+            </pre>
+          </Box>
+        </Paper>
+      )}
       <Paper className="claim-card">
         <Box
           sx={{
@@ -33,27 +75,34 @@ const AllocationCard = ({ status, setStatus }) => {
               }}
             >
               <TokenGold />
-              <Typography variant="h3">333.33 fPHM</Typography>
+              {!claimState.allocationLoading ? (
+                claimState.pendingFPHM === 0 ? (
+                  <Typography>You have nothing to claim.</Typography>
+                ) : (
+                  <Typography variant="h3">{claimState.pendingFPHM} fPHM</Typography>
+                )
+              ) : (
+                <Skeleton width="120px" height={28} variant="text" animation="wave"></Skeleton>
+              )}
             </Box>
           </Box>
 
-          {status === "not-claimed" && (
+          {status === "not-claimed" && claimState.pendingFPHM > 0 && (
             <Button
               variant="contained"
               color="primary"
               size="medium"
               style={{
                 fontSize: "16px",
+                minWidth: "100px",
               }}
-              onClick={() => {
-                setStatus("pending");
-                setTimeout(() => {
-                  setStatus("claimed");
-                }, 1000);
-              }}
-              disabled={false}
+              onClick={handleClaim}
+              disabled={claimState.claimLoading}
             >
               Claim
+              <Box ml={1} mt={1}>
+                {claimState.claimLoading && <CircularProgress size={22} />}
+              </Box>
             </Button>
           )}
           {status === "pending" && <LoaderButton />}
@@ -61,8 +110,8 @@ const AllocationCard = ({ status, setStatus }) => {
           {/* Disabled version of the button which is shown if a user revisits already claimed tokens and there are no token to claim */}
         </Box>
       </Paper>
-      <Typography align="center" variant="p" color="textSecondary" style={{ marginTop: "24px" }}>
-        fPHM is vested linearly over 1 year, with 25% unlocked on day one of Phantoms release{" "}
+      <Typography align="center" variant="p" color="textSecondary" style={{ marginTop: "24px", lineHeight: "20px" }}>
+        fPHM is vested linearly over 1 year, with 25% unlocked on day 1 of Phantoms release{" "}
         <a className="info-link">Read more about fPHM</a>
       </Typography>
     </>

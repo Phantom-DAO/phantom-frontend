@@ -30,6 +30,7 @@ import { light as lightTheme } from "./themes/light.js";
 import { girth as gTheme } from "./themes/girth.js";
 import WhiteList from "./Whitelist";
 import "./style.scss";
+import { getFPHMAllocation } from "./slices/ClaimSlice";
 
 // 😬 Sorry for all the console logging
 const DEBUG = false;
@@ -129,6 +130,7 @@ function App() {
       bonds.map(bond => {
         dispatch(calculateUserBondDetails({ address, bond, provider, networkID: chainID }));
       });
+      dispatch(getFPHMAllocation({ address, networkID: chainID, provider: loadProvider }));
     },
     [connected],
   );
@@ -155,7 +157,7 @@ function App() {
       setWalletChecked(true);
     }
     if (shouldTriggerSafetyCheck()) {
-      dispatch(info("Safety Check: Always verify you're on app.olympusdao.finance!"));
+      dispatch(info("Safety Check: Always verify you're on app.phantomdao.xyz!"));
     }
   }, []);
 
