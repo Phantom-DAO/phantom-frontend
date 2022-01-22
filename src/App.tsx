@@ -18,7 +18,7 @@ import { loadAccountDetails, calculateUserBondDetails } from "./slices/AccountSl
 import { loadAuctionDetails, loadMyCommitments } from "./slices/AuctionSlice";
 import { info } from "./slices/MessagesSlice";
 
-import { Stake, ChooseBond, Bond, Wrap, TreasuryDashboard, Auction } from "./views";
+import { Stake, ChooseBond, Bond, Wrap, TreasuryDashboard, Auction, Swap, Claim } from "./views";
 import Sidebar from "./components/Sidebar/Sidebar.jsx";
 import TopBar from "./components/TopBar/TopBar.jsx";
 import NavDrawer from "./components/Sidebar/NavDrawer.jsx";
@@ -28,6 +28,7 @@ import NotFound from "./views/404/NotFound";
 import { dark as darkTheme } from "./themes/dark.js";
 import { light as lightTheme } from "./themes/light.js";
 import { girth as gTheme } from "./themes/girth.js";
+import WhiteList from "./Whitelist";
 import "./style.scss";
 
 // 😬 Sorry for all the console logging
@@ -182,70 +183,90 @@ function App() {
     setIsSidebarExpanded(false);
   };
 
-  let themeMode = theme === "light" ? lightTheme : theme === "dark" ? darkTheme : gTheme;
+  // let themeMode = theme === "light" ? lightTheme : theme === "dark" ? darkTheme : gTheme;
+  let themeMode = darkTheme;
 
   useEffect(() => {
-    themeMode = theme === "light" ? lightTheme : darkTheme;
+    themeMode = darkTheme;
   }, [theme]);
 
   useEffect(() => {
     if (isSidebarExpanded) handleSidebarClose();
   }, [location]);
 
-  return (
-    <ThemeProvider theme={themeMode}>
-      <CssBaseline />
-      {/* {isAppLoading && <LoadingSplash />} */}
-      <div className={`app ${isSmallerScreen && "tablet"} ${isSmallScreen && "mobile"} ${theme}`}>
-        <Messages />
-        <TopBar theme={theme} toggleTheme={toggleTheme} handleDrawerToggle={handleDrawerToggle} />
-        <nav className={classes.drawer}>
-          {isSmallerScreen ? (
-            <NavDrawer mobileOpen={mobileOpen} handleDrawerToggle={handleDrawerToggle} />
-          ) : (
-            <Sidebar />
-          )}
-        </nav>
+  if (window.location.hash === "#/whitelist") {
+    console.log("where am i");
+    return (
+      <ThemeProvider theme={themeMode}>
+        <CssBaseline />
+        <Claim />
+      </ThemeProvider>
+    );
+  } else {
+    return (
+      <ThemeProvider theme={themeMode}>
+        {console.log("im finally here")}
+        <CssBaseline />
+        {/* {isAppLoading && <LoadingSplash />} */}
+        <div className={`app ${isSmallerScreen && "tablet"} ${isSmallScreen && "mobile"} ${theme}`}>
+          <Messages />
+          <TopBar theme={theme} toggleTheme={toggleTheme} handleDrawerToggle={handleDrawerToggle} />
+          <nav className={classes.drawer}>
+            {isSmallerScreen ? (
+              <NavDrawer mobileOpen={mobileOpen} handleDrawerToggle={handleDrawerToggle} />
+            ) : (
+              <Sidebar />
+            )}
+          </nav>
 
-        <div className={`${classes.content} ${isSmallerScreen && classes.contentShift}`}>
-          <Switch>
-            <Route exact path="/dashboard">
-              <TreasuryDashboard />
-            </Route>
+          <div className={`${classes.content} ${isSmallerScreen && classes.contentShift}`}>
+            <Switch>
+              <Route exact path="/dashboard">
+                <TreasuryDashboard />
+              </Route>
 
-            <Route exact path="/">
-              <Redirect to="/stake" />
-            </Route>
+              <Route exact path="/">
+                <Redirect to="/stake" />
+              </Route>
 
-            <Route path="/stake">
-              <Stake />
-            </Route>
+              <Route path="/stake">
+                <Stake />
+              </Route>
 
-            <Route path="/auction">
-              <Auction />
-            </Route>
+              <Route path="/claim">
+                <Claim />
+              </Route>
 
-            <Route path="/wrap">
-              <Wrap />
-            </Route>
+              <Route path="/auction">
+                <Auction />
+              </Route>
 
-            <Route path="/bonds">
-              {bonds.map(bond => {
-                return (
-                  <Route exact key={bond.name} path={`/bonds/${bond.name}`}>
-                    <Bond bond={bond} />
-                  </Route>
-                );
-              })}
-              <ChooseBond />
-            </Route>
+              <Route path="/swap">
+                <Swap />
+              </Route>
 
-            <Route component={NotFound} />
-          </Switch>
+              <Route path="/wrap">
+                <Wrap />
+              </Route>
+
+              <Route path="/bonds">
+                {bonds.map(bond => {
+                  return (
+                    <Route exact key={bond.name} path={`/bonds/${bond.name}`}>
+                      <Bond bond={bond} />
+                    </Route>
+                  );
+                })}
+                <ChooseBond />
+              </Route>
+
+              <Route component={NotFound} />
+            </Switch>
+          </div>
         </div>
-      </div>
-    </ThemeProvider>
-  );
+      </ThemeProvider>
+    );
+  }
 }
 
 export default App;

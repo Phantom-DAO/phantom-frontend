@@ -73,7 +73,7 @@ function OhmMenu() {
   const { chainID, address } = useWeb3Context();
 
   const networkID = chainID;
-
+  console.log(networkID, "ksndfksf");
   const SOHM_ADDRESS = addresses[networkID].SOHM_ADDRESS;
   const OHM_ADDRESS = addresses[networkID].OHM_ADDRESS;
   const WSOHM_ADDRESS = addresses[networkID].WSOHM_ADDRESS;

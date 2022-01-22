@@ -12,7 +12,7 @@ const darkTheme = {
   backgroundColor: "#0E0D1C",
   background: "#0E0D1C",
   paperBg: "#0C0B17",
-  gold: "#F8CC82",
+  gold: "#FFC768",
   gray: "#A3A3A3",
   textHighlightColor: "#F4D092",
   modalBg: "#0C0B17",
@@ -103,6 +103,12 @@ export const dark = responsiveFontSizes(
               color: darkTheme.color,
               backdropFilter: "blur(15px)",
             },
+            "&.claim-card": {
+              backgroundColor: darkTheme.paperBg,
+              border: "1px solid rgba(255, 255, 255, 0.1)",
+              boxShadow: "0px 0px 64px rgba(119, 34, 252, 0.1)",
+              borderRadius: "12px",
+            },
           },
         },
         MuiBackdrop: {
@@ -114,7 +120,7 @@ export const dark = responsiveFontSizes(
           root: {
             color: darkTheme.color,
             "&:hover": {
-              color: darkTheme.textHighlightColor,
+              color: darkTheme.purpleAccent,
               textDecoration: "none",
               "&.active": {
                 color: darkTheme.color,
@@ -184,9 +190,9 @@ export const dark = responsiveFontSizes(
         MuiButton: {
           containedPrimary: {
             color: darkTheme.primaryButtonColor,
-            backgroundColor: darkTheme.purpleAccent,
+            backgroundColor: darkTheme.darkPurpleAccent,
             "&:hover": {
-              backgroundColor: darkTheme.darkPurpleAccent,
+              backgroundColor: darkTheme.purpleAccent,
               color: darkTheme.primaryButtonHoverColor,
             },
             "&:active": {
@@ -195,9 +201,9 @@ export const dark = responsiveFontSizes(
             },
             "@media (hover:none)": {
               color: darkTheme.primaryButtonColor,
-              backgroundColor: darkTheme.gold,
+              backgroundColor: darkTheme.darkPurpleAccent,
               "&:hover": {
-                backgroundColor: darkTheme.darkPurpleAccent,
+                backgroundColor: darkTheme.purpleAccent,
               },
             },
           },
@@ -222,7 +228,7 @@ export const dark = responsiveFontSizes(
             },
           },
           outlinedPrimary: {
-            color: darkTheme.color,
+            color: darkTheme.gold,
             borderColor: darkTheme.gold,
             "&:hover": {
               color: "#333",
@@ -241,11 +247,11 @@ export const dark = responsiveFontSizes(
           },
           outlinedSecondary: {
             color: darkTheme.color,
-            borderColor: darkTheme.color,
+            borderColor: darkTheme.gray,
             "&:hover": {
-              color: darkTheme.outlinedSecondaryButtonHoverColor,
+              color: darkTheme.gray,
               backgroundColor: darkTheme.outlinedSecondaryButtonHoverBG,
-              borderColor: darkTheme.gold,
+              borderColor: darkTheme.gray,
             },
           },
           textPrimary: {

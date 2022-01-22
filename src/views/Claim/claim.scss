@@ -1,0 +1,70 @@
+#claim-view {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    margin-top: 15vh;
+
+    .disconnect-button {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+    }
+}
+.subtitle{
+    margin-top: 24px;
+}
+.content{
+    margin-top: 48px;
+    width: 80%;
+    max-width: 580px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    .claim-card{
+        padding: 24px;
+        padding-top: 32px;
+        padding-bottom: 32px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0px 0px 64px rgba(119, 34, 252, 0.1);
+        border-radius: 12px;
+    }
+    
+    .claim-button{
+        font-size: 16px;
+    }
+    
+    .info{
+        margin-top: 24;
+    }
+    
+    .info-link{
+        text-decoration: underline;
+        &:hover{
+            cursor: pointer;
+        }
+    }
+}
+
+.loaderButton{
+    
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0px 0px 10px rgba(44, 39, 109, 0.1);
+    padding: 12px 24px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    font-size: 16px;
+    border-radius: 30px;
+    align-items: center;
+    cursor: pointer;
+
+    .progress{
+      margin-right: 10px;
+    }
+}
+
+.MuiCircularProgress-circle	{
+    color: #FFC768;
+}
