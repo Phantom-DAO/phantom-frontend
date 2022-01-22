@@ -33,15 +33,15 @@ const AuctionDetails = ({
   const data = [
     {
       name: "AUCTION START",
-      "AUCTION PRICE": startPrice,
+      auctionPrice: startPrice,
     },
     {
       name: "",
-      "AUCTION PRICE": tokenPrice,
+      auctionPrice: tokenPrice,
     },
     {
       name: "AUCTION END",
-      "AUCTION PRICE": minimumPrice,
+      auctionPrice: minimumPrice,
     },
   ];
 

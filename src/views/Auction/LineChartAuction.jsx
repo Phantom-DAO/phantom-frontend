@@ -33,7 +33,7 @@ const LineChartAuction = ({ data }) => {
         <YAxis tick={false} domain={[0, "dataMax"]}>
           <Label value="STARTING PRICE" position="insideTopLeft" offset={70} style={{ fill: "#768299" }} />
           <Label
-            value={`${data[0]["AUCTION PRICE"]} FRAX`}
+            value={`${data[0].auctionPrice} FRAX`}
             position="insideTopLeft"
             offset={90}
             style={{ fill: "white" }}
@@ -42,14 +42,14 @@ const LineChartAuction = ({ data }) => {
         <YAxis yAxisId="right" orientation="right" tick={false} axisLine={true}>
           <Label value="RESERVE PRICE" position="insideTopRight" offset={70} style={{ fill: "#768299" }} />
           <Label
-            value={`${data[2]["AUCTION PRICE"]} FRAX`}
+            value={`${data[2].auctionPrice} FRAX`}
             position="insideTopRight"
             offset={90}
             style={{ fill: "white" }}
           />
         </YAxis>
         <Tooltip content={<CustomTooltip />} />
-        <Line type="monotone" dataKey="AUCTION PRICE" stroke="#7722FC" activeDot={{ r: 8 }} />
+        <Line type="monotone" dataKey="auctionPrice" stroke="#7722FC" activeDot={{ r: 8 }} />
       </LineChart>
     </ResponsiveContainer>
   );
