@@ -196,7 +196,7 @@ function App() {
     if (isSidebarExpanded) handleSidebarClose();
   }, [location]);
 
-  if (window.location.hash === "#/whitelist") {
+  if (window.location.hash === "#/claim") {
     console.log("where am i");
     return (
       <ThemeProvider theme={themeMode}>
