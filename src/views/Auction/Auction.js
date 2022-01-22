@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { BigNumber, ethers } from "ethers";
 
 import { useWeb3Context } from "../../hooks/web3Context";
-import { commitTokens, loadAuctionDetails } from "../../slices/AuctionSlice";
+import { commitTokens, loadAuctionDetails, loadAllCommitments } from "../../slices/AuctionSlice";
 import { error } from "../../slices/MessagesSlice";
 import CommitmentsTable from "./CommitmentsTable";
 import AuctionBanner from "./AuctionBanner";
@@ -38,11 +38,7 @@ const rows = [
 const Auction = () => {
   const theme = useTheme();
   const dispatch = useDispatch();
-  const {
-    provider,
-    chainID,
-    address = "0x3DCa07E1…5451f885", // @todo: remove default
-  } = useWeb3Context();
+  const { provider, chainID, address } = useWeb3Context();
 
   const {
     tokenPrice,
@@ -51,15 +47,23 @@ const Auction = () => {
     commitedFrax,
     auctionEnded,
     isOpen,
-    loading,
     startPrice,
     minimumPrice,
     startTime,
     endTime,
+    commitments,
+    myCommitments,
+    loading,
+    auctionToken,
   } = useSelector(state => state.auction);
+  const isLoading = !startTime && !endTime; //
   const tokensClaimable = useSelector(state => state.account.auction && state.account.auction.tokensClaimable);
   const fraxBalance = useSelector(state => state.account?.balances?.frax);
-  const auctionStatus = "finished"; //auctionEnded && !isOpen ? "finished" : !auctionEnded && !isOpen ? "notstarted" : "ongoing";
+  const auctionStatus = auctionEnded && !isOpen ? "finished" : !auctionEnded && !isOpen ? "notstarted" : "ongoing";
+
+  useEffect(() => {
+    dispatch(loadAllCommitments());
+  }, []);
 
   useEffect(() => {
     if (auctionStatus === "nostarted") {
@@ -96,10 +100,11 @@ const Auction = () => {
           <AuctionTitle endTime={endTime} auctionStatus={auctionStatus} />
           <Grid container spacing={2}>
             <Grid item xs={12} md={4}>
-              <AuctionBanner auctionStatus={auctionStatus} tokenPrice={tokenPrice} />
+              <AuctionBanner auctionStatus={auctionStatus} tokenPrice={tokenPrice} auctionToken={auctionToken} />
             </Grid>
             <Grid item xs={12} md={8}>
               <AuctionDetails
+                isLoading={isLoading}
                 address={address}
                 auctionStatus={auctionStatus}
                 tokenPrice={tokenPrice}

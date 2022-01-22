@@ -39,7 +39,15 @@ const AuctionController = ({ tokenPrice, fraxBalance, onCommitTokens }) => {
   };
 
   return (
-    <>
+    <Box
+      sx={{
+        padding: theme.spacing(2),
+        paddingLeft: theme.spacing(2),
+        paddingRight: theme.spacing(2),
+        backgroundColor: "#161429",
+        borderRadius: "12px",
+      }}
+    >
       <Grid container spacing={2} justifyContent="space-between">
         <Grid item xs={6} md={4}>
           <Typography variant="body1" color="textSecondary" style={{ marginBottom: theme.spacing(1) }}>
@@ -191,7 +199,7 @@ const AuctionController = ({ tokenPrice, fraxBalance, onCommitTokens }) => {
           Everyone who commits before the end of the auction, claims tokens at the same final price.
         </Typography>
       </Box>
-    </>
+    </Box>
   );
 };
 

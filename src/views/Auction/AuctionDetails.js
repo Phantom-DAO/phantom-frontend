@@ -10,6 +10,7 @@ import LineChartAuction from "./LineChartAuction";
 import { durationAsString } from "../../helpers";
 
 const AuctionDetails = ({
+  isLoading,
   auctionStatus,
   startPrice,
   minimumPrice,
@@ -60,11 +61,13 @@ const AuctionDetails = ({
       component={Paper}
       sx={{
         boxShadow: "0px 0px 64px rgba(119, 34, 252, 0.1)",
-        borderRadius: "10px",
+        borderRadius: "12px",
         minHeight: "100%",
+        border: "1px solid rgba(255, 255, 255, 0.1)",
+        backgroundColor: "#161429",
       }}
     >
-      {address ? (
+      {address && !isLoading ? (
         <>
           <Grid container spacing={2} justifyContent="flex-start" style={{ padding: theme.spacing(4) }}>
             <Grid item xs={6} md={3}>

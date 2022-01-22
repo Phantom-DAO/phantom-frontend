@@ -15,7 +15,7 @@ import { shouldTriggerSafetyCheck } from "./helpers";
 import { calcBondDetails } from "./slices/BondSlice";
 import { loadAppDetails } from "./slices/AppSlice";
 import { loadAccountDetails, calculateUserBondDetails } from "./slices/AccountSlice";
-import { loadAuctionDetails } from "./slices/AuctionSlice";
+import { loadAuctionDetails, loadMyCommitments } from "./slices/AuctionSlice";
 import { info } from "./slices/MessagesSlice";
 
 import { Stake, ChooseBond, Bond, Wrap, TreasuryDashboard, Auction } from "./views";
@@ -123,6 +123,7 @@ function App() {
 
   const loadAccount = useCallback(
     loadProvider => {
+      dispatch(loadMyCommitments({ address }));
       dispatch(loadAccountDetails({ networkID: chainID, address, provider: loadProvider }));
       bonds.map(bond => {
         dispatch(calculateUserBondDetails({ address, bond, provider, networkID: chainID }));

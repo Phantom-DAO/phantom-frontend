@@ -4,7 +4,7 @@ import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit"
 // @ts-ignore
 import { abi as AuctionAbi } from "../abi/auction.json";
 import { abi as ierc20ABI } from "../abi/IERC20.json";
-import { addresses } from "../constants";
+import { addresses, NetworkId } from "../constants";
 import { bnToNum, setAll } from "../helpers";
 import { RootState } from "src/store";
 import {
@@ -13,7 +13,10 @@ import {
   ICommitTokensAsyncThunk,
   IFraxApprovalAsyncThunk,
   IBaseAddressAsyncThunk,
+  IAddressAsyncThunk,
 } from "./interfaces";
+import apollo from "../lib/apolloClient";
+import { NodeHelper } from "src/helpers/NodeHelper";
 import { error, info } from "../slices/MessagesSlice";
 import { fetchAccountSuccess, getBalances } from "./AccountSlice";
 import { clearPendingTxn, fetchPendingTxns, getStakingTypeText } from "./PendingTxnsSlice";
@@ -31,6 +34,7 @@ export interface IAuctionDetails {
   startTime: number;
   endTime: number;
   totalTokens: number;
+  auctionToken: string;
 }
 
 export const loadAuctionDetails = createAsyncThunk(
@@ -46,6 +50,7 @@ export const loadAuctionDetails = createAsyncThunk(
       marketPrice,
       marketInfo,
       marketStatus,
+      auctionToken,
     ] = await Promise.all([
       auctionContract.clearingPrice(),
       auctionContract.auctionSuccessful(),
@@ -55,6 +60,7 @@ export const loadAuctionDetails = createAsyncThunk(
       auctionContract.marketPrice(),
       auctionContract.marketInfo(),
       auctionContract.marketStatus(),
+      auctionContract.auctionToken(),
     ]);
     const price = bnToNum(tokenPrice) / Math.pow(10, 18);
 
@@ -70,6 +76,7 @@ export const loadAuctionDetails = createAsyncThunk(
       startTime: bnToNum(marketInfo.startTime),
       endTime: bnToNum(marketInfo.endTime),
       totalTokens: bnToNum(marketInfo.totalTokens) / Math.pow(10, 18),
+      auctionToken,
     };
   },
 );
@@ -198,6 +205,54 @@ export const changeFraxApproval = createAsyncThunk(
   },
 );
 
+interface ICommitment {
+  readonly id: string;
+  readonly owner: string;
+  readonly displayName: string;
+  readonly imageUrl: string;
+}
+
+export const loadAllCommitments = createAsyncThunk("app/loadAllCommitments", async () => {
+  const commitments = `
+      query {
+        gravatars(first: 5) {
+          id
+          owner
+          displayName
+          imageUrl
+        }
+      }
+    `;
+
+  const graphData = await apollo(commitments);
+  if (!graphData || graphData == null) {
+    console.error("Returned a null response when querying TheGraph");
+    return { commitments: [] };
+  }
+
+  return { commitments: (graphData as any).data.gravatars };
+});
+
+export const loadMyCommitments = createAsyncThunk("app/loadMyCommitments", async ({ address }: IAddressAsyncThunk) => {
+  const commitments = `
+      query {
+        gravatars(first: 5, where: {owner_in: (${address})}) {
+          id
+          owner
+          displayName
+          imageUrl
+        }
+      }
+    `;
+
+  const graphData = await apollo(commitments);
+  if (!graphData || graphData == null) {
+    console.error("Returned a null response when querying TheGraph");
+    return { myCommitments: [] };
+  }
+  return { myCommitments: (graphData as any).data.gravatars };
+});
+
 // Note: this is a barebones interface for the state. Update to be more accurate
 interface IAuctionSlice extends IAuctionDetails {
   [key: string]: any;
@@ -215,6 +270,9 @@ const initialState: IAuctionSlice = {
   startTime: 0,
   endTime: 0,
   totalTokens: 0,
+  commitments: null,
+  myCommitments: null,
+  auctionToken: "",
 };
 
 const auctionSlice = createSlice({
@@ -233,6 +291,14 @@ const auctionSlice = createSlice({
       .addCase(loadAuctionDetails.rejected, (state, { error }) => {
         state.loading = false;
         console.error(error.message);
+      })
+      .addCase(loadAllCommitments.fulfilled, (state, action) => {
+        setAll(state, action.payload || {});
+        state.loading = false;
+      })
+      .addCase(loadMyCommitments.fulfilled, (state, action) => {
+        setAll(state, action.payload || {});
+        state.loading = false;
       });
   },
 });

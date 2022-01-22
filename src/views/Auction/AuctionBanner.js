@@ -1,18 +1,20 @@
-import { Box, Divider, IconButton, Link, SvgIcon, Typography, Paper, useTheme } from "@material-ui/core";
+import { Box, Divider, IconButton, Typography, Paper, useTheme } from "@material-ui/core";
 import { Skeleton } from "@material-ui/lab";
-
-import {
-  Folder as FolderIcon,
-  Twitter as TwitterIcon,
-  Telegram as TelegramIcon,
-  FileCopyOutlined as ContentCopyIcon,
-} from "@material-ui/icons";
+import copy from "copy-to-clipboard";
+import { FileCopyOutlined as ContentCopyIcon } from "@material-ui/icons";
 import aPhmLogo from "./../../assets/icons/token-aPHM-alt.png";
-import { ReactComponent as DiscordIcon } from "./../../assets/icons/discord.svg";
 import curvesImage from "./../../assets/images/Curves.png";
 
-const AuctionBanner = ({ auctionStatus, tokenPrice }) => {
+const AuctionBanner = ({ auctionStatus, tokenPrice, auctionToken }) => {
   const theme = useTheme();
+
+  const handleCopyAddress = e => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    copy(auctionToken);
+  };
   return (
     <Box
       component={Paper}
@@ -21,6 +23,7 @@ const AuctionBanner = ({ auctionStatus, tokenPrice }) => {
         borderRadius: "10px",
         position: "relative",
         minHeight: "100%",
+        border: "1px solid rgba(255, 255, 255, 0.1)",
       }}
     >
       <Box
@@ -104,78 +107,48 @@ const AuctionBanner = ({ auctionStatus, tokenPrice }) => {
           Care about adding positive net value to the web3 ecosystem? Backing founders building cool shit? This is for
           you.
         </Typography>
-        <Box
-          sx={{
-            display: "flex",
-            marginTop: theme.spacing(2),
-            justifyContent: "flex-start",
-            flexWrap: "wrap",
-            "& a": {
-              marginRight: theme.spacing(2),
-            },
-          }}
-        >
-          <Link href="https://docs.phantomdao.xyz/" target={"_blank"}>
-            <FolderIcon />
-          </Link>
-          <Link href="https://twitter.com/xPhantomDAO" target={"_blank"}>
-            <TwitterIcon />
-          </Link>
-          <Link href="https://discord.com/invite/ZAQX75htEb" target={"_blank"}>
-            <TelegramIcon />
-          </Link>
-          <Link href="#" target={"_blank"}>
-            <SvgIcon color="primary" component={DiscordIcon} />
-          </Link>
-        </Box>
-        <Box
-          sx={{
-            margin: theme.spacing(4, 0),
-          }}
-        >
-          <Divider />
-        </Box>
-        <Box
-          sx={{
-            display: "flex",
-            marginTop: theme.spacing(10),
-            padding: theme.spacing(1, 0),
-            justifyContent: "space-between",
-            justifySelf: "space-end",
-            bottom: 0,
-            width: "100%",
-          }}
-        >
-          <Box>
-            <Typography variant="h6" color="textSecondary">
-              TOKEN
-            </Typography>
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-              }}
-            >
-              <Typography variant="body1">0x0cEd05DEe64...</Typography>
-              <IconButton
-                style={{
-                  margin: 0,
-                  padding: 0,
-                }}
-              >
-                <ContentCopyIcon />
-              </IconButton>
-            </Box>
-          </Box>
+        <Box sx={{ position: "absolute", width: "100%", bottom: 0, left: 0 }}>
+          <Divider style={{ margin: theme.spacing(0, 2) }} />
           <Box
             sx={{
-              textAlign: "right",
+              display: "flex",
+              padding: theme.spacing(2),
+              justifyContent: "space-between",
+              width: "100%",
             }}
           >
-            <Typography variant="h6" color="textSecondary">
-              Auction Type
-            </Typography>
-            <Typography variant="body1">Dutch Auction</Typography>
+            <Box>
+              <Typography variant="h6" color="textSecondary">
+                TOKEN
+              </Typography>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                <Typography variant="body1">{auctionToken.slice(0, 13)}...</Typography>
+                <IconButton
+                  style={{
+                    margin: 0,
+                    padding: 0,
+                  }}
+                  onClick={handleCopyAddress}
+                >
+                  <ContentCopyIcon />
+                </IconButton>
+              </Box>
+            </Box>
+            <Box
+              sx={{
+                textAlign: "right",
+              }}
+            >
+              <Typography variant="h6" color="textSecondary">
+                Type
+              </Typography>
+              <Typography variant="body1">Dutch Auction</Typography>
+            </Box>
           </Box>
         </Box>
       </Box>

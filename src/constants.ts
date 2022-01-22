@@ -1,4 +1,4 @@
-export const THE_GRAPH_URL = "https://api.thegraph.com/subgraphs/name/drondin/olympus-graph";
+export const THE_GRAPH_URL = "https://api.thegraph.com/subgraphs/name/0xleez/phantom-da";
 export const EPOCH_INTERVAL = 2200;
 
 // NOTE could get this from an outside source since it changes slightly over time
@@ -10,6 +10,11 @@ export const POOL_GRAPH_URLS = {
   4: "https://api.thegraph.com/subgraphs/name/pooltogether/rinkeby-v3_4_3",
   1: "https://api.thegraph.com/subgraphs/name/pooltogether/pooltogether-v3_4_3",
 };
+
+export enum NetworkId {
+  FANTOM = 250,
+  FANTOM_TESTNET = 4002,
+}
 
 interface IAddresses {
   [key: number]: { [key: string]: string };

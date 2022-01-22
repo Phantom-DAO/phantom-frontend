@@ -73,6 +73,10 @@ export interface ICommitTokensAsyncThunk extends IBaseAddressAsyncThunk {
   readonly quantity: string;
 }
 
+export interface IAddressAsyncThunk {
+  readonly address: string;
+}
+
 export interface IFraxApprovalAsyncThunk extends IBaseAddressAsyncThunk {
   readonly value: string;
 }
