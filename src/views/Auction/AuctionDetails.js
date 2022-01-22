@@ -8,6 +8,7 @@ import { claimTokens } from "../../slices/AuctionSlice";
 import AuctionController from "./AuctionController";
 import LineChartAuction from "./LineChartAuction";
 import { durationAsString } from "../../helpers";
+import SkeletonLoader from "./SkeletonLoader";
 
 const AuctionDetails = ({
   isLoading,
@@ -67,7 +68,35 @@ const AuctionDetails = ({
         backgroundColor: "#161429",
       }}
     >
-      {address && !isLoading ? (
+      {!address ? (
+        <Box
+          sx={{
+            width: "100%",
+            position: "absolute",
+            top: 0,
+            left: 0,
+            height: "100%",
+            background: "radial-gradient(50% 50% at 50% 50%, #1D0443 0%, #010101 100%)",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            textAlign: "center",
+            borderRadius: "15px",
+          }}
+        >
+          <Box sx={{ marginBottom: theme.spacing(2) }}>
+            <Typography className="connect-wallet-text" variant="h6">
+              Please make sure to connect your wallet first
+            </Typography>
+          </Box>
+          <Button variant="contained" color="primary" className="connect-button" onClick={connect} key={1}>
+            Connect Wallet
+          </Button>
+        </Box>
+      ) : isLoading ? (
+        <SkeletonLoader />
+      ) : (
         <>
           <Grid container spacing={2} justifyContent="flex-start" style={{ padding: theme.spacing(4) }}>
             <Grid item xs={6} md={3}>
@@ -203,31 +232,6 @@ const AuctionDetails = ({
             <AuctionController tokenPrice={tokenPrice} fraxBalance={fraxBalance} onCommitTokens={onCommitTokens} />
           )}
         </>
-      ) : (
-        <Box
-          sx={{
-            width: "100%",
-            position: "absolute",
-            top: 0,
-            left: 0,
-            height: "100%",
-            background: "radial-gradient(50% 50% at 50% 50%, #1D0443 0%, #010101 100%)",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            textAlign: "center",
-          }}
-        >
-          <Box sx={{ marginBottom: theme.spacing(2) }}>
-            <Typography className="connect-wallet-text" variant="h6">
-              Please make sure to connect your wallet first
-            </Typography>
-          </Box>
-          <Button variant="contained" color="primary" className="connect-button" onClick={connect} key={1}>
-            Connect Wallet
-          </Button>
-        </Box>
       )}
     </Box>
   );

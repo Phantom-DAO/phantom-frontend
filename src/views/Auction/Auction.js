@@ -10,6 +10,7 @@ import CommitmentsTable from "./CommitmentsTable";
 import AuctionBanner from "./AuctionBanner";
 import AuctionTitle from "./AuctionTitle";
 import AuctionDetails from "./AuctionDetails";
+import SkeletonLoader from "./SkeletonLoader";
 import "./auction.scss";
 
 function createData(address, amountCommitted, claimable, txHash, blockNumber) {
