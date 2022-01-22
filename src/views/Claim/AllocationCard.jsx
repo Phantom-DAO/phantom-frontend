@@ -3,7 +3,6 @@ import { Skeleton } from "@material-ui/lab";
 import { useDispatch, useSelector } from "react-redux";
 import { useWeb3Context } from "src/hooks/web3Context";
 import { ReactComponent as TokenGold } from "../../assets/icons/token-gold.svg";
-import usePhantomLaunch from "../../hooks/usePhantomLaunch";
 import { claimFPHM } from "../../slices/ClaimSlice";
 import { success } from "../../slices/MessagesSlice";
 import "./claim.scss";
@@ -11,7 +10,7 @@ import LoaderButton from "./LoaderButton";
 
 const AllocationCard = ({ status, setStatus, onClaimSuccess }) => {
   const web3Context = useWeb3Context();
-  const PhantomLaunch = usePhantomLaunch();
+
   const { address, connect, provider, chainID } = useWeb3Context();
   const claimState = useSelector(s => s.claim);
 
