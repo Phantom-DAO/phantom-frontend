@@ -1,4 +1,4 @@
-export const THE_GRAPH_URL = "https://api.thegraph.com/subgraphs/name/drondin/olympus-graph";
+export const THE_GRAPH_URL = "https://api.thegraph.com/subgraphs/name/0xleez/phantom-da";
 export const EPOCH_INTERVAL = 2200;
 
 // NOTE could get this from an outside source since it changes slightly over time
@@ -10,6 +10,11 @@ export const POOL_GRAPH_URLS = {
   4: "https://api.thegraph.com/subgraphs/name/pooltogether/rinkeby-v3_4_3",
   1: "https://api.thegraph.com/subgraphs/name/pooltogether/pooltogether-v3_4_3",
 };
+
+export enum NetworkId {
+  FANTOM = 250,
+  FANTOM_TESTNET = 4002,
+}
 
 interface IAddresses {
   [key: number]: { [key: string]: string };
@@ -45,10 +50,16 @@ export const addresses: IAddresses = {
     PhantomStorage: "0xdc3ECa41F1020748BBe734C1d934cE64a1B4b2Fa",
     PhantomTreasury: "0x613d30088a48CC8BCC6390D0f66f6dd6b8AE76c7",
     PhantomVault: "0xaEABE773466BEe5B246128b487971FE12F520dC3",
+
+    /*PhantomAuction: "0xe57da0f3e0db8abc47e984d317938028aa0e0b70", // ended */
+    PhantomAuction: "0x8588762f41169425c233931ba306abf247013832", // 20jan-30jan (ongoing)
+    /*PhantomAuction: "0x4358A55CEdE788aAC2F7ec7bE3e91cf6D4A841fb", // 30jan-14feb*/
+
     aPHM: "0x0cEd05DEe6471F8bbcaeA61F93615b159EF26197",
     fPHM: "0xE7B53E8A2EaC1Be321AC66bDbD8874Bbe78C155A",
     gPHM: "0xa68c78BAf1291C201228Af4FD54F564b6aFd24EA",
     sPHM: "0x8bEe8D80d9970Aa82AEcC8963494fa1a57Ba2978",
+    frax: "0xfafedb041c0dd4fa2dc0d87a6b0979ee6fa7af5f", // LINK address, kept name same as prod for ease
   },
   4: {
     DAI_ADDRESS: "0xB2180448f8945C8Cc8AE9809E67D6bd27d8B2f2C", // duplicate

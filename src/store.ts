@@ -4,6 +4,7 @@ import bondingReducer from "./slices/BondSlice";
 import appReducer from "./slices/AppSlice";
 import pendingTransactionsReducer from "./slices/PendingTxnsSlice";
 import messagesReducer from "./slices/MessagesSlice";
+import auctionReducer from "./slices/AuctionSlice";
 // reducers are named automatically based on the name field in the slice
 // exported in slice files by default as nameOfSlice.reducer
 
@@ -16,6 +17,7 @@ const store = configureStore({
     app: appReducer,
     pendingTransactions: pendingTransactionsReducer,
     messages: messagesReducer,
+    auction: auctionReducer,
   },
   middleware: getDefaultMiddleware => getDefaultMiddleware({ serializableCheck: false }),
 });

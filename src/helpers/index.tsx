@@ -1,6 +1,7 @@
 import { EPOCH_INTERVAL, BLOCK_RATE_SECONDS, addresses } from "../constants";
 import { BigNumber, ethers } from "ethers";
 import axios from "axios";
+import moment from "moment";
 import { abi as PairContractABI } from "../abi/PairContract.json";
 import { abi as RedeemHelperABI } from "../abi/RedeemHelper.json";
 
@@ -219,4 +220,22 @@ export const toBN = (num: number) => {
 
 export const bnToNum = (bigNum: BigNumber) => {
   return Number(bigNum.toString());
+};
+
+export const durationAsString = (start: number, end: number) => {
+  const duration = moment.duration(moment(end).diff(moment(start)));
+
+  //Get Days
+  const days = Math.floor(duration.asDays()); // .asDays returns float but we are interested in full days only
+  const daysFormatted = days ? `${days}D ` : ""; // if no full days then do not display it at all
+
+  //Get Hours
+  const hours = duration.hours();
+  const hoursFormatted = `${hours}H `;
+
+  //Get Minutes
+  const minutes = duration.minutes();
+  const minutesFormatted = `${minutes}Min`;
+
+  return [daysFormatted, hoursFormatted, minutesFormatted].join("");
 };
