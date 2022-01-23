@@ -226,16 +226,20 @@ export const durationAsString = (start: number, end: number) => {
   const duration = moment.duration(moment(end).diff(moment(start)));
 
   //Get Days
-  const days = Math.floor(duration.asDays()); // .asDays returns float but we are interested in full days only
+  let days = Math.floor(duration.asDays()); // .asDays returns float but we are interested in full days only
+  if (days < 0) days = 0;
   const daysFormatted = days ? `${days}D ` : ""; // if no full days then do not display it at all
 
   //Get Hours
-  const hours = duration.hours();
+  let hours = duration.hours();
+  if (hours < 0) hours = 0;
   const hoursFormatted = `${hours}H `;
 
   //Get Minutes
-  const minutes = duration.minutes();
+  let minutes = duration.minutes();
+  if (minutes < 0) minutes = 0;
   const minutesFormatted = `${minutes}Min`;
-
+  // case when it's under 1 min
+  if (!days && !hours && !minutes) minutes = 1;
   return [daysFormatted, hoursFormatted, minutesFormatted].join("");
 };

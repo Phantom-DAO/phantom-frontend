@@ -1,4 +1,4 @@
-export const THE_GRAPH_URL = "https://api.thegraph.com/subgraphs/name/0xleez/phantom-da";
+export const THE_GRAPH_URL = "https://api.thegraph.com/subgraphs/name/0xleez/ph-subgraphs";
 export const EPOCH_INTERVAL = 2200;
 
 // NOTE could get this from an outside source since it changes slightly over time
@@ -22,7 +22,10 @@ interface IAddresses {
 
 export const addresses: IAddresses = {
   /* FTM */
-  250: {},
+  250: {
+    PhantomAuction: "0x67eA2dC0D042eF1dEB62AB5e3d0f687231F11B17", // test contract
+    frax: "0xdc301622e621166bd8e82f2ca0a26c13ad0be355", //
+  },
   /* FTM testnet */
   4002: {
     DAI_ADDRESS: "", // duplicate
@@ -54,6 +57,7 @@ export const addresses: IAddresses = {
     /*PhantomAuction: "0xe57da0f3e0db8abc47e984d317938028aa0e0b70", // ended */
     PhantomAuction: "0x8588762f41169425c233931ba306abf247013832", // 20jan-30jan (ongoing)
     /*PhantomAuction: "0x4358A55CEdE788aAC2F7ec7bE3e91cf6D4A841fb", // 30jan-14feb*/
+    /*PhantomAuction: "0x540B02e3Ac75f00f92512b0ae66f1A79b8E49A21",*/
 
     aPHM: "0x0cEd05DEe6471F8bbcaeA61F93615b159EF26197",
     fPHM: "0xcbD5351D8dF3dd12154042D08b7D0d907f58Aa31",

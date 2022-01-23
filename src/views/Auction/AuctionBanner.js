@@ -77,7 +77,7 @@ const AuctionBanner = ({ auctionStatus, tokenPrice, auctionToken }) => {
           </Box>
         )}
       </Box>
-      <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+      <Box sx={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
         <Box
           sx={{
             backgroundColor: "#0C0B17",
