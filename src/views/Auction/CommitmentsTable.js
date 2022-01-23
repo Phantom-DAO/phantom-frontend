@@ -16,11 +16,12 @@ import {
 } from "@material-ui/core";
 import { useState } from "react";
 
-const CommitmentsTable = ({ rows, account }) => {
+const CommitmentsTable = ({ commitments, myCommitments, tokenPrice }) => {
   const theme = useTheme();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [allOrMine, setAllOrMine] = useState("all");
+  const rows = allOrMine === "all" ? commitments || [] : myCommitments || [];
 
   return (
     <Box
@@ -84,37 +85,36 @@ const CommitmentsTable = ({ rows, account }) => {
           >
             <TableRow>
               <TableCell>Address</TableCell>
-              <TableCell align="right">Amount Committed</TableCell>
-              <TableCell align="right">Claimable</TableCell>
-              <TableCell align="right">Tx Hash</TableCell>
-              <TableCell align="right">Block Number</TableCell>
+              <TableCell align="left">Amount Committed</TableCell>
+              <TableCell align="left">Claimable</TableCell>
+              <TableCell align="left">Tx Hash</TableCell>
+              <TableCell align="left">Block Number</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {(allOrMine === "all"
-              ? rowsPerPage > 0
-                ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                : rows
-              : rowsPerPage > 0
-              ? rows.filter(row => row.address === account).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              : rows.filter(row => row.address === account)
-            ).map((row, index) => (
-              <TableRow key={`${index}-${row.address}`} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-                <TableCell component="th" scope="row">
-                  {row.address}
-                </TableCell>
-                <TableCell align="right">{row.amountCommitted} FRAX</TableCell>
-                <TableCell align="right">{row.claimable} aPHM</TableCell>
-                <TableCell align="right">{row.txHash}</TableCell>
-                <TableCell align="right">{row.blockNumber}</TableCell>
-              </TableRow>
-            ))}
+            {(rowsPerPage > 0 ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : rows).map(
+              (row, index) => (
+                <TableRow key={`${index}-${row.address}`} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
+                  <TableCell component="th" scope="row">
+                    {row.contributor.slice(0, 10)}...{row.contributor.slice(row.contributor.length - 8)}
+                  </TableCell>
+                  <TableCell align="left">{+row.amountCommited / 1e18} FRAX</TableCell>
+                  <TableCell align="left">
+                    {Math.round((+row.amountCommited / 1e18 / tokenPrice) * 100) / 100} aPHM
+                  </TableCell>
+                  <TableCell align="left">
+                    {row.txHash.slice(0, 10)}...{row.txHash.slice(row.txHash.length - 8)}
+                  </TableCell>
+                  <TableCell align="left">{row.blockNumber}</TableCell>
+                </TableRow>
+              ),
+            )}
           </TableBody>
           <TableFooter>
             <TablePagination
               rowsPerPageOptions={[5, 10, 50, 100]}
               rowsPerPage={rowsPerPage}
-              count={allOrMine === "all" ? rows.length : rows.filter(row => row.address === account).length}
+              count={rows.length}
               page={page}
               onPageChange={(event, newPage) => {
                 setPage(newPage);
