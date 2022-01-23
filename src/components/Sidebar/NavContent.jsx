@@ -71,6 +71,7 @@ function NavContent() {
           <div className="dapp-menu-links">
             <div className="dapp-nav" id="navbarNav">
               <Link
+                disabled
                 component={NavLink}
                 id="dash-nav"
                 to="/dashboard"
@@ -86,6 +87,7 @@ function NavContent() {
               </Link>
 
               <Link
+                disabled
                 component={NavLink}
                 id="auction-nav"
                 to="/auction"
@@ -101,6 +103,7 @@ function NavContent() {
               </Link>
 
               <Link
+                disabled
                 component={NavLink}
                 id="stake-nav"
                 to="/"
@@ -131,6 +134,7 @@ function NavContent() {
               </Link> */}
 
               <Link
+                disabled
                 component={NavLink}
                 id="bond-nav"
                 to="/bonds"

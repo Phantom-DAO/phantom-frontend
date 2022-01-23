@@ -109,8 +109,10 @@ const AllocationCard = ({ status, setStatus, onClaimSuccess }) => {
         </Box>
       </Paper>
       <Typography align="center" variant="p" color="textSecondary" style={{ marginTop: "24px", lineHeight: "20px" }}>
-        fPHM is vested linearly over 1 year, with 25% unlocked on day 1 of Phantoms release{" "}
-        <a className="info-link">Read more about fPHM</a>
+        fPHM is vested linearly over 1 year, with 25% unlocked on day 1 of Phantoms release <br />
+        <a className="info-link" href="https://medium.com/phantom-dao/specters-rejoice-2b286bb23b64" target="_blank">
+          Read more about fPHM
+        </a>
       </Typography>
     </>
   );
