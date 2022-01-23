@@ -5,6 +5,7 @@ import WalletConnectProvider from "@walletconnect/web3-provider";
 import { IFrameEthereumProvider } from "@ledgerhq/iframe-provider";
 import { EnvHelper } from "../helpers/Environment";
 import { NodeHelper } from "src/helpers/NodeHelper";
+import { switchNetwork } from "./switchNetwork";
 
 /**
  * kept as function to mimic `getMainnetURI()`
@@ -162,6 +163,7 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({ chil
     const validNetwork = _checkNetwork(chainId);
     if (!validNetwork) {
       console.error("Wrong network, please switch to FTM mainnet");
+      switchNetwork();
       return;
     }
     // Save everything after we've validated the right network.
