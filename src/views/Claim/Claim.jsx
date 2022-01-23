@@ -39,6 +39,15 @@ const Claim = () => {
 
   return (
     <div id="claim-view">
+      {address ? (
+        <div className="disconnect-button">
+          <Button variant="outlined" color="secondary" size="medium" onClick={disconnect}>
+            Disconnect
+          </Button>
+        </div>
+      ) : (
+        <></>
+      )}
       <Zoom in={true}>
         <Grid direction="column" container alignItems="center" justifyContent="center">
           <PhantomTitle className="title" height={isMobileScreen && "50px"} />
