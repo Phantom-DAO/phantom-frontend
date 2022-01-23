@@ -1,12 +1,29 @@
-import { Box, Grid, Paper, Typography, Button } from "@material-ui/core";
+import { Box, Button, Paper, Typography } from "@material-ui/core";
+import { useHistory } from "react-router-dom";
 import { useWeb3Context } from "src/hooks/web3Context";
-import { useState } from "react";
 import { ReactComponent as CheckGold } from "../../assets/icons/check-gold.svg";
-
-import LoaderButton from "./LoaderButton";
+import { addresses } from "../../constants";
 import "./claim.scss";
 
 const Greeting = ({ isMobileScreen }) => {
+  const { chainID } = useWeb3Context();
+  const history = useHistory();
+
+  const handleAddFPHM = async () => {
+    if (!window.ethereum) return;
+    await window.ethereum.request({
+      method: "wallet_watchAsset",
+      params: {
+        type: "ERC20", // Initially only supports ERC20, but eventually more!
+        options: {
+          address: addresses[chainID].fPHM,
+          symbol: "fPHM", // A ticker symbol or shorthand, up to 5 chars.
+          decimals: 18, // The number of decimals in the token
+          image: "https://i.ibb.co/qCQYxXN/Token-f-PHM-Style-Alt.png",
+        },
+      },
+    });
+  };
   return (
     <Paper className="claim-card">
       <Box
@@ -38,6 +55,7 @@ const Greeting = ({ isMobileScreen }) => {
             variant="outlined"
             color="secondary"
             size="medium"
+            onClick={() => history.push("/swap")}
             style={{
               fontSize: "16px",
             }}
@@ -51,6 +69,7 @@ const Greeting = ({ isMobileScreen }) => {
             style={{
               fontSize: "16px",
             }}
+            onClick={handleAddFPHM}
           >
             Add fPHM to wallet
           </Button>
