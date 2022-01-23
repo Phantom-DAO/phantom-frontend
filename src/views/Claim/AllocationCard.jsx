@@ -76,7 +76,7 @@ const AllocationCard = ({ status, setStatus, onClaimSuccess }) => {
               <TokenGold />
               {!claimState.allocationLoading ? (
                 claimState.pendingFPHM === 0 ? (
-                  <Typography>You have nothing to claim.</Typography>
+                  <Typography variant="h3">0 fPHM</Typography>
                 ) : (
                   <Typography variant="h3">{claimState.pendingFPHM} fPHM</Typography>
                 )
@@ -86,24 +86,23 @@ const AllocationCard = ({ status, setStatus, onClaimSuccess }) => {
             </Box>
           </Box>
 
-          {status === "not-claimed" && claimState.pendingFPHM > 0 && (
-            <Button
-              variant="contained"
-              color="primary"
-              size="medium"
-              style={{
-                fontSize: "16px",
-                minWidth: "100px",
-              }}
-              onClick={handleClaim}
-              disabled={claimState.claimLoading}
-            >
-              Claim
-              <Box ml={1} mt={1}>
-                {claimState.claimLoading && <CircularProgress size={22} />}
-              </Box>
-            </Button>
-          )}
+          <Button
+            variant="contained"
+            color="primary"
+            size="medium"
+            style={{
+              fontSize: "16px",
+              minWidth: "100px",
+            }}
+            onClick={handleClaim}
+            disabled={claimState.claimLoading || claimState.pendingFPHM === 0}
+          >
+            Claim
+            <Box ml={1} mt={1}>
+              {claimState.claimLoading && <CircularProgress size={22} />}
+            </Box>
+          </Button>
+
           {status === "pending" && <LoaderButton />}
 
           {/* Disabled version of the button which is shown if a user revisits already claimed tokens and there are no token to claim */}
