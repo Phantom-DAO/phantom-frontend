@@ -24,6 +24,8 @@ const AuctionBanner = ({ auctionStatus, tokenPrice, auctionToken }) => {
         position: "relative",
         minHeight: "100%",
         border: "1px solid rgba(255, 255, 255, 0.1)",
+        display: "flex",
+        flexDirection: "column",
       }}
     >
       <Box
@@ -75,39 +77,41 @@ const AuctionBanner = ({ auctionStatus, tokenPrice, auctionToken }) => {
           </Box>
         )}
       </Box>
-      <Box
-        sx={{
-          backgroundColor: "#0C0B17",
-          borderRadius: "10px",
-          borderTopLeftRadius: "0",
-          borderTopRightRadius: "0",
-          padding: theme.spacing(2),
-        }}
-      >
-        <Typography
-          variant="body1"
-          color="textSecondary"
-          style={{ lineHeight: "1.3125rem", marginBottom: theme.spacing(2) }}
+      <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+        <Box
+          sx={{
+            backgroundColor: "#0C0B17",
+            borderRadius: "10px",
+            borderTopLeftRadius: "0",
+            borderTopRightRadius: "0",
+            padding: theme.spacing(2),
+          }}
         >
-          Phantom is a community-owned web3 version of Y-Combinator on Fantom.
-        </Typography>
-        <Typography
-          variant="body1"
-          color="textSecondary"
-          style={{ lineHeight: "1.3125rem", marginBottom: theme.spacing(2) }}
-        >
-          A portion of Phantom’s treasury is dedicated to an Accelerator program that accepts up-and-coming DeFi,
-          Metaverse, Gaming & Education startups.
-        </Typography>
-        <Typography
-          variant="body1"
-          color="textSecondary"
-          style={{ lineHeight: "1.3125rem", marginBottom: theme.spacing(2) }}
-        >
-          Care about adding positive net value to the web3 ecosystem? Backing founders building cool shit? This is for
-          you.
-        </Typography>
-        <Box sx={{ position: "absolute", width: "100%", bottom: 0, left: 0 }}>
+          <Typography
+            variant="body1"
+            color="textSecondary"
+            style={{ lineHeight: "1.3125rem", marginBottom: theme.spacing(2) }}
+          >
+            Phantom is a community-owned web3 version of Y-Combinator on Fantom.
+          </Typography>
+          <Typography
+            variant="body1"
+            color="textSecondary"
+            style={{ lineHeight: "1.3125rem", marginBottom: theme.spacing(2) }}
+          >
+            A portion of Phantom’s treasury is dedicated to an Accelerator program that accepts up-and-coming DeFi,
+            Metaverse, Gaming & Education startups.
+          </Typography>
+          <Typography
+            variant="body1"
+            color="textSecondary"
+            style={{ lineHeight: "1.3125rem", marginBottom: theme.spacing(2) }}
+          >
+            Care about adding positive net value to the web3 ecosystem? Backing founders building cool shit? This is for
+            you.
+          </Typography>
+        </Box>
+        <Box>
           <Divider style={{ margin: theme.spacing(0, 2) }} />
           <Box
             sx={{
@@ -127,7 +131,11 @@ const AuctionBanner = ({ auctionStatus, tokenPrice, auctionToken }) => {
                   alignItems: "center",
                 }}
               >
-                <Typography variant="body1">{auctionToken.slice(0, 13)}...</Typography>
+                {auctionToken ? (
+                  <Typography variant="body1">{auctionToken.slice(0, 13)}...</Typography>
+                ) : (
+                  <Skeleton width="60px" height="20px" />
+                )}
                 <IconButton
                   style={{
                     margin: 0,
