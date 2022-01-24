@@ -26,7 +26,7 @@ import ClaimBonds from "./ClaimBonds";
 import isEmpty from "lodash/isEmpty";
 import { allBondsMap } from "src/helpers/AllBonds";
 import { NetworkID } from "src/lib/Bond";
-import { fakeBonds } from "./FakeBonds";
+import { fakeBonds } from "src/helpers/FakeBonds";
 
 function ChooseBond() {
   const { chainID } = useWeb3Context();

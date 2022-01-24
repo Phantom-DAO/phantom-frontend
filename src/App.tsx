@@ -33,6 +33,9 @@ import WhiteList from "./Whitelist";
 import "./style.scss";
 import { getFPHMAllocation } from "./slices/ClaimSlice";
 
+// TODO: This is fake bond data until contracts are done
+import { fakeBonds } from "./helpers/FakeBonds";
+
 // 😬 Sorry for all the console logging
 const DEBUG = false;
 
@@ -93,7 +96,8 @@ function App() {
 
   const [walletChecked, setWalletChecked] = useState(false);
 
-  const { bonds } = useBonds(chainID);
+  // const { bonds } = useBonds(chainID);
+  const bonds = fakeBonds;
   async function loadDetails(whichDetails: string) {
     // NOTE (unbanksy): If you encounter the following error:
     // Unhandled Rejection (Error): call revert exception (method="balanceOf(address)", errorArgs=null, errorName=null, errorSignature=null, reason=null, code=CALL_EXCEPTION, version=abi/5.4.0)
@@ -117,9 +121,9 @@ function App() {
     loadProvider => {
       dispatch(loadAuctionDetails({ provider, networkID: chainID }));
       dispatch(loadAppDetails({ networkID: chainID, provider: loadProvider }));
-      bonds.map(bond => {
-        dispatch(calcBondDetails({ bond, value: "", provider: loadProvider, networkID: chainID }));
-      });
+      // bonds.map(bond => {
+      //   dispatch(calcBondDetails({ bond, value: "", provider: loadProvider, networkID: chainID }));
+      // });
     },
     [connected],
   );
@@ -128,9 +132,9 @@ function App() {
     loadProvider => {
       dispatch(loadMyCommitments({ address }));
       dispatch(loadAccountDetails({ networkID: chainID, address, provider: loadProvider }));
-      bonds.map(bond => {
-        dispatch(calculateUserBondDetails({ address, bond, provider, networkID: chainID }));
-      });
+      // bonds.map(bond => {
+      //   dispatch(calculateUserBondDetails({ address, bond, provider, networkID: chainID }));
+      // });
       dispatch(getFPHMAllocation({ address, networkID: chainID, provider: loadProvider }));
       dispatch(loadSwapBalances({ address, networkID: chainID, provider: loadProvider }));
     },
