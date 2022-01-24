@@ -79,8 +79,8 @@ const Swap = () => {
     [balancesLoading],
   );
 
-  const approveOrSwapAPHM = aPHMAllowance >= aPHMBalance ? "swap" : "approve";
-  const approveOrSwapFPHM = fPHMAllowance > 0 ? "swap" : "approve";
+  const approveOrSwapAPHM = aPHMAllowance >= aPHMBalance && aPHMBalance > 0 ? "swap" : "approve";
+  const approveOrSwapFPHM = fPHMAllowance >= fPHMBalance && fPHMBalance > 0 ? "swap" : "approve";
   return (
     <div id="swap-view">
       <Zoom in={true}>
