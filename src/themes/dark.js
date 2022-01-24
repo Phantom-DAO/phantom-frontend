@@ -130,6 +130,14 @@ export const dark = responsiveFontSizes(
               color: darkTheme.color,
               textDecoration: "underline",
             },
+            "&[disabled]": {
+              color: "grey",
+              cursor: "default",
+              pointerEvents: "none",
+              "&:hover": {
+                textDecoration: "none",
+              },
+            },
           },
         },
         MuiTableCell: {

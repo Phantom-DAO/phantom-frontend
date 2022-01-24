@@ -158,6 +158,11 @@ export const commitTokens = createAsyncThunk(
     }
     dispatch(getBalances({ address, networkID, provider }));
     dispatch(loadAuctionDetails({ networkID, provider }));
+    // give thegraph a couple secs to process the event
+    setTimeout(() => {
+      dispatch(loadAllCommitments());
+      dispatch(loadMyCommitments({ address }));
+    }, 3000);
   },
 );
 
@@ -205,21 +210,14 @@ export const changeFraxApproval = createAsyncThunk(
   },
 );
 
-interface ICommitment {
-  readonly id: string;
-  readonly owner: string;
-  readonly displayName: string;
-  readonly imageUrl: string;
-}
-
 export const loadAllCommitments = createAsyncThunk("app/loadAllCommitments", async () => {
   const commitments = `
       query {
-        gravatars(first: 5) {
-          id
-          owner
-          displayName
-          imageUrl
+        commitments {
+          contributor
+          amountCommited
+          txHash
+          blockNumber
         }
       }
     `;
@@ -230,27 +228,27 @@ export const loadAllCommitments = createAsyncThunk("app/loadAllCommitments", asy
     return { commitments: [] };
   }
 
-  return { commitments: (graphData as any).data.gravatars };
+  return { commitments: (graphData as any).data.commitments };
 });
 
 export const loadMyCommitments = createAsyncThunk("app/loadMyCommitments", async ({ address }: IAddressAsyncThunk) => {
   const commitments = `
-      query {
-        gravatars(first: 5, where: {owner_in: (${address})}) {
-          id
-          owner
-          displayName
-          imageUrl
-        }
+    query {
+      commitments (where: {contributor: "${address}"}) {
+        contributor
+        amountCommited
+        txHash
+        blockNumber
       }
-    `;
+    }
+  `;
 
   const graphData = await apollo(commitments);
   if (!graphData || graphData == null) {
     console.error("Returned a null response when querying TheGraph");
     return { myCommitments: [] };
   }
-  return { myCommitments: (graphData as any).data.gravatars };
+  return { myCommitments: (graphData as any).data.commitments };
 });
 
 // Note: this is a barebones interface for the state. Update to be more accurate

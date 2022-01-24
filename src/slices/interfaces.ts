@@ -4,6 +4,7 @@ import { Bond, NetworkID } from "src/lib/Bond";
 export interface IJsonRPCError {
   readonly message: string;
   readonly code: number;
+  readonly data?: any;
 }
 
 export interface IBaseAsyncThunk {

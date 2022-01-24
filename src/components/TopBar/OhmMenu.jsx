@@ -202,7 +202,7 @@ function OhmMenu() {
 
                 <Divider color="secondary" />
                 <Link
-                  href="https://docs.olympusdao.finance/using-the-website/unstaking_lp"
+                  href="https://www.notion.so/Phantom-Governance-01afd36a7b3c4d838d7456b84724e34e"
                   target="_blank"
                   rel="noreferrer"
                 >

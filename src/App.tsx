@@ -16,6 +16,7 @@ import { calcBondDetails } from "./slices/BondSlice";
 import { loadAppDetails } from "./slices/AppSlice";
 import { loadAccountDetails, calculateUserBondDetails } from "./slices/AccountSlice";
 import { loadAuctionDetails, loadMyCommitments } from "./slices/AuctionSlice";
+import { loadSwapBalances } from "./slices/SwapSlice";
 import { info } from "./slices/MessagesSlice";
 
 import { Stake, ChooseBond, Bond, Wrap, TreasuryDashboard, Auction, Swap, Claim } from "./views";
@@ -131,6 +132,7 @@ function App() {
         dispatch(calculateUserBondDetails({ address, bond, provider, networkID: chainID }));
       });
       dispatch(getFPHMAllocation({ address, networkID: chainID, provider: loadProvider }));
+      dispatch(loadSwapBalances({ address, networkID: chainID, provider: loadProvider }));
     },
     [connected],
   );
@@ -207,7 +209,6 @@ function App() {
   } else {
     return (
       <ThemeProvider theme={themeMode}>
-        {console.log("im finally here")}
         <CssBaseline />
         {/* {isAppLoading && <LoadingSplash />} */}
         <div className={`app ${isSmallerScreen && "tablet"} ${isSmallScreen && "mobile"} ${theme}`}>
@@ -223,31 +224,35 @@ function App() {
 
           <div className={`${classes.content} ${isSmallerScreen && classes.contentShift}`}>
             <Switch>
-              <Route exact path="/dashboard">
+              {/* <Route exact path="/dashboard">
                 <TreasuryDashboard />
               </Route>
 
               <Route exact path="/">
                 <Redirect to="/stake" />
               </Route>
-
+              
               <Route path="/stake">
-                <Stake />
-              </Route>
+              <Stake />
+            </Route> */}
 
               <Route path="/claim">
                 <Claim />
               </Route>
 
-              <Route path="/auction">
+              {/* <Route path="/auction">
                 <Auction />
+              </Route> */}
+
+              <Route exact path="/">
+                <Redirect to="/swap" />
               </Route>
 
               <Route path="/swap">
                 <Swap />
               </Route>
 
-              <Route path="/wrap">
+              {/* <Route path="/wrap">
                 <Wrap />
               </Route>
 
@@ -260,7 +265,7 @@ function App() {
                   );
                 })}
                 <ChooseBond />
-              </Route>
+              </Route> */}
 
               <Route component={NotFound} />
             </Switch>

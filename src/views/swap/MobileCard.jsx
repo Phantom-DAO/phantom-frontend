@@ -1,7 +1,7 @@
-import { Box, Typography, Zoom, SvgIcon, useTheme, Button, useMediaQuery } from "@material-ui/core";
+import { Box, Typography, CircularProgress, useTheme, Button } from "@material-ui/core";
 import "./swap.scss";
 
-const MobileCard = ({ icon, balance, unlocked, onApprove, swapText }) => {
+const MobileCard = ({ icon, balance, unlocked, onClick, swapText, buttonLabel, loading }) => {
   const theme = useTheme();
   return (
     <Box style={{ padding: "24px " }}>
@@ -23,8 +23,20 @@ const MobileCard = ({ icon, balance, unlocked, onApprove, swapText }) => {
         </Typography>
         <Typography variant="p">{unlocked}</Typography>
       </Box>
-      <Button variant="outlined" onClick={onApprove} color="primary" style={{ width: "100%" }} size="small">
-        Approve
+      <Button
+        variant="outlined"
+        onClick={onClick}
+        color="primary"
+        style={{ width: "100%" }}
+        size="small"
+        disabled={balance === 0}
+      >
+        {loading && (
+          <Box mr={1} mt={1}>
+            <CircularProgress size={22} />
+          </Box>
+        )}
+        {buttonLabel}
       </Button>
     </Box>
   );

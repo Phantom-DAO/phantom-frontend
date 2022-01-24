@@ -1,8 +1,8 @@
 {
-  "short_name": "OlympusDAO",
+  "short_name": "PhantomDAO",
   "start_url": ".",
   "homepage": "./",
-  "name": "OlympusDAO",
+  "name": "PhantomDAO",
   "launch_path": "/public/index.html",
   "icons": [
     {
