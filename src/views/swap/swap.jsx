@@ -1,10 +1,9 @@
 import {
   Box,
-  Grid,
+  CircularProgress,
   Paper,
   Typography,
   Zoom,
-  SvgIcon,
   useTheme,
   Table,
   TableHead,
@@ -15,21 +14,18 @@ import {
   Button,
   useMediaQuery,
 } from "@material-ui/core";
-import MobileCard from "./MobileCard";
-import "./swap.scss";
-
-// for wallet access see const in swap function
 import { useWeb3Context } from "src/hooks/web3Context";
-
 // maintain state for some settings
 import { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
 import { Skeleton } from "@material-ui/lab";
-import { getOhmTokenImage, getTokenImage, trim } from "../../helpers";
 
+import { getOhmTokenImage, getTokenImage } from "../../helpers";
 import { ReactComponent as APHMToPHM } from "../../assets/icons/aphm-to-phm.svg";
 import { ReactComponent as FPHMToGPHM } from "../../assets/icons/fphm-to-gphm.svg";
+import { swapFPHMToGPHM, swapAPHMToPHM, approveFPHM, approveAPHM } from "../../slices/SwapSlice";
+import MobileCard from "./MobileCard";
+import "./swap.scss";
 
 // TODO: 1 Implementation
 // add getimage to ./helpers/index.tsx
@@ -40,46 +36,51 @@ const Swap = () => {
   const theme = useTheme();
   const isMobileScreen = useMediaQuery("(max-width: 700px)");
   const { provider, address, connected, connect, chainID } = useWeb3Context();
-  const [zoomed, setZoomed] = useState(false);
-  const [view, setView] = useState(0);
-  const [quantity, setQuantity] = useState("");
-  const isAppLoading = useSelector(state => state.app.loading);
+  const dispatch = useDispatch();
 
-  const sampleData = [
-    { swap: 1, balance: 10, unlocked: 20 },
-    { swap: 2, balance: 10, unlocked: 20 },
-  ];
-  const renderSwapTable = (swap, balance, unlocked) => (
-    <TableRow>
-      <TableCell width="40%" align="left">
-        <Box className="swap-token">
-          {swap === 1 ? <APHMToPHM /> : <FPHMToGPHM />}
-          <Typography style={{ marginLeft: "5px" }} variant="h6">
-            {swap === 1 ? "aPHM to PHM" : "fPHM to gPHM"}
-          </Typography>
-        </Box>
-      </TableCell>
-      <TableCell width="20%" align="right">
-        {balance}
-      </TableCell>
-      <TableCell width="20%" align="right">
-        {unlocked}
-      </TableCell>
-      <TableCell width="20%" align="right">
-        <Button variant="outlined" color="primary" size="small">
-          Approve
-        </Button>
-      </TableCell>
-    </TableRow>
+  const {
+    balancesLoading,
+    approveAPHMLoading,
+    approveFPHMLoading,
+    FPHMToGPHMLoading,
+    APHMToPHMLoading,
+    unlockedFPHM,
+    fPHMBalance,
+    aPHMBalance,
+    fPHMAllowance,
+    aPHMAllowance,
+    error,
+  } = useSelector(state => state.swap);
+
+  const handleSwapAPHM = async () => {
+    dispatch(swapAPHMToPHM({ provider, address, networkID: chainID, value: aPHMBalance }));
+  };
+
+  const handleApproveAPHM = () => {
+    dispatch(approveAPHM({ provider, address, value: aPHMBalance, networkID: chainID }));
+  };
+
+  const handleSwapFPHM = async () => {
+    dispatch(swapFPHMToGPHM({ provider, address, value: fPHMBalance, networkID: chainID }));
+  };
+
+  const handleApproveFPHM = () => {
+    dispatch(approveFPHM({ provider, address, value: 100, networkID: chainID }));
+  };
+
+  const loadingBalance = useCallback(
+    balance => {
+      return balancesLoading ? (
+        <Skeleton width="50px" height="20px" style={{ marginLeft: "60%" }} />
+      ) : (
+        Math.round(balance * 100) / 100
+      );
+    },
+    [balancesLoading],
   );
 
-  const ohmBalance = useSelector(state => {
-    return state.account.balances && state.account.balances.ohm;
-  });
-  const sohmBalance = useSelector(state => {
-    return state.account.balances && state.account.balances.sohm;
-  });
-
+  const approveOrSwapAPHM = aPHMAllowance >= aPHMBalance ? "swap" : "approve";
+  const approveOrSwapFPHM = fPHMAllowance > 0 ? "swap" : "approve";
   return (
     <div id="swap-view">
       <Zoom in={true}>
@@ -120,16 +121,20 @@ const Swap = () => {
                   <MobileCard
                     icon={<APHMToPHM />}
                     swapText={"aPHM to PHM"}
-                    balance={100}
-                    unlocked={100}
-                    onApprove={() => {}}
+                    balance={loadingBalance(aPHMBalance)}
+                    unlocked={loadingBalance(aPHMBalance)}
+                    buttonLabel={approveOrSwapAPHM === "approve" ? "Approve" : "Swap"}
+                    loading={approveOrSwapAPHM === "approve" ? approveAPHMLoading : APHMToPHMLoading}
+                    onClick={approveOrSwapAPHM === "approve" ? handleApproveAPHM : handleSwapAPHM}
                   />
                   <MobileCard
                     icon={<FPHMToGPHM />}
                     swapText={"fPHM to gPHM"}
-                    balance={100}
-                    unlocked={100}
-                    onApprove={() => {}}
+                    balance={loadingBalance(fPHMBalance)}
+                    unlocked={loadingBalance(unlockedFPHM)}
+                    buttonLabel={approveOrSwapFPHM === "approve" ? "Approve" : "Swap"}
+                    loading={approveOrSwapFPHM === "approve" ? approveFPHMLoading : FPHMToGPHMLoading}
+                    onClick={approveOrSwapFPHM === "approve" ? handleApproveFPHM : handleSwapFPHM}
                   />
                 </>
               ) : (
@@ -152,7 +157,106 @@ const Swap = () => {
                         </TableCell>
                       </TableRow>
                     </TableHead>
-                    <TableBody>{sampleData.map(e => renderSwapTable(e.swap, e.balance, e.unlocked))}</TableBody>
+                    <TableBody>
+                      <TableRow>
+                        <TableCell width="40%" align="left">
+                          <Box className="swap-token">
+                            <APHMToPHM />
+                            <Typography style={{ marginLeft: "5px" }} variant="h6">
+                              aPHM to PHM
+                            </Typography>
+                          </Box>
+                        </TableCell>
+                        <TableCell width="20%" align="right">
+                          {loadingBalance(aPHMBalance)}
+                        </TableCell>
+                        <TableCell width="20%" align="right">
+                          {loadingBalance(aPHMBalance)}
+                        </TableCell>
+                        <TableCell width="20%" align="right">
+                          {approveOrSwapAPHM === "swap" ? (
+                            <Button
+                              variant="outlined"
+                              color="primary"
+                              size="small"
+                              disabled={aPHMBalance === 0}
+                              onClick={handleSwapAPHM}
+                            >
+                              {APHMToPHMLoading && (
+                                <Box mr={1} mt={1}>
+                                  <CircularProgress size={22} />
+                                </Box>
+                              )}
+                              Swap
+                            </Button>
+                          ) : (
+                            <Button
+                              variant="outlined"
+                              color="primary"
+                              size="small"
+                              disabled={aPHMBalance === 0}
+                              onClick={handleApproveAPHM}
+                            >
+                              {approveAPHMLoading && (
+                                <Box mr={1} mt={1}>
+                                  <CircularProgress size={22} />
+                                </Box>
+                              )}
+                              Approve
+                            </Button>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell width="40%" align="left">
+                          <Box className="swap-token">
+                            <FPHMToGPHM />
+                            <Typography style={{ marginLeft: "5px" }} variant="h6">
+                              fPHM to gPHM
+                            </Typography>
+                          </Box>
+                        </TableCell>
+                        <TableCell width="20%" align="right">
+                          {loadingBalance(fPHMBalance)}
+                        </TableCell>
+                        <TableCell width="20%" align="right">
+                          {loadingBalance(unlockedFPHM)}
+                        </TableCell>
+                        <TableCell width="20%" align="right">
+                          {approveOrSwapFPHM === "swap" ? (
+                            <Button
+                              variant="outlined"
+                              color="primary"
+                              size="small"
+                              disabled={fPHMBalance === 0}
+                              onClick={handleSwapFPHM}
+                            >
+                              {FPHMToGPHMLoading && (
+                                <Box mr={1} mt={1}>
+                                  <CircularProgress size={22} />
+                                </Box>
+                              )}
+                              Swap
+                            </Button>
+                          ) : (
+                            <Button
+                              variant="outlined"
+                              color="primary"
+                              size="small"
+                              disabled={fPHMBalance === 0}
+                              onClick={handleApproveFPHM}
+                            >
+                              {approveFPHMLoading && (
+                                <Box mr={1} mt={1}>
+                                  <CircularProgress size={22} />
+                                </Box>
+                              )}
+                              Approve
+                            </Button>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    </TableBody>
                   </Table>
                 </TableContainer>
               )}

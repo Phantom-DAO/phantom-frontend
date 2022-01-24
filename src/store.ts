@@ -6,6 +6,7 @@ import pendingTransactionsReducer from "./slices/PendingTxnsSlice";
 import messagesReducer from "./slices/MessagesSlice";
 import auctionReducer from "./slices/AuctionSlice";
 import claimReducer from "./slices/ClaimSlice";
+import swapReducer from "./slices/SwapSlice";
 // reducers are named automatically based on the name field in the slice
 // exported in slice files by default as nameOfSlice.reducer
 
@@ -20,6 +21,7 @@ const store = configureStore({
     messages: messagesReducer,
     auction: auctionReducer,
     claim: claimReducer,
+    swap: swapReducer,
   },
   middleware: getDefaultMiddleware => getDefaultMiddleware({ serializableCheck: false }),
 });
