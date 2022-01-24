@@ -119,7 +119,7 @@ export const approveFPHM = createAsyncThunk(
 
 export const swapAPHMToPHM = createAsyncThunk(
   "swap/APHMoPHM",
-  async ({ address, networkID, provider, value }: IValueAsyncThunk, { dispatch }) => {
+  async ({ address, networkID, provider }: IBaseAddressAsyncThunk, { dispatch }) => {
     const phantomLaunch = new Contract(addresses[networkID].PhantomLaunch, PhantomLaunchAbi, provider.getSigner());
     try {
       const tx = await phantomLaunch.swapAPHM();
@@ -127,6 +127,7 @@ export const swapAPHMToPHM = createAsyncThunk(
         await tx.wait();
       }
     } catch (e) {
+      console.log("swap/APHMoPHM: ", e);
       const err = e as IJsonRPCError;
       const message = err.data ? err.data.message : err.message;
       dispatch(error(message));
@@ -147,6 +148,7 @@ export const swapFPHMToGPHM = createAsyncThunk(
         await tx.wait();
       }
     } catch (e) {
+      console.log("swap/FPHMToGPHM: ", e);
       const err = e as IJsonRPCError;
       const message = err.data ? err.data.message : err.message;
       dispatch(error(message));

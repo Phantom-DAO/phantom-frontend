@@ -52,20 +52,6 @@ const Swap = () => {
     error,
   } = useSelector(state => state.swap);
 
-  // console.log("--- ", {
-  //   balancesLoading,
-  //   approveAPHMLoading,
-  //   approveFPHMLoading,
-  //   FPHMToGPHMLoading,
-  //   APHMToPHMLoading,
-  //   unlockedFPHM,
-  //   fPHMBalance,
-  //   aPHMBalance,
-  //   fPHMAllowance,
-  //   aPHMAllowance,
-  //   error,
-  // });
-
   const handleSwapAPHM = async () => {
     dispatch(swapAPHMToPHM({ provider, address, networkID: chainID, value: aPHMBalance }));
   };
@@ -79,18 +65,22 @@ const Swap = () => {
   };
 
   const handleApproveFPHM = () => {
-    dispatch(approveFPHM({ provider, address, value: fPHMBalance + unlockedFPHM, networkID: chainID }));
+    dispatch(approveFPHM({ provider, address, value: 100, networkID: chainID }));
   };
 
   const loadingBalance = useCallback(
     balance => {
-      return balancesLoading ? <Skeleton width="50px" height="20px" style={{ marginLeft: "60%" }} /> : balance;
+      return balancesLoading ? (
+        <Skeleton width="50px" height="20px" style={{ marginLeft: "60%" }} />
+      ) : (
+        Math.round(balance * 100) / 100
+      );
     },
     [balancesLoading],
   );
 
   const approveOrSwapAPHM = aPHMAllowance >= aPHMBalance ? "swap" : "approve";
-  const approveOrSwapFPHM = fPHMAllowance >= fPHMBalance ? "swap" : "approve";
+  const approveOrSwapFPHM = fPHMAllowance > 0 ? "swap" : "approve";
   return (
     <div id="swap-view">
       <Zoom in={true}>
@@ -184,7 +174,7 @@ const Swap = () => {
                           {loadingBalance(aPHMBalance)}
                         </TableCell>
                         <TableCell width="20%" align="right">
-                          {aPHMAllowance >= aPHMBalance ? (
+                          {approveOrSwapAPHM === "swap" ? (
                             <Button
                               variant="outlined"
                               color="primary"
@@ -233,7 +223,7 @@ const Swap = () => {
                           {loadingBalance(unlockedFPHM)}
                         </TableCell>
                         <TableCell width="20%" align="right">
-                          {fPHMAllowance >= fPHMBalance + unlockedFPHM ? (
+                          {approveOrSwapFPHM === "swap" ? (
                             <Button
                               variant="outlined"
                               color="primary"
