@@ -65,7 +65,7 @@ const Swap = () => {
   };
 
   const handleApproveFPHM = () => {
-    dispatch(approveFPHM({ provider, address, value: 100, networkID: chainID }));
+    dispatch(approveFPHM({ provider, address, value: fPHMBalance, networkID: chainID }));
   };
 
   const loadingBalance = useCallback(
