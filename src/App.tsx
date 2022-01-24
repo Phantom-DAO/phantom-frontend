@@ -223,31 +223,35 @@ function App() {
 
           <div className={`${classes.content} ${isSmallerScreen && classes.contentShift}`}>
             <Switch>
-              <Route exact path="/dashboard">
+              {/* <Route exact path="/dashboard">
                 <TreasuryDashboard />
               </Route>
 
               <Route exact path="/">
                 <Redirect to="/stake" />
               </Route>
-
+              
               <Route path="/stake">
-                <Stake />
-              </Route>
+              <Stake />
+            </Route> */}
 
               <Route path="/claim">
                 <Claim />
               </Route>
 
-              <Route path="/auction">
+              {/* <Route path="/auction">
                 <Auction />
+              </Route> */}
+
+              <Route exact path="/">
+                <Redirect to="/swap" />
               </Route>
 
               <Route path="/swap">
                 <Swap />
               </Route>
 
-              <Route path="/wrap">
+              {/* <Route path="/wrap">
                 <Wrap />
               </Route>
 
@@ -260,7 +264,7 @@ function App() {
                   );
                 })}
                 <ChooseBond />
-              </Route>
+              </Route> */}
 
               <Route component={NotFound} />
             </Switch>

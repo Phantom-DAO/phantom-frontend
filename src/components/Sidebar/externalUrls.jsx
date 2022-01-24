@@ -8,12 +8,12 @@ import { Trans } from "@lingui/macro";
 const externalUrls = [
   {
     title: <Trans>Forum</Trans>,
-    url: "https://forum.olympusdao.finance/",
+    url: "https://community.phantomdao.xyz/",
     icon: <SvgIcon color="primary" component={ForumIcon} />,
   },
   {
     title: <Trans>Governance</Trans>,
-    url: "https://vote.olympusdao.finance/",
+    url: "https://community.phantomdao.xyz/",
     icon: <SvgIcon color="primary" component={GovIcon} />,
   },
   {
