@@ -13,7 +13,7 @@ const MobileCard = ({ icon, balance, unlocked, onApprove, swapText }) => {
       </Box>
       <Box style={{ marginTop: "14px" }} className="swap-metric-mobile">
         <Typography variant="p" color="textSecondary">
-          BALANCE
+          LOCKED
         </Typography>
         <Typography variant="p">{balance}</Typography>
       </Box>

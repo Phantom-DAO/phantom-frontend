@@ -22,7 +22,42 @@ interface IAddresses {
 
 export const addresses: IAddresses = {
   /* FTM */
-  250: {},
+  250: {
+    DAI_ADDRESS: "", // duplicate
+    OHM_ADDRESS: "",
+    STAKING_ADDRESS: "0xa0391E0a61AbC4C5e7c806Db3e9Cf642fba64b8e", // The new staking contract
+    STAKING_HELPER_ADDRESS: "", // Helper contract used for Staking only
+    SOHM_ADDRESS: "",
+    WSOHM_ADDRESS: "",
+    BONDINGCALC_ADDRESS: "",
+    TREASURY_ADDRESS: "",
+    CRUCIBLE_OHM_LUSD: "",
+    LQTY: "",
+    REDEEM_HELPER_ADDRESS: "",
+    //phm contracts
+    PHM: "0x4Ac8a70DF1366163071457c1c6c7AdB1e46E0DA4",
+    PhantomAdmin: "",
+    PhantomAllocator: "",
+    PhantomAlphaSwap: "0xAD86f0841F3905BbbE28D5fEeCF992C573a0Ef74",
+    PhantomBonding: "",
+    PhantomDexRouter: "",
+    PhantomExecutor: "0xB30cCD668b9906c63F270fB7e130d3ab880549B2",
+    PhantomFinance: "",
+    PhantomFounders: "0x412FA39551a0BEf9dB9eD3427402941eF78C8209",
+    PhantomGovernor: "0x38a51314E772245c0dEc231223117b73C980846d",
+    PhantomLaunch: "0x7714CDE16F7Ad77e8155Ca6434289cf85756c8C7",
+    PhantomPayments: "",
+    PhantomStaking: "",
+    PhantomStorage: "0xf99f229595a1fA265D04Afec41CCaBb6fbA1BE22",
+    PhantomTreasury: "0x8589B5722B6ae24B30F890E406Fa70c221Fe2Fbc",
+    PhantomVault: "0xB0D87A3f3d537ef5F8b5f1ea185CED30f66a54AF",
+    aPHM: "0x747d453192D8A0B2e2184738033d0A6296301476",
+    fPHM: "0x316a0E6c9Ada20d7C9C678589C63dC21afa27301",
+    gPHM: "0x783E157A197327243ffed082Ab7C8cf942f0988e",
+    sPHM: "0x418355d3601087EabC46557592C82483BD1c08e1",
+    //end
+    frax: "0xfafedb041c0dd4fa2dc0d87a6b0979ee6fa7af5f", // LINK address, kept name same as prod for ease
+  },
   /* FTM testnet */
   4002: {
     DAI_ADDRESS: "", // duplicate
@@ -36,29 +71,28 @@ export const addresses: IAddresses = {
     CRUCIBLE_OHM_LUSD: "",
     LQTY: "",
     REDEEM_HELPER_ADDRESS: "",
-    /* phm ctrcts */
-    PHM: "0x9839cD79D0F8dC30A7328E38f444Bb0D5352EC50",
-    PhantomAdmin: "0x13f7B4581dF403542286563C2F762077B2a368Da",
-    PhantomAlphaSwap: "0x975E0616140dCB33Fe0d03A881e3a80D5d0aB9AF",
-    PhantomBonding: "0x0c8A62D089B9F6310a3fa5Cdb9f2b6392C9Dc595",
-    PhantomExecutor: "0xaB8A23cDBA29D282430C67eC5b99041BE60Cf7f4",
-    PhantomFinance: "0x50a47673711bB7EE1e268E4790E8FFBE0a019Be6",
-    PhantomFounders: "0xD064c26821B80c590955A342b3Bc005b0Cfcfc98",
-    PhantomGovernor: "0x1464f060D710cbCc6adc81120b197ec825B088A1",
-    PhantomLaunch: "0x3888bE2E5E6ed71CF916b51531A4394e47C51fa1",
-    PhantomStaking: "0xa56D7e5eD39EFE0727010F63D061aB486cB9785e",
-    PhantomStorage: "0xdc3ECa41F1020748BBe734C1d934cE64a1B4b2Fa",
-    PhantomTreasury: "0x613d30088a48CC8BCC6390D0f66f6dd6b8AE76c7",
-    PhantomVault: "0xaEABE773466BEe5B246128b487971FE12F520dC3",
-
-    /*PhantomAuction: "0xe57da0f3e0db8abc47e984d317938028aa0e0b70", // ended */
-    PhantomAuction: "0x8588762f41169425c233931ba306abf247013832", // 20jan-30jan (ongoing)
-    /*PhantomAuction: "0x4358A55CEdE788aAC2F7ec7bE3e91cf6D4A841fb", // 30jan-14feb*/
-
-    aPHM: "0x0cEd05DEe6471F8bbcaeA61F93615b159EF26197",
-    fPHM: "0xcbD5351D8dF3dd12154042D08b7D0d907f58Aa31",
-    gPHM: "0xa68c78BAf1291C201228Af4FD54F564b6aFd24EA",
-    sPHM: "0x8bEe8D80d9970Aa82AEcC8963494fa1a57Ba2978",
+    //phm contracts
+    PHM: "0x845e54a78953C4b12162f3cf4d3252a39Bdee1D9",
+    PhantomAdmin: "",
+    PhantomAllocator: "",
+    PhantomAlphaSwap: "0xb15bef2074ED8b5F6CD860BDF6922C261fc574b2",
+    PhantomBonding: "",
+    PhantomDexRouter: "0x7AB9Dea2176C382B5C8699Ef23f3B25bEb506981",
+    PhantomExecutor: "0x87c7b0A0368D949905EC862940201860a570d599",
+    PhantomFinance: "",
+    PhantomFounders: "0xB1b259440E1cFd456048FFb7D519dd4540487933",
+    PhantomGovernor: "0x91651AEBf40cD2b1f144BCCFB0877a5a5fde43aA",
+    PhantomLaunch: "0x9dBddc5830fFD1F2B3554C63d2cb005B17bEaf53",
+    PhantomPayments: "",
+    PhantomStaking: "",
+    PhantomStorage: "0xff37AE8A6e78f84F72f9CEF87897333D67d9399e",
+    PhantomTreasury: "0xBfd4c79a01A13B933fb9551a0f8923a28E726ca6",
+    PhantomVault: "0x82e29fb0494339467f2f19cebe5360e92dDCC923",
+    aPHM: "0x21a937d9570D3378366f838b95D584e0DA2042Ba",
+    fPHM: "0x7DA73c277B0b23fCa06825891A1d5bf5dBF19219",
+    gPHM: "0x589BD1a953a64b4b3ABeDA7421F44F366102d187",
+    sPHM: "0x9Ae3485beE56175528a4d1AB460cE85e7497d17a",
+    //end
     frax: "0xfafedb041c0dd4fa2dc0d87a6b0979ee6fa7af5f", // LINK address, kept name same as prod for ease
   },
   4: {
