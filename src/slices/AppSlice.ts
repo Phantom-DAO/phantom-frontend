@@ -19,10 +19,10 @@ export const loadAppDetails = createAsyncThunk(
   async ({ networkID, provider }: IBaseAsyncThunk, { dispatch }) => {
     let marketPrice;
     try {
-      const originalPromiseResult = await dispatch(
-        loadMarketPrice({ networkID: networkID, provider: provider }),
-      ).unwrap();
-      marketPrice = originalPromiseResult?.marketPrice;
+      // const originalPromiseResult = await dispatch(
+      //   loadMarketPrice({ networkID: networkID, provider: provider }),
+      // ).unwrap();
+      // marketPrice = originalPromiseResult?.marketPrice;
     } catch (rejectedValueOrSerializedError) {
       // handle error here
       console.error("Returned a null response from dispatch(loadMarketPrice)");
@@ -37,19 +37,19 @@ export const loadAppDetails = createAsyncThunk(
     }
     const currentBlock = await provider.getBlockNumber();
 
-    //TODO: replace with PhantomStaking and ABI
-    const stakingContract = new ethers.Contract(
-      addresses[networkID].STAKING_ADDRESS as string,
-      OlympusStakingv2ABI,
-      provider,
-    ) as OlympusStakingv2;
+    // //TODO: replace with PhantomStaking and ABI
+    // const stakingContract = new ethers.Contract(
+    //   addresses[networkID].STAKING_ADDRESS as string,
+    //   OlympusStakingv2ABI,
+    //   provider,
+    // ) as OlympusStakingv2;
 
-    //TODO: replace with sPHMto and ABI
-    const sohmMainContract = new ethers.Contract(
-      addresses[networkID].SOHM_ADDRESS as string,
-      sOHMv2,
-      provider,
-    ) as SOhmv2;
+    // //TODO: replace with sPHMto and ABI
+    // const sohmMainContract = new ethers.Contract(
+    //   addresses[networkID].SOHM_ADDRESS as string,
+    //   sOHMv2,
+    //   provider,
+    // ) as SOhmv2;
 
     // Calculating staking
     // const epoch = await stakingContract.epoch();

@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 import Social from "./Social";
 import externalUrls from "./externalUrls";
 import { ReactComponent as StakeIcon } from "../../assets/icons/stake.svg";
+import { ReactComponent as SwapIcon } from "../../assets/icons/swap-icon.svg";
 import { ReactComponent as BondIcon } from "../../assets/icons/bond.svg";
 import { ReactComponent as DashboardIcon } from "../../assets/icons/dashboard.svg";
 import { ReactComponent as PhantomIcon } from "../../assets/icons/phantom-nav-header.svg";
@@ -38,6 +39,9 @@ function NavContent() {
     if (currentPath.indexOf("auction") >= 0 && page === "auction") {
       return true;
     }
+    if (currentPath.indexOf("swap") >= 0 && page === "swap") {
+      return true;
+    }
     return false;
   }, []);
 
@@ -46,7 +50,7 @@ function NavContent() {
       <Box className="dapp-sidebar-inner" display="flex" justifyContent="space-between" flexDirection="column">
         <div className="dapp-menu-top">
           <Box className="branding-header">
-            <Link href="https://olympusdao.finance" target="_blank">
+            <Link href="https://phantomdao.xyz" target="_blank">
               <SvgIcon
                 color="primary"
                 component={PhantomIcon}
@@ -57,7 +61,7 @@ function NavContent() {
 
             {address && (
               <div className="wallet-link">
-                <Link href={`https://etherscan.io/address/${address}`} target="_blank">
+                <Link href={`https://ftmscan.com/address/${address}`} target="_blank">
                   {shorten(address)}
                 </Link>
               </div>
@@ -67,6 +71,7 @@ function NavContent() {
           <div className="dapp-menu-links">
             <div className="dapp-nav" id="navbarNav">
               <Link
+                disabled
                 component={NavLink}
                 id="dash-nav"
                 to="/dashboard"
@@ -82,6 +87,7 @@ function NavContent() {
               </Link>
 
               <Link
+                disabled
                 component={NavLink}
                 id="auction-nav"
                 to="/auction"
@@ -97,6 +103,7 @@ function NavContent() {
               </Link>
 
               <Link
+                disabled
                 component={NavLink}
                 id="stake-nav"
                 to="/"
@@ -127,6 +134,7 @@ function NavContent() {
               </Link> */}
 
               <Link
+                disabled
                 component={NavLink}
                 id="bond-nav"
                 to="/bonds"
@@ -165,6 +173,20 @@ function NavContent() {
                   ))}
                 </div>
               </div>
+              <Link
+                component={NavLink}
+                id="swap-nav"
+                to="/swap"
+                isActive={(match, location) => {
+                  return checkPage(match, location, "swap");
+                }}
+                className={`button-dapp-menu ${isActive ? "active" : ""}`}
+              >
+                <Typography variant="h6">
+                  <SvgIcon color="primary" component={SwapIcon} />
+                  <Trans>Swap</Trans>
+                </Typography>
+              </Link>
             </div>
           </div>
         </div>

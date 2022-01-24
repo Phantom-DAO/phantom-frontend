@@ -15,6 +15,8 @@ import { shouldTriggerSafetyCheck } from "./helpers";
 import { calcBondDetails } from "./slices/BondSlice";
 import { loadAppDetails } from "./slices/AppSlice";
 import { loadAccountDetails, calculateUserBondDetails } from "./slices/AccountSlice";
+import { loadAuctionDetails, loadMyCommitments } from "./slices/AuctionSlice";
+import { loadSwapBalances } from "./slices/SwapSlice";
 import { info } from "./slices/MessagesSlice";
 
 import { Stake, ChooseBond, Bond, Wrap, TreasuryDashboard, Auction, Swap, Claim } from "./views";
@@ -27,7 +29,9 @@ import NotFound from "./views/404/NotFound";
 import { dark as darkTheme } from "./themes/dark.js";
 import { light as lightTheme } from "./themes/light.js";
 import { girth as gTheme } from "./themes/girth.js";
+import WhiteList from "./Whitelist";
 import "./style.scss";
+import { getFPHMAllocation } from "./slices/ClaimSlice";
 
 // 😬 Sorry for all the console logging
 const DEBUG = false;
@@ -111,6 +115,7 @@ function App() {
 
   const loadApp = useCallback(
     loadProvider => {
+      dispatch(loadAuctionDetails({ provider, networkID: chainID }));
       dispatch(loadAppDetails({ networkID: chainID, provider: loadProvider }));
       bonds.map(bond => {
         dispatch(calcBondDetails({ bond, value: "", provider: loadProvider, networkID: chainID }));
@@ -121,10 +126,13 @@ function App() {
 
   const loadAccount = useCallback(
     loadProvider => {
+      dispatch(loadMyCommitments({ address }));
       dispatch(loadAccountDetails({ networkID: chainID, address, provider: loadProvider }));
       bonds.map(bond => {
         dispatch(calculateUserBondDetails({ address, bond, provider, networkID: chainID }));
       });
+      dispatch(getFPHMAllocation({ address, networkID: chainID, provider: loadProvider }));
+      dispatch(loadSwapBalances({ address, networkID: chainID, provider: loadProvider }));
     },
     [connected],
   );
@@ -151,7 +159,7 @@ function App() {
       setWalletChecked(true);
     }
     if (shouldTriggerSafetyCheck()) {
-      dispatch(info("Safety Check: Always verify you're on app.olympusdao.finance!"));
+      dispatch(info("Safety Check: Always verify you're on app.phantomdao.xyz!"));
     }
   }, []);
 
@@ -179,78 +187,93 @@ function App() {
     setIsSidebarExpanded(false);
   };
 
-  let themeMode = theme === "light" ? lightTheme : theme === "dark" ? darkTheme : gTheme;
+  // let themeMode = theme === "light" ? lightTheme : theme === "dark" ? darkTheme : gTheme;
+  let themeMode = darkTheme;
 
   useEffect(() => {
-    themeMode = theme === "light" ? lightTheme : darkTheme;
+    themeMode = darkTheme;
   }, [theme]);
 
   useEffect(() => {
     if (isSidebarExpanded) handleSidebarClose();
   }, [location]);
 
-  return (
-    <ThemeProvider theme={themeMode}>
-      <CssBaseline />
-      {/* {isAppLoading && <LoadingSplash />} */}
-      <div className={`app ${isSmallerScreen && "tablet"} ${isSmallScreen && "mobile"} ${theme}`}>
-        <Messages />
-        <TopBar theme={theme} toggleTheme={toggleTheme} handleDrawerToggle={handleDrawerToggle} />
-        <nav className={classes.drawer}>
-          {isSmallerScreen ? (
-            <NavDrawer mobileOpen={mobileOpen} handleDrawerToggle={handleDrawerToggle} />
-          ) : (
-            <Sidebar />
-          )}
-        </nav>
+  if (window.location.hash === "#/claim") {
+    console.log("where am i");
+    return (
+      <ThemeProvider theme={themeMode}>
+        <CssBaseline />
+        <Claim />
+      </ThemeProvider>
+    );
+  } else {
+    return (
+      <ThemeProvider theme={themeMode}>
+        <CssBaseline />
+        {/* {isAppLoading && <LoadingSplash />} */}
+        <div className={`app ${isSmallerScreen && "tablet"} ${isSmallScreen && "mobile"} ${theme}`}>
+          <Messages />
+          <TopBar theme={theme} toggleTheme={toggleTheme} handleDrawerToggle={handleDrawerToggle} />
+          <nav className={classes.drawer}>
+            {isSmallerScreen ? (
+              <NavDrawer mobileOpen={mobileOpen} handleDrawerToggle={handleDrawerToggle} />
+            ) : (
+              <Sidebar />
+            )}
+          </nav>
 
-        <div className={`${classes.content} ${isSmallerScreen && classes.contentShift}`}>
-          <Switch>
-            <Route exact path="/dashboard">
-              <TreasuryDashboard />
-            </Route>
+          <div className={`${classes.content} ${isSmallerScreen && classes.contentShift}`}>
+            <Switch>
+              {/* <Route exact path="/dashboard">
+                <TreasuryDashboard />
+              </Route>
 
-            <Route exact path="/">
-              <Redirect to="/stake" />
-            </Route>
-
-            <Route path="/stake">
+              <Route exact path="/">
+                <Redirect to="/stake" />
+              </Route>
+              
+              <Route path="/stake">
               <Stake />
-            </Route>
+            </Route> */}
 
-            <Route path="/swap">
-              <Swap />
-            </Route>
+              <Route path="/claim">
+                <Claim />
+              </Route>
 
-            <Route path="/claim">
-              <Claim />
-            </Route>
+              {/* <Route path="/auction">
+                <Auction />
+              </Route> */}
 
-            <Route path="/auction">
-              <Auction />
-            </Route>
+              <Route exact path="/">
+                <Redirect to="/swap" />
+              </Route>
 
-            <Route path="/wrap">
-              <Wrap />
-            </Route>
+              <Route path="/swap">
+                <Swap />
+              </Route>
 
-            <Route path="/bonds">
-              {bonds.map(bond => {
-                return (
-                  <Route exact key={bond.name} path={`/bonds/${bond.name}`}>
-                    <Bond bond={bond} />
-                  </Route>
-                );
-              })}
-              <ChooseBond />
-            </Route>
+              {/* <Route path="/wrap">
+                <Wrap />
+              </Route>
 
-            <Route component={NotFound} />
-          </Switch>
+              <Route path="/bonds">
+                {bonds.map(bond => {
+                  return (
+                    <Route exact key={bond.name} path={`/bonds/${bond.name}`}>
+                      <Bond bond={bond} />
+                    </Route>
+                  );
+                })}
+                <ChooseBond />
+              </Route> */}
+
+              <Route component={NotFound} />
+            </Switch>
+          </div>
         </div>
-      </div>
-    </ThemeProvider>
-  );
+      </ThemeProvider>
+    );
+  }
 }
 
 export default App;

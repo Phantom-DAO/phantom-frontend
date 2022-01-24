@@ -158,7 +158,7 @@ function Wrap() {
                 <Link
                   className="migrate-sohm-button"
                   style={{ textDecoration: "none" }}
-                  href="https://docs.olympusdao.finance/main/contracts/tokens#wsohm"
+                  href="https://docs.phantomdao.xyz/main/contracts/tokens"
                   aria-label="wsohm-wut"
                   target="_blank"
                 >
@@ -242,7 +242,7 @@ function Wrap() {
                                 <>
                                   First time wrapping <b>sOHM</b>?
                                   <br />
-                                  Please approve Olympus Dao to use your <b>sOHM</b> for wrapping.
+                                  Please approve Phantom Dao to use your <b>sOHM</b> for wrapping.
                                 </>
                               )}
                             </Typography>

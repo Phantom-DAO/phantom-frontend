@@ -1,19 +1,10 @@
-import { minutesAgo } from "./index";
-import { EnvHelper } from "./Environment";
-import { ethers } from "ethers";
+import { StaticJsonRpcProvider } from "@ethersproject/providers";
 
-interface ICurrentStats {
-  failedConnectionCount: number;
-  lastFailedConnectionAt: number;
-}
-
-/**
- * NodeHelper used to parse which nodes are valid / invalid, working / not working
- * NodeHelper.currentRemovedNodes is Object representing invalidNodes
- * NodeHelper.logBadConnectionWithTimer logs connection stats for Nodes
- * NodeHelper.getNodesUris returns an array of valid node uris
- */
 export class NodeHelper {
+  static getFantomMainnetStaticProvider = () => {
+    return new StaticJsonRpcProvider("https://rpc.testnet.fantom.network/");
+  };
+
   static getNodesUris = () => {
     return process.env.RPC_URL;
   };

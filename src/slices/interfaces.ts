@@ -4,6 +4,7 @@ import { Bond, NetworkID } from "src/lib/Bond";
 export interface IJsonRPCError {
   readonly message: string;
   readonly code: number;
+  readonly data?: any;
 }
 
 export interface IBaseAsyncThunk {
@@ -65,4 +66,18 @@ export interface IRedeemAllBondsAsyncThunk extends IBaseAsyncThunk {
   readonly bonds: Bond[];
   readonly address: string;
   readonly autostake: boolean;
+}
+
+// Auction Slice
+
+export interface ICommitTokensAsyncThunk extends IBaseAddressAsyncThunk {
+  readonly quantity: string;
+}
+
+export interface IAddressAsyncThunk {
+  readonly address: string;
+}
+
+export interface IFraxApprovalAsyncThunk extends IBaseAddressAsyncThunk {
+  readonly value: string;
 }

@@ -49,11 +49,11 @@ function TopBar({ theme, toggleTheme, handleDrawerToggle }) {
         </Button>
 
         <Box display="flex">
-          {!isVerySmallScreen && <OhmMenu />}
+          {/* {!isVerySmallScreen && <OhmMenu />} */}
 
           <ConnectMenu theme={theme} />
 
-          <LocaleSwitcher theme={theme} />
+          {/* <LocaleSwitcher theme={theme} /> */}
         </Box>
       </Toolbar>
     </AppBar>

@@ -261,13 +261,13 @@ function Stake() {
                                 <>
                                   First time staking <b>OHM</b>?
                                   <br />
-                                  Please approve Olympus Dao to use your <b>OHM</b> for staking.
+                                  Please approve Phantom Dao to use your <b>OHM</b> for staking.
                                 </>
                               ) : (
                                 <>
                                   First time unstaking <b>sOHM</b>?
                                   <br />
-                                  Please approve Olympus Dao to use your <b>sOHM</b> for unstaking.
+                                  Please approve Phantom Dao to use your <b>sOHM</b> for unstaking.
                                 </>
                               )}
                             </Typography>

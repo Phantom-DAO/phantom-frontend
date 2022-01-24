@@ -5,17 +5,18 @@ import WalletConnectProvider from "@walletconnect/web3-provider";
 import { IFrameEthereumProvider } from "@ledgerhq/iframe-provider";
 import { EnvHelper } from "../helpers/Environment";
 import { NodeHelper } from "src/helpers/NodeHelper";
+import { switchNetwork } from "./switchNetwork";
 
 /**
  * kept as function to mimic `getMainnetURI()`
  * @returns string
  */
 function getTestnetURI() {
-  return process.env.REACT_APP_TESTNET_RPC_URL || "";
+  return process.env.REACT_APP_TESTNET_RPC_URL || "https://rpc.testnet.fantom.network/";
 }
 
 function getMainnetURI() {
-  return process.env.REACT_APP_RPC_URL || "";
+  return process.env.REACT_APP_RPC_URL || "https://rpc.ftm.tools/";
 }
 
 /**
@@ -71,7 +72,7 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({ chil
   // NOTE (appleseed): if you are testing on rinkeby you need to set chainId === 4 as the default for non-connected wallet testing...
   // ... you also need to set getTestnetURI() as the default uri state below
   const [chainID, setChainID] = useState(250);
-  debugger;
+
   const [address, setAddress] = useState("");
 
   const [uri, setUri] = useState(getMainnetURI());
@@ -162,6 +163,7 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({ chil
     const validNetwork = _checkNetwork(chainId);
     if (!validNetwork) {
       console.error("Wrong network, please switch to FTM mainnet");
+      switchNetwork();
       return;
     }
     // Save everything after we've validated the right network.
