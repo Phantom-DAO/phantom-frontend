@@ -22,9 +22,11 @@ export function ClaimBondTableData({ userBond }) {
 
   const isAppLoading = useSelector(state => state.app.loading ?? true);
 
-  const currentBlock = useSelector(state => {
-    return state.app.currentBlock;
-  });
+  // const currentBlock = useSelector(state => {
+  //   return state.app.currentBlock;
+  // });
+
+  const currentBlock = 0;
 
   const pendingTransactions = useSelector(state => {
     return state.pendingTransactions;
@@ -80,9 +82,11 @@ export function ClaimBondCardData({ userBond }) {
   const bond = userBond[1];
   const bondName = bond.bond;
 
-  const currentBlock = useSelector(state => {
-    return state.app.currentBlock;
-  });
+  // const currentBlock = useSelector(state => {
+  //   return state.app.currentBlock;
+  // });
+
+  const currentBlock = 0;
 
   const pendingTransactions = useSelector(state => {
     return state.pendingTransactions;

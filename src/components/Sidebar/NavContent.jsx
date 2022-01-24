@@ -16,11 +16,15 @@ import { Paper, Link, Box, Typography, SvgIcon } from "@material-ui/core";
 import { Skeleton } from "@material-ui/lab";
 import "./sidebar.scss";
 
+// TODO: Fake bond data import
+import { fakeBonds } from "src/helpers/FakeBonds";
+
 function NavContent() {
   const [isActive] = useState();
   const address = useAddress();
   const { chainID } = useWeb3Context();
-  const { bonds } = useBonds(chainID);
+  // const { bonds } = useBonds(chainID);
+  const bonds = fakeBonds;
 
   const checkPage = useCallback((match, location, page) => {
     const currentPath = location.pathname.replace("/", "");
@@ -155,19 +159,26 @@ function NavContent() {
                     <Trans>Bond discounts</Trans>
                   </Typography>
                   {bonds.map((bond, i) => (
-                    <Link component={NavLink} to={`/bonds/${bond.name}`} key={i} className={"bond"}>
+                    <Link
+                      component={NavLink}
+                      to={`${bond.isAvailable[chainID] ? `/bonds/${bond.name}` : "#"}`}
+                      key={i}
+                      className={`bond ${!bond.isAvailable[chainID] ? "disabled" : ""}`}
+                    >
                       {!bond.bondDiscount ? (
                         <Skeleton variant="text" width={"150px"} />
                       ) : (
-                        <Typography variant="body2">
-                          {bond.displayName}
-
-                          <span className="bond-pair-roi">
+                        <div className="bond-item">
+                          <Typography variant="body2">{bond.displayName}</Typography>
+                          <Typography
+                            variant="body2"
+                            className={`bond-pair-roi ${!bond.isAvailable[chainID] ? "phantom-gold" : ""}`}
+                          >
                             {!bond.isAvailable[chainID]
                               ? "Sold Out"
                               : `${bond.bondDiscount && trim(bond.bondDiscount * 100, 2)}%`}
-                          </span>
-                        </Typography>
+                          </Typography>
+                        </div>
                       )}
                     </Link>
                   ))}

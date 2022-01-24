@@ -28,7 +28,11 @@ function Bond({ bond }) {
   const [view, setView] = useState(0);
   const [quantity, setQuantity] = useState();
 
-  const isBondLoading = useSelector(state => state.bonding.loading ?? true);
+  // const isBondLoading = useSelector(state => state.bonding.loading ?? true);
+
+  // Fake variables
+  const isBondLoading = false;
+  console.log(bond.bondPrice);
 
   const onRecipientAddressChange = e => {
     return setRecipientAddress(e.target.value);
@@ -87,7 +91,7 @@ function Bond({ bond }) {
                 onChange={changeView}
                 aria-label="bond tabs"
               >
-                <Tab aria-label="bond-tab-button" label={t`do_bond`} {...a11yProps(0)} />
+                <Tab aria-label="bond-tab-button" label={t`Bond`} {...a11yProps(0)} />
                 <Tab aria-label="redeem-tab-button" label={t`Redeem`} {...a11yProps(1)} />
               </Tabs>
 
