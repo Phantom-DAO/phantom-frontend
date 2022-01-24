@@ -18,13 +18,8 @@ const externalUrls = [
   },
   {
     title: <Trans>Docs</Trans>,
-    url: "https://docs.olympusdao.finance/",
+    url: "https://www.notion.so/Phantom-Governance-01afd36a7b3c4d838d7456b84724e34e",
     icon: <SvgIcon color="primary" component={DocsIcon} />,
-  },
-  {
-    title: "Feedback",
-    url: "https://olympusdao.canny.io/",
-    icon: <SvgIcon color="primary" component={FeedbackIcon} />,
   },
 ];
 

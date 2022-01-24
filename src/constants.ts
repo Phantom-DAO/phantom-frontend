@@ -23,6 +23,26 @@ interface IAddresses {
 export const addresses: IAddresses = {
   /* FTM */
   250: {
+    PHM: "0xDCa967B5Fd6DFc250e2D68775D03b9131Ae4abf5",
+    PhantomAdmin: "",
+    PhantomAllocator: "",
+    PhantomAlphaSwap: "",
+    PhantomBonding: "",
+    PhantomDexRouter: "",
+    PhantomExecutor: "0x825e99F8CEbE57A5efA9AB98B6bf8839cd1f0794",
+    PhantomFinance: "",
+    PhantomFounders: "0xFCD3c5a17c8e16C834d58D91350739709f09Bd31",
+    PhantomGovernor: "0x155EAF1eEE6D582abB8Ad6e4773855a50DceEc0B",
+    PhantomLaunch: "0xAF9BCA94C868D10b02003db66C317Fd403e074F7",
+    PhantomPayments: "",
+    PhantomStaking: "",
+    PhantomStorage: "0xf99f229595a1fA265D04Afec41CCaBb6fbA1BE22",
+    PhantomTreasury: "0x69ee6905F95F5453AcC3af2687Df59E57469b2F5",
+    PhantomVault: "0xD9cbBB89d9e2E18FeFC0a82d7152729245Deafa8",
+    aPHM: "0x8DC8d32ae584c7e705a4593e86fbbc2C2383B18D",
+    fPHM: "0x90dad363A40E406cBFe3B2B3E494005758e2A490",
+    gPHM: "0x3b6813D005a40fd3fEBaA91A28cCDD97b44529eD",
+    sPHM: "0x7EE1273f020553AcFCEfEc91BE8690eD44ceb7A6",
     PhantomAuction: "0x67eA2dC0D042eF1dEB62AB5e3d0f687231F11B17", // test contract
     frax: "0xdc301622e621166bd8e82f2ca0a26c13ad0be355", //
   },
