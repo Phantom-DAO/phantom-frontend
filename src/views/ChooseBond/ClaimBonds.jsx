@@ -17,7 +17,9 @@ import {
   TableRow,
   TableCell,
   Table,
+  Typography,
   Zoom,
+  useTheme,
 } from "@material-ui/core";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import "./choosebond.scss";
@@ -27,9 +29,10 @@ function ClaimBonds({ activeBonds }) {
   const dispatch = useDispatch();
   const { provider, address, chainID } = useWeb3Context();
   const { bonds } = useBonds(chainID);
+  const theme = useTheme();
 
   const [numberOfBonds, setNumberOfBonds] = useState(0);
-  const isSmallScreen = useMediaQuery("(max-width: 733px)"); // change to breakpoint query
+  const isSmallScreen = useMediaQuery("(max-width: 820px)"); // change to breakpoint query
 
   const pendingTransactions = useSelector(state => {
     return state.pendingTransactions;
@@ -63,83 +66,103 @@ function ClaimBonds({ activeBonds }) {
     <>
       {numberOfBonds > 0 && (
         <Zoom in={true}>
-          <Paper className="ohm-card claim-bonds-card">
-            <CardHeader title="Your Bonds (1,1)" />
-            <Box>
-              {!isSmallScreen && (
-                <TableContainer>
-                  <Table aria-label="Claimable bonds">
-                    <TableHead>
-                      <TableRow>
-                        <TableCell align="center">
-                          <Trans>Bond</Trans>
-                        </TableCell>
-                        <TableCell align="center">
-                          <Trans>Claimable</Trans>
-                        </TableCell>
-                        <TableCell align="center">
-                          <Trans>Pending</Trans>
-                        </TableCell>
-                        <TableCell align="right">
-                          <Trans>Fully Vested</Trans>
-                        </TableCell>
-                        <TableCell align="right"></TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {Object.entries(activeBonds).map((bond, i) => (
-                        <ClaimBondTableData key={i} userBond={bond} />
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              )}
-
-              {isSmallScreen &&
-                Object.entries(activeBonds).map((bond, i) => <ClaimBondCardData key={i} userBond={bond} />)}
-
-              <Box
-                display="flex"
-                justifyContent="center"
-                className={`global-claim-buttons ${isSmallScreen ? "small" : ""}`}
-              >
-                {numberOfBonds > 1 && (
-                  <>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      className="transaction-button"
-                      fullWidth
-                      disabled={pendingClaim()}
-                      onClick={() => {
-                        onRedeemAll({ autostake: false });
-                      }}
-                    >
-                      {txnButtonTextGeneralPending(pendingTransactions, "redeem_all_bonds", t`Claim all`)}
-                    </Button>
-
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      id="claim-all-and-stake-btn"
-                      className="transaction-button"
-                      fullWidth
-                      disabled={pendingClaim()}
-                      onClick={() => {
-                        onRedeemAll({ autostake: true });
-                      }}
-                    >
-                      {txnButtonTextGeneralPending(
-                        pendingTransactions,
-                        "redeem_all_bonds_autostake",
-                        t`Claim all and Stake`,
-                      )}
-                    </Button>
-                  </>
-                )}
+          <Box
+            sx={{
+              marginTop: theme.spacing(4),
+              width: isSmallScreen ? "97%" : "80%",
+            }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                flexWrap: "wrap",
+                marginBottom: "24px",
+              }}
+            >
+              <Box>
+                <Typography variant="h3" color="textPrimary" style={{ fontWeight: "bold", marginBottom: "4px" }}>
+                  Your Bonds (1,1)
+                </Typography>
               </Box>
             </Box>
-          </Paper>
+            <Paper className="ohm-card bond-card claim-bonds-card">
+              <Box>
+                {!isSmallScreen && (
+                  <TableContainer>
+                    <Table aria-label="Claimable bonds">
+                      <TableHead>
+                        <TableRow>
+                          <TableCell align="center">
+                            <Trans>Bond</Trans>
+                          </TableCell>
+                          <TableCell align="center">
+                            <Trans>Claimable</Trans>
+                          </TableCell>
+                          <TableCell align="center">
+                            <Trans>Pending</Trans>
+                          </TableCell>
+                          <TableCell align="right">
+                            <Trans>Fully Vested</Trans>
+                          </TableCell>
+                          <TableCell align="right"></TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {Object.entries(activeBonds).map((bond, i) => (
+                          <ClaimBondTableData key={i} userBond={bond} />
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                )}
+
+                {isSmallScreen &&
+                  Object.entries(activeBonds).map((bond, i) => <ClaimBondCardData key={i} userBond={bond} />)}
+
+                <Box
+                  display="flex"
+                  justifyContent="center"
+                  className={`global-claim-buttons ${isSmallScreen ? "small" : ""}`}
+                >
+                  {numberOfBonds > 1 && (
+                    <>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        className="transaction-button"
+                        fullWidth
+                        disabled={pendingClaim()}
+                        onClick={() => {
+                          onRedeemAll({ autostake: false });
+                        }}
+                      >
+                        {txnButtonTextGeneralPending(pendingTransactions, "redeem_all_bonds", t`Claim all`)}
+                      </Button>
+
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        id="claim-all-and-stake-btn"
+                        className="transaction-button"
+                        fullWidth
+                        disabled={pendingClaim()}
+                        onClick={() => {
+                          onRedeemAll({ autostake: true });
+                        }}
+                      >
+                        {txnButtonTextGeneralPending(
+                          pendingTransactions,
+                          "redeem_all_bonds_autostake",
+                          t`Claim all and Stake`,
+                        )}
+                      </Button>
+                    </>
+                  )}
+                </Box>
+              </Box>
+            </Paper>
+          </Box>
         </Zoom>
       )}
     </>

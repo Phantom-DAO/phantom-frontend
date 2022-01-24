@@ -29,11 +29,15 @@ function BondPurchase({ bond, slippage, recipientAddress }) {
   const [quantity, setQuantity] = useState("");
   const [secondsToRefresh, setSecondsToRefresh] = useState(SECONDS_TO_REFRESH);
 
-  const currentBlock = useSelector(state => {
-    return state.app.currentBlock;
-  });
+  // const currentBlock = useSelector(state => {
+  //   return state.app.currentBlock;
+  // });
 
-  const isBondLoading = useSelector(state => state.bonding.loading ?? true);
+  // Fake variables
+  const currentBlock = 0;
+  const isBondLoading = false;
+
+  // const isBondLoading = useSelector(state => state.bonding.loading ?? true);
 
   const pendingTransactions = useSelector(state => {
     return state.pendingTransactions;
@@ -144,8 +148,8 @@ function BondPurchase({ bond, slippage, recipientAddress }) {
                     <em>
                       <Typography variant="body1" align="center" color="textSecondary">
                         <Trans>First time bonding</Trans> <b>{bond.displayName}</b>? <br />{" "}
-                        <Trans>Please approve Olympus Dao to use your</Trans> <b>{bond.displayName}</b>{" "}
-                        <b>{bond.displayName}</b> <Trans>for bonding</Trans>.
+                        <Trans>Please approve Phantom Dao to use your</Trans> <b>{bond.displayName}</b>{" "}
+                        <Trans>for bonding</Trans>.
                       </Typography>
                     </em>
                   </div>
@@ -232,7 +236,7 @@ function BondPurchase({ bond, slippage, recipientAddress }) {
               <Trans>You Will Get</Trans>
             </Typography>
             <Typography id="bond-value-id" className="price-data">
-              {isBondLoading ? <Skeleton width="100px" /> : `${trim(bond.bondQuote, 4) || "0"} OHM`}
+              {isBondLoading ? <Skeleton width="100px" /> : `${trim(bond.bondQuote, 4) || "0"} PHM`}
             </Typography>
           </div>
 
@@ -241,7 +245,7 @@ function BondPurchase({ bond, slippage, recipientAddress }) {
               <Trans>Max You Can Buy</Trans>
             </Typography>
             <Typography id="bond-value-id" className="price-data">
-              {isBondLoading ? <Skeleton width="100px" /> : `${trim(bond.maxBondPrice, 4) || "0"} OHM`}
+              {isBondLoading ? <Skeleton width="100px" /> : `${trim(bond.maxBondPrice, 4) || "0"} PHM`}
             </Typography>
           </div>
 

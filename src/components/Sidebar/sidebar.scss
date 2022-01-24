@@ -49,6 +49,7 @@
   .dapp-nav {
     display: flex;
     flex-flow: column;
+    width: 100%;
   }
 }
 
@@ -107,14 +108,23 @@
   > p {
     margin-left: 33px;
   }
+  .disabled {
+    cursor: default;
+  }
   .bond {
     display: block;
     padding: unset;
-    margin-bottom: 0 0 1px 0;
+    margin-bottom: 24px;
     text-decoration: none !important;
-    .bond-pair-roi {
-      float: right;
-      margin-left: 33px;
+    .bond-item {
+      display: flex;
+      justify-content: space-between;
+      .bond-pair-roi {
+        margin-right: 24px;
+      }
+      .phantom-gold {
+        color: #FFC768;
+      }
     }
   }
 }
