@@ -52,6 +52,20 @@ const Swap = () => {
     error,
   } = useSelector(state => state.swap);
 
+  // console.log("--- ", {
+  //   balancesLoading,
+  //   approveAPHMLoading,
+  //   approveFPHMLoading,
+  //   FPHMToGPHMLoading,
+  //   APHMToPHMLoading,
+  //   unlockedFPHM,
+  //   fPHMBalance,
+  //   aPHMBalance,
+  //   fPHMAllowance,
+  //   aPHMAllowance,
+  //   error,
+  // });
+
   const handleSwapAPHM = async () => {
     dispatch(swapAPHMToPHM({ provider, address, networkID: chainID, value: aPHMBalance }));
   };
@@ -65,7 +79,7 @@ const Swap = () => {
   };
 
   const handleApproveFPHM = () => {
-    dispatch(approveFPHM({ provider, address, value: fPHMBalance, networkID: chainID }));
+    dispatch(approveFPHM({ provider, address, value: fPHMBalance + unlockedFPHM, networkID: chainID }));
   };
 
   const loadingBalance = useCallback(
@@ -219,7 +233,7 @@ const Swap = () => {
                           {loadingBalance(unlockedFPHM)}
                         </TableCell>
                         <TableCell width="20%" align="right">
-                          {fPHMAllowance >= fPHMBalance ? (
+                          {fPHMAllowance >= fPHMBalance + unlockedFPHM ? (
                             <Button
                               variant="outlined"
                               color="primary"
