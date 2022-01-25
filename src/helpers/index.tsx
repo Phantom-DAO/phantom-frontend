@@ -238,8 +238,8 @@ export const durationAsString = (start: number, end: number) => {
   //Get Minutes
   let minutes = duration.minutes();
   if (minutes < 0) minutes = 0;
-  const minutesFormatted = `${minutes}Min`;
+  let minutesFormatted = `${minutes}Min`;
   // case when it's under 1 min
-  if (!days && !hours && !minutes) minutes = 1;
+  if (!days && !hours && !minutes) minutesFormatted = "1Min";
   return [daysFormatted, hoursFormatted, minutesFormatted].join("");
 };
