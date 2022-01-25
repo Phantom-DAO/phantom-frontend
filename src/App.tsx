@@ -16,7 +16,6 @@ import { calcBondDetails } from "./slices/BondSlice";
 import { loadAppDetails } from "./slices/AppSlice";
 import { loadAccountDetails, calculateUserBondDetails } from "./slices/AccountSlice";
 import { loadAuctionDetails, loadMyCommitments } from "./slices/AuctionSlice";
-import { loadSwapBalances } from "./slices/SwapSlice";
 import { info } from "./slices/MessagesSlice";
 
 import { Stake, ChooseBond, Bond, Wrap, TreasuryDashboard, Auction, Swap, Claim } from "./views";
@@ -136,7 +135,6 @@ function App() {
       //   dispatch(calculateUserBondDetails({ address, bond, provider, networkID: chainID }));
       // });
       dispatch(getFPHMAllocation({ address, networkID: chainID, provider: loadProvider }));
-      dispatch(loadSwapBalances({ address, networkID: chainID, provider: loadProvider }));
     },
     [connected],
   );
@@ -203,7 +201,6 @@ function App() {
   }, [location]);
 
   if (window.location.hash === "#/claim") {
-    console.log("where am i");
     return (
       <ThemeProvider theme={themeMode}>
         <CssBaseline />

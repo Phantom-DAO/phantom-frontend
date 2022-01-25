@@ -30,10 +30,10 @@ const Auction = () => {
     endTime,
     commitments,
     myCommitments,
-    loading,
+    auctionDataLoading,
     auctionToken,
   } = useSelector(state => state.auction);
-  const isLoading = !startTime && !endTime;
+  const isLoading = auctionDataLoading || (!startTime && !endTime);
   const tokensClaimable = useSelector(state => state.account.auction && state.account.auction.tokensClaimable);
   const fraxBalance = useSelector(state => state.account?.balances?.frax);
   const auctionStatus = auctionEnded && !isOpen ? "finished" : !auctionEnded && !isOpen ? "notstarted" : "ongoing";
@@ -48,7 +48,7 @@ const Auction = () => {
       const msDiff = new Date(startTime * 1000).getTime() - new Date().getTime();
       setTimeout(() => {
         dispatch(loadAuctionDetails({ provider, networkID: chainID }));
-      }, msDiff + 5 * 1000);
+      }, msDiff + 5);
     }
   }, [auctionStatus]);
 

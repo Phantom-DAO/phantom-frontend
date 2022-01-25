@@ -17,7 +17,7 @@ import {
 } from "./interfaces";
 import apollo from "../lib/apolloClient";
 import { NodeHelper } from "src/helpers/NodeHelper";
-import { error, info } from "../slices/MessagesSlice";
+import { error, success } from "../slices/MessagesSlice";
 import { fetchAccountSuccess, getBalances } from "./AccountSlice";
 import { clearPendingTxn, fetchPendingTxns, getStakingTypeText } from "./PendingTxnsSlice";
 import { loadAccountDetails } from "./AccountSlice";
@@ -113,6 +113,7 @@ export const claimTokens = createAsyncThunk(
     }
     dispatch(loadAuctionDetails({ networkID, provider }));
     dispatch(loadAccountDetails({ networkID, provider, address }));
+    dispatch(success("You have claimed your aPHM allocation successfully."));
   },
 );
 
@@ -158,6 +159,7 @@ export const commitTokens = createAsyncThunk(
     }
     dispatch(getBalances({ address, networkID, provider }));
     dispatch(loadAuctionDetails({ networkID, provider }));
+    dispatch(success("Transaction successful"));
     // give thegraph a couple secs to process the event
     setTimeout(() => {
       dispatch(loadAllCommitments());
@@ -199,7 +201,7 @@ export const changeFraxApproval = createAsyncThunk(
 
     // go get fresh allowances
     let fraxAllowance = await fraxContract.allowance(address, addresses[networkID].PhantomAuction);
-
+    dispatch(success("Transaction successful"));
     return dispatch(
       fetchAccountSuccess({
         auction: {
@@ -271,6 +273,7 @@ const initialState: IAuctionSlice = {
   commitments: null,
   myCommitments: null,
   auctionToken: "",
+  auctionDataLoading: false,
 };
 
 const auctionSlice = createSlice({
@@ -280,14 +283,14 @@ const auctionSlice = createSlice({
   extraReducers: builder => {
     builder
       .addCase(loadAuctionDetails.pending, state => {
-        state.loading = true;
+        state.auctionDataLoading = true;
       })
       .addCase(loadAuctionDetails.fulfilled, (state, action) => {
         setAll(state, action.payload || {});
-        state.loading = false;
+        state.auctionDataLoading = false;
       })
       .addCase(loadAuctionDetails.rejected, (state, { error }) => {
-        state.loading = false;
+        state.auctionDataLoading = false;
         console.error(error.message);
       })
       .addCase(loadAllCommitments.fulfilled, (state, action) => {

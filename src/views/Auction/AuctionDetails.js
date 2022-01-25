@@ -151,7 +151,7 @@ const AuctionDetails = ({
                   <DotIcon />
                 </SvgIcon>
                 <Typography variant="body1">
-                  {auctionStatus === "ongoing" ? "Ongoing" : auctionStatus === "finished" ? "Finished" : "Not started"}{" "}
+                  {auctionStatus === "ongoing" ? "Ongoing" : auctionStatus === "finished" ? "Finished" : "Not started"}
                 </Typography>
               </Box>
             </Box>
@@ -198,7 +198,7 @@ const AuctionDetails = ({
                     <Skeleton width="150px" height="60px" />
                   )}
                 </Box>
-              ) : (
+              ) : auctionStatus === "finished" ? (
                 <>
                   <Box>
                     <Typography variant="h6">THIS AUCTION HAS</Typography>
@@ -225,7 +225,7 @@ const AuctionDetails = ({
                     </Button>
                   </Box>
                 </>
-              )}
+              ) : null}
             </Box>
           )}
           {auctionStatus === "ongoing" && (
