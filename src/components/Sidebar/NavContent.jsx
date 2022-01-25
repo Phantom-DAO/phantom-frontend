@@ -153,7 +153,7 @@ function NavContent() {
                 </Typography>
               </Link>
 
-              <div className="dapp-menu-data discounts">
+              {/* <div className="dapp-menu-data discounts">
                 <div className="bond-discounts">
                   <Typography variant="body2">
                     <Trans>Bond discounts</Trans>
@@ -183,7 +183,7 @@ function NavContent() {
                     </Link>
                   ))}
                 </div>
-              </div>
+              </div> */}
               <Link
                 component={NavLink}
                 id="swap-nav"
