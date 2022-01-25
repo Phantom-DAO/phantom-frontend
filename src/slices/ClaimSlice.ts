@@ -6,7 +6,6 @@ import { addresses } from "../constants";
 import { setAll } from "../helpers";
 import { getBalances } from "./AccountSlice";
 import { IBaseAddressAsyncThunk } from "./interfaces";
-import { fetchPendingTxns } from "./PendingTxnsSlice";
 
 export type IClaimSlice = {
   pendingFPHM: string;
@@ -51,13 +50,10 @@ export const claimFPHM = createAsyncThunk(
   "claim/fphm",
   async ({ address, networkID, provider }: IBaseAddressAsyncThunk, { dispatch }) => {
     const phantomLaunch = new Contract(addresses[networkID].PhantomLaunch, PhantomLaunchAbi, provider.getSigner());
-
     const tx = await phantomLaunch.claimFPHM();
     if (tx) {
-      await dispatch(fetchPendingTxns({ txnHash: tx.hash, text: "Pending...", type: "claim_tokens" }));
       await tx.wait();
     }
-
     await dispatch(getBalances({ address, networkID, provider }));
 
     return {

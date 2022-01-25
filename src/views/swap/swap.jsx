@@ -16,14 +16,14 @@ import {
 } from "@material-ui/core";
 import { useWeb3Context } from "src/hooks/web3Context";
 // maintain state for some settings
-import { useCallback, useState } from "react";
+import { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Skeleton } from "@material-ui/lab";
 
 import { getOhmTokenImage, getTokenImage } from "../../helpers";
 import { ReactComponent as APHMToPHM } from "../../assets/icons/aphm-to-phm.svg";
 import { ReactComponent as FPHMToGPHM } from "../../assets/icons/fphm-to-gphm.svg";
-import { swapFPHMToGPHM, swapAPHMToPHM, approveFPHM, approveAPHM } from "../../slices/SwapSlice";
+import { swapFPHMToGPHM, swapAPHMToPHM, approveFPHM, approveAPHM, loadSwapBalances } from "../../slices/SwapSlice";
 import MobileCard from "./MobileCard";
 import "./swap.scss";
 
@@ -35,8 +35,14 @@ import "./swap.scss";
 const Swap = () => {
   const theme = useTheme();
   const isMobileScreen = useMediaQuery("(max-width: 700px)");
-  const { provider, address, connected, connect, chainID } = useWeb3Context();
+  const { provider, address, hasCachedProvider, connected, connect, chainID } = useWeb3Context();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (connected) {
+      dispatch(loadSwapBalances({ address, networkID: chainID, provider }));
+    }
+  }, [connected]);
 
   const {
     balancesLoading,
