@@ -56,7 +56,8 @@ export const addresses: IAddresses = {
     gPHM: "0x783E157A197327243ffed082Ab7C8cf942f0988e",
     sPHM: "0x418355d3601087EabC46557592C82483BD1c08e1",
     //end
-    frax: "0xfafedb041c0dd4fa2dc0d87a6b0979ee6fa7af5f", // LINK address, kept name same as prod for ease
+    frax: "0xdc301622e621166bd8e82f2ca0a26c13ad0be355",
+    PhantomAuction: "0x67eA2dC0D042eF1dEB62AB5e3d0f687231F11B17", // test contract
   },
   /* FTM testnet */
   4002: {

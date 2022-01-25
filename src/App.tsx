@@ -241,9 +241,9 @@ function App() {
                 <Claim />
               </Route>
 
-              {/* <Route path="/auction">
+              <Route path="/auction">
                 <Auction />
-              </Route> */}
+              </Route>
 
               <Route exact path="/">
                 <Redirect to="/swap" />
