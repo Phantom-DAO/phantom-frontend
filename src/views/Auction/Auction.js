@@ -1,5 +1,5 @@
 import { Box, Grid, useTheme, Zoom } from "@material-ui/core";
-import { useEffect } from "react";
+import { useState, useEffect, useLayoutEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ethers } from "ethers";
 
@@ -33,13 +33,23 @@ const Auction = () => {
     auctionDataLoading,
     auctionToken,
   } = useSelector(state => state.auction);
+  const [auctionStatus, setAuctionStatus] = useState(null);
   const isLoading = auctionDataLoading || (!startTime && !endTime);
   const tokensClaimable = useSelector(state => state.account.auction && state.account.auction.tokensClaimable);
   const fraxBalance = useSelector(state => state.account?.balances?.frax);
-  const auctionStatus = auctionEnded && !isOpen ? "finished" : !auctionEnded && !isOpen ? "notstarted" : "ongoing";
+
+  useLayoutEffect(() => {
+    // change auctionStatus only after the first load
+    if (isLoading && !auctionStatus) return;
+    const status = auctionEnded && !isOpen ? "finished" : !auctionEnded && !isOpen ? "notstarted" : "ongoing";
+    setAuctionStatus(status);
+  }, [isLoading]);
 
   useEffect(() => {
-    dispatch(loadAllCommitments());
+    const id = setInterval(() => {
+      dispatch(loadAllCommitments());
+    }, 10 * 1000);
+    return () => clearInterval(id);
   }, []);
 
   useEffect(() => {
@@ -77,7 +87,12 @@ const Auction = () => {
           <AuctionTitle endTime={endTime} auctionStatus={auctionStatus} />
           <Grid container spacing={2}>
             <Grid item xs={12} md={4}>
-              <AuctionBanner auctionStatus={auctionStatus} tokenPrice={tokenPrice} auctionToken={auctionToken} />
+              <AuctionBanner
+                isLoading={isLoading}
+                auctionStatus={auctionStatus}
+                tokenPrice={tokenPrice}
+                auctionToken={auctionToken}
+              />
             </Grid>
             <Grid item xs={12} md={8}>
               <AuctionDetails

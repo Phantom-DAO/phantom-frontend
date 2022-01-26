@@ -45,6 +45,7 @@ if (DEBUG) console.log("📡 Connecting to Mainnet Ethereum");
 
 const drawerWidth = 280;
 const transitionDuration = 969;
+let auctionInterval = null as any;
 
 const useStyles = makeStyles(theme => ({
   drawer: {
@@ -118,23 +119,28 @@ function App() {
 
   const loadApp = useCallback(
     loadProvider => {
-      dispatch(loadAuctionDetails({ provider, networkID: chainID }));
       dispatch(loadAppDetails({ networkID: chainID, provider: loadProvider }));
       // bonds.map(bond => {
       //   dispatch(calcBondDetails({ bond, value: "", provider: loadProvider, networkID: chainID }));
       // });
+
+      // load auction details + poll
+      dispatch(loadAuctionDetails({ provider, networkID: chainID }));
+      auctionInterval = setInterval(() => {
+        dispatch(loadAuctionDetails({ provider, networkID: chainID }));
+      }, 10 * 1000);
     },
     [connected],
   );
 
   const loadAccount = useCallback(
     loadProvider => {
-      dispatch(loadMyCommitments({ address }));
       dispatch(loadAccountDetails({ networkID: chainID, address, provider: loadProvider }));
       // bonds.map(bond => {
       //   dispatch(calculateUserBondDetails({ address, bond, provider, networkID: chainID }));
       // });
       dispatch(getFPHMAllocation({ address, networkID: chainID, provider: loadProvider }));
+      dispatch(loadMyCommitments({ address }));
     },
     [connected],
   );
@@ -163,6 +169,10 @@ function App() {
     if (shouldTriggerSafetyCheck()) {
       dispatch(info("Safety Check: Always verify you're on app.phantomdao.xyz!"));
     }
+
+    return () => {
+      clearInterval(auctionInterval);
+    };
   }, []);
 
   // this useEffect fires on state change from above. It will ALWAYS fire AFTER

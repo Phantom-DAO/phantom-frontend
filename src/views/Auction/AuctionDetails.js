@@ -1,6 +1,6 @@
 import { Box, Grid, Paper, SvgIcon, Typography, useTheme, Button } from "@material-ui/core";
-import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Skeleton } from "@material-ui/lab";
 import { useWeb3Context } from "../../hooks/web3Context";
 import { ReactComponent as DotIcon } from "./../../assets/icons/dot.svg";
 import { txnButtonText } from "src/slices/PendingTxnsSlice";
@@ -28,7 +28,7 @@ const AuctionDetails = ({
   const { address, connect, provider, chainID } = useWeb3Context();
   const dispatch = useDispatch();
   const remainingTokensShare = 100 - (totalTokensCommitted / totalTokens) * 100;
-  const [timeLeft, setTimeLeft] = useState(durationAsString(new Date().getTime(), startTime * 1000));
+  const timeLeft = durationAsString(new Date().getTime(), startTime * 1000);
   const pendingTransactions = useSelector(state => state.pendingTransactions);
 
   const data = [
@@ -49,13 +49,6 @@ const AuctionDetails = ({
   const onClaimTokens = () => {
     dispatch(claimTokens({ provider, networkID: chainID, address }));
   };
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTimeLeft(durationAsString(new Date().getTime(), startTime * 1000));
-    }, 1000);
-    return () => clearInterval(interval);
-  });
 
   return (
     <Box
@@ -94,7 +87,7 @@ const AuctionDetails = ({
             Connect Wallet
           </Button>
         </Box>
-      ) : isLoading ? (
+      ) : isLoading && !auctionStatus ? (
         <SkeletonLoader />
       ) : (
         <>
@@ -111,13 +104,19 @@ const AuctionDetails = ({
               <Typography variant="body1" color="textSecondary" style={{ marginBottom: theme.spacing(1) }}>
                 RAISED
               </Typography>
-              <Typography variant="body1">{new Intl.NumberFormat("en-US").format(commitedFrax)} FRAX</Typography>
+              {isLoading ? (
+                <Skeleton width="60px" height="20px" />
+              ) : (
+                <Typography variant="body1">{new Intl.NumberFormat("en-US").format(commitedFrax)} FRAX</Typography>
+              )}
             </Grid>
             <Grid item xs={6} md={3}>
               <Typography variant="body1" color="textSecondary" style={{ marginBottom: theme.spacing(1) }}>
                 REMAINING
               </Typography>
-              {auctionStatus === "notstarted" ? (
+              {isLoading ? (
+                <Skeleton width="60px" height="20px" />
+              ) : auctionStatus === "notstarted" ? (
                 <Typography variant="body1">{new Intl.NumberFormat("en-US").format(150000000)} FRAX</Typography>
               ) : (
                 <Typography variant="body1">{Math.round(remainingTokensShare * 100) / 100}%</Typography>
@@ -156,17 +155,17 @@ const AuctionDetails = ({
               </Box>
             </Box>
           </Grid>
-          {auctionStatus === "ongoing" && startPrice ? (
+          {auctionStatus === "ongoing" ? (
             <Box
               sx={{
                 width: "100%",
                 minHeight: "400px",
-                backgroundColor: "#000000",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 marginBottom: theme.spacing(2),
                 marginTop: theme.spacing(2),
+                backgroundColor: "#000",
               }}
             >
               <LineChartAuction data={data} />
