@@ -91,7 +91,7 @@ export const addresses: IAddresses = {
     PhantomVault: "0x82e29fb0494339467f2f19cebe5360e92dDCC923",
     aPHM: "0x21a937d9570D3378366f838b95D584e0DA2042Ba",
     fPHM: "0x7DA73c277B0b23fCa06825891A1d5bf5dBF19219",
-    gPHM: "0x589BD1a953a64b4b3ABeDA7421F44F366102d187",
+    gPHM: "0x4975CC49D7f4045dF96a75e4C567Ad6506D71cc0",
     sPHM: "0x9Ae3485beE56175528a4d1AB460cE85e7497d17a",
     //end
     frax: "0xfafedb041c0dd4fa2dc0d87a6b0979ee6fa7af5f", // LINK address, kept name same as prod for ease
