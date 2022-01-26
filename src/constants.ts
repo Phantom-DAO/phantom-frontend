@@ -41,10 +41,10 @@ export const addresses: IAddresses = {
     PhantomAlphaSwap: "0xAD86f0841F3905BbbE28D5fEeCF992C573a0Ef74",
     PhantomBonding: "",
     PhantomDexRouter: "",
-    PhantomExecutor: "0xB30cCD668b9906c63F270fB7e130d3ab880549B2",
+    PhantomExecutor: "0x0d09B6C07B27C7EeD27A0649C0e4e7346C05eb59",
     PhantomFinance: "",
     PhantomFounders: "0x412FA39551a0BEf9dB9eD3427402941eF78C8209",
-    PhantomGovernor: "0x38a51314E772245c0dEc231223117b73C980846d",
+    PhantomGovernor: "0xd7b00DD460B5f81e7C638442603B7038756131B3",
     PhantomLaunch: "0x7714CDE16F7Ad77e8155Ca6434289cf85756c8C7",
     PhantomPayments: "",
     PhantomStaking: "",
@@ -53,7 +53,7 @@ export const addresses: IAddresses = {
     PhantomVault: "0xB0D87A3f3d537ef5F8b5f1ea185CED30f66a54AF",
     aPHM: "0x747d453192D8A0B2e2184738033d0A6296301476",
     fPHM: "0x316a0E6c9Ada20d7C9C678589C63dC21afa27301",
-    gPHM: "0x783E157A197327243ffed082Ab7C8cf942f0988e",
+    gPHM: "0x354e0Bc93d29bB1E48cF4714E1eDA6DCA4aa8828",
     sPHM: "0x418355d3601087EabC46557592C82483BD1c08e1",
     //end
     frax: "0xfafedb041c0dd4fa2dc0d87a6b0979ee6fa7af5f", // LINK address, kept name same as prod for ease
