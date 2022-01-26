@@ -288,7 +288,7 @@ const Swap = () => {
               )}
             </Paper>
           </Box>
-          <Box className="add-tokens-container">
+          <Box className={isMobileScreen ? "add-tokens-container-mobile" : "add-tokens-container"}>
             <Button
               variant="outlined"
               color="secondary"

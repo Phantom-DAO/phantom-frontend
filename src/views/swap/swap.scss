@@ -18,6 +18,14 @@
     margin-top: 20px;
     gap: 20px;
   }
+
+  .add-tokens-container-mobile{
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    margin-top: 20px;
+    gap: 10px;
+  }
 }
 
 .swap-metric-mobile{
