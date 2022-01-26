@@ -46,7 +46,7 @@ if (DEBUG) console.log("📡 Connecting to Mainnet Ethereum");
 
 const drawerWidth = 280;
 const transitionDuration = 969;
-let auctionInterval = null;
+let auctionInterval = null as any;
 
 const useStyles = makeStyles(theme => ({
   drawer: {
