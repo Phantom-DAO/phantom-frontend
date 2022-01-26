@@ -71,8 +71,9 @@
   svg {
     width: 20px;
     height: 20px;
-    margin-right: 12px;
+    margin-right: 15px;
     vertical-align: -4px;
+    overflow: visible;
   }
 }
 
@@ -95,8 +96,9 @@
   a svg {
     width: 20px;
     height: 20px;
-    margin-right: 12px;
+    margin-right: 15px;
     vertical-align: middle;
+    overflow: visible;
   }
 }
 
@@ -143,6 +145,16 @@
       width: 20px;
     }
   }
+}
+
+.dapp-menu-social {
+  margin-bottom: -87px;
+}
+
+.dapp-curves-icon {
+  height: auto !important;
+  width: 75% !important;
+  fill: none !important;
 }
 
 .mobile .show .dapp-sidebar {

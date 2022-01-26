@@ -32,7 +32,7 @@ function ClaimBonds({ activeBonds }) {
   const theme = useTheme();
 
   const [numberOfBonds, setNumberOfBonds] = useState(0);
-  const isSmallScreen = useMediaQuery("(max-width: 820px)"); // change to breakpoint query
+  const isSmallScreen = useMediaQuery("(max-width: 920px)"); // change to breakpoint query
 
   const pendingTransactions = useSelector(state => {
     return state.pendingTransactions;

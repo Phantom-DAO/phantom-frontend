@@ -2,11 +2,13 @@ import { useCallback, useState } from "react";
 import { NavLink } from "react-router-dom";
 import Social from "./Social";
 import externalUrls from "./externalUrls";
+import { ReactComponent as AuctionIcon } from "../../assets/icons/auction.svg";
 import { ReactComponent as StakeIcon } from "../../assets/icons/stake.svg";
-import { ReactComponent as SwapIcon } from "../../assets/icons/swap-icon.svg";
+import { ReactComponent as SwapIcon } from "../../assets/icons/swap.svg";
 import { ReactComponent as BondIcon } from "../../assets/icons/bond.svg";
 import { ReactComponent as DashboardIcon } from "../../assets/icons/dashboard.svg";
 import { ReactComponent as PhantomIcon } from "../../assets/icons/phantom-nav-header.svg";
+import { ReactComponent as WavesLeftIcon } from "../../assets/icons/waves-left.svg";
 import { ReactComponent as PoolTogetherIcon } from "../../assets/icons/33-together.svg";
 import { Trans } from "@lingui/macro";
 import { trim, shorten } from "../../helpers";
@@ -101,7 +103,7 @@ function NavContent() {
                 className={`button-dapp-menu ${isActive ? "active" : ""}`}
               >
                 <Typography variant="h6">
-                  <SvgIcon color="primary" component={StakeIcon} />
+                  <SvgIcon color="primary" component={AuctionIcon} />
                   <Trans>Auction</Trans>
                 </Typography>
               </Link>
@@ -155,9 +157,6 @@ function NavContent() {
 
               {/* <div className="dapp-menu-data discounts">
                 <div className="bond-discounts">
-                  <Typography variant="body2">
-                    <Trans>Bond discounts</Trans>
-                  </Typography>
                   {bonds.map((bond, i) => (
                     <Link
                       component={NavLink}
@@ -216,6 +215,7 @@ function NavContent() {
             <Social />
           </div>
         </Box>
+        <SvgIcon className="dapp-curves-icon" color="primary" component={WavesLeftIcon} viewBox="0 0 248 105" />
       </Box>
     </Paper>
   );
