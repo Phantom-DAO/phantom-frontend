@@ -134,10 +134,7 @@ export const commitTokens = createAsyncThunk(
 
     let commitTx;
     try {
-      // @todo: might need to remove gasLimit
-      commitTx = await auctionContract.commitTokens(ethers.utils.parseEther(quantity.toString()), true, {
-        gasLimit: 150000,
-      });
+      commitTx = await auctionContract.commitTokens(ethers.utils.parseEther(quantity.toString()), true);
       dispatch(fetchPendingTxns({ txnHash: commitTx.hash, text: "Pending...", type: "commit_tokens" }));
       await commitTx.wait();
     } catch (e: unknown) {
@@ -214,15 +211,15 @@ export const changeFraxApproval = createAsyncThunk(
 
 export const loadAllCommitments = createAsyncThunk("app/loadAllCommitments", async () => {
   const commitments = `
-      query {
-        commitments {
-          contributor
-          amountCommited
-          txHash
-          blockNumber
-        }
+    query {
+      commitments {
+        contributor
+        amountCommited
+        txHash
+        blockNumber
       }
-    `;
+    }
+  `;
 
   const graphData = await apollo(commitments);
   if (!graphData || graphData == null) {

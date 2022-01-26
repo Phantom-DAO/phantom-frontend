@@ -5,7 +5,7 @@ import { FileCopyOutlined as ContentCopyIcon } from "@material-ui/icons";
 import aPhmLogo from "./../../assets/icons/token-aPHM-alt.png";
 import curvesImage from "./../../assets/images/Curves.png";
 
-const AuctionBanner = ({ auctionStatus, tokenPrice, auctionToken }) => {
+const AuctionBanner = ({ auctionStatus, tokenPrice, auctionToken, isLoading }) => {
   const theme = useTheme();
 
   const handleCopyAddress = e => {
@@ -69,12 +69,12 @@ const AuctionBanner = ({ auctionStatus, tokenPrice, auctionToken }) => {
         </Typography>
         {auctionStatus === "notstarted" ? (
           <Typography variant="h5">Not available yet</Typography>
-        ) : tokenPrice ? (
-          <Typography variant="h5">{Math.round(tokenPrice * 100) / 100} FRAX</Typography>
-        ) : (
+        ) : !tokenPrice || isLoading ? (
           <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
-            <Skeleton width="100px" height="40px" />
+            <Skeleton width="100px" height="28px" />
           </Box>
+        ) : (
+          <Typography variant="h5">{Math.round(tokenPrice * 100) / 100} FRAX</Typography>
         )}
       </Box>
       <Box sx={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
