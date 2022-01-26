@@ -32,8 +32,8 @@ function ChooseBond() {
   const { chainID } = useWeb3Context();
   // const { bonds } = useBonds(chainID);
   const theme = useTheme();
-  const isSmallScreen = useMediaQuery("(max-width: 820px)"); // change to breakpoint query
-  const isVerySmallScreen = useMediaQuery("(max-width: 710px)");
+  const isSmallScreen = useMediaQuery("(max-width: 920px)"); // change to breakpoint query
+  const isVerySmallScreen = useMediaQuery("(max-width: 820px)");
 
   const isAppLoading = useSelector(state => state.app.loading);
   const isAccountLoading = useSelector(state => state.account.loading);
