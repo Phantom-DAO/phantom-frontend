@@ -251,7 +251,7 @@ function App() {
                 <Claim />
               </Route>
 
-              <Route path="/auction">
+              <Route path="/very-random-auction-page-xyz">
                 <Auction />
               </Route>
 
