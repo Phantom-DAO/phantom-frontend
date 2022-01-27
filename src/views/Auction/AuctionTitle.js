@@ -1,17 +1,10 @@
 import { Box, Typography, useTheme } from "@material-ui/core";
-import { useEffect, useState } from "react";
 import { durationAsString } from "../../helpers";
 
 const AuctionTitle = ({ endTime, auctionStatus }) => {
   const theme = useTheme();
-  const [timeLeft, setTimeLeft] = useState(durationAsString(new Date().getTime(), endTime * 1000));
+  const timeLeft = durationAsString(new Date().getTime(), endTime * 1000);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTimeLeft(durationAsString(new Date().getTime(), endTime * 1000));
-    }, 1000);
-    return () => clearInterval(interval);
-  });
   return (
     <Box
       sx={{

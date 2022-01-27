@@ -25,6 +25,7 @@ import { ReactComponent as APHMToPHM } from "../../assets/icons/aphm-to-phm.svg"
 import { ReactComponent as FPHMToGPHM } from "../../assets/icons/fphm-to-gphm.svg";
 import { swapFPHMToGPHM, swapAPHMToPHM, approveFPHM, approveAPHM, loadSwapBalances } from "../../slices/SwapSlice";
 import MobileCard from "./MobileCard";
+import { addresses } from "../../constants";
 import "./swap.scss";
 
 // TODO: 1 Implementation
@@ -72,6 +73,25 @@ const Swap = () => {
 
   const handleApproveFPHM = () => {
     dispatch(approveFPHM({ provider, address, value: fPHMBalance, networkID: chainID }));
+  };
+
+  const handleAddToken = async token => {
+    if (!window.ethereum) return;
+    await window.ethereum.request({
+      method: "wallet_watchAsset",
+      params: {
+        type: "ERC20",
+        options: {
+          address: token === "PHM" ? addresses[chainID].PHM : addresses[chainID].gPHM,
+          symbol: token,
+          decimals: 18,
+          image:
+            token === "PHM"
+              ? "https://i.ibb.co/HtxRm9r/Token-PHM-Style-Alt.png"
+              : "https://i.ibb.co/VTB5xYM/Token-g-PHM-Style-Alt.png",
+        },
+      },
+    });
   };
 
   const loadingBalance = useCallback(
@@ -267,6 +287,30 @@ const Swap = () => {
                 </TableContainer>
               )}
             </Paper>
+          </Box>
+          <Box className={isMobileScreen ? "add-tokens-container-mobile" : "add-tokens-container"}>
+            <Button
+              variant="outlined"
+              color="secondary"
+              size="medium"
+              style={{
+                fontSize: "16px",
+              }}
+              onClick={() => handleAddToken("PHM")}
+            >
+              Add PHM to wallet
+            </Button>
+            <Button
+              variant="outlined"
+              color="secondary"
+              size="medium"
+              style={{
+                fontSize: "16px",
+              }}
+              onClick={() => handleAddToken("gPHM")}
+            >
+              Add gPHM to wallet
+            </Button>
           </Box>
         </Box>
       </Zoom>

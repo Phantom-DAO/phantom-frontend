@@ -56,7 +56,8 @@ export const addresses: IAddresses = {
     gPHM: "0x354e0Bc93d29bB1E48cF4714E1eDA6DCA4aa8828",
     sPHM: "0x418355d3601087EabC46557592C82483BD1c08e1",
     //end
-    frax: "0xfafedb041c0dd4fa2dc0d87a6b0979ee6fa7af5f", // LINK address, kept name same as prod for ease
+    frax: "0xdc301622e621166bd8e82f2ca0a26c13ad0be355",
+    PhantomAuction: "0x67eA2dC0D042eF1dEB62AB5e3d0f687231F11B17", // test contract
   },
   /* FTM testnet */
   4002: {
@@ -90,7 +91,7 @@ export const addresses: IAddresses = {
     PhantomVault: "0x82e29fb0494339467f2f19cebe5360e92dDCC923",
     aPHM: "0x21a937d9570D3378366f838b95D584e0DA2042Ba",
     fPHM: "0x7DA73c277B0b23fCa06825891A1d5bf5dBF19219",
-    gPHM: "0xB529F19d1B42d1381fE5fCA3cE649E42465eA8aF",
+    gPHM: "0x4975CC49D7f4045dF96a75e4C567Ad6506D71cc0",
     sPHM: "0x9Ae3485beE56175528a4d1AB460cE85e7497d17a",
     //end
     frax: "0xfafedb041c0dd4fa2dc0d87a6b0979ee6fa7af5f", // LINK address, kept name same as prod for ease

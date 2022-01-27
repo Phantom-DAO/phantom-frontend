@@ -14,6 +14,7 @@ const useStyles = makeStyles(theme => ({
   drawerPaper: {
     width: drawerWidth,
     borderRight: 0,
+    boxShadow: "0px 0px 64px rgba(119, 34, 252, 0.1) !important",
   },
 }));
 

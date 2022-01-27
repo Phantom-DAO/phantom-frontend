@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
   },
   menuButton: {
     marginRight: theme.spacing(2),
-    [theme.breakpoints.up("981")]: {
+    [theme.breakpoints.up("1281")]: {
       display: "none",
     },
   },
