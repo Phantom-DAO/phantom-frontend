@@ -13,6 +13,7 @@ import {
   Typography,
   ButtonGroup,
   Button,
+  Link,
 } from "@material-ui/core";
 import { useState } from "react";
 
@@ -98,12 +99,14 @@ const CommitmentsTable = ({ commitments, myCommitments, tokenPrice }) => {
                   <TableCell component="th" scope="row">
                     {row.contributor.slice(0, 10)}...{row.contributor.slice(row.contributor.length - 8)}
                   </TableCell>
-                  <TableCell align="left">{+row.amountCommited / 1e18} FRAX</TableCell>
+                  <TableCell align="left">{Math.round((+row.amountCommited / 1e18) * 100) / 100} FRAX</TableCell>
                   <TableCell align="left">
-                    {Math.round((+row.amountCommited / 1e18 / tokenPrice) * 100) / 100} aPHM
+                    {Math.round((+row.amountCommited / 1e18 / tokenPrice) * 1000) / 1000} aPHM
                   </TableCell>
                   <TableCell align="left">
-                    {row.txHash.slice(0, 10)}...{row.txHash.slice(row.txHash.length - 8)}
+                    <Link href={`https://ftmscan.com/tx/${row.txHash}`} target="_blank" rel="noreferrer">
+                      {row.txHash.slice(0, 10)}...{row.txHash.slice(row.txHash.length - 8)}
+                    </Link>
                   </TableCell>
                   <TableCell align="left">{row.blockNumber}</TableCell>
                 </TableRow>

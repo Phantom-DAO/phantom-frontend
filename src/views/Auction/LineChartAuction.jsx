@@ -49,7 +49,7 @@ const LineChartAuction = ({ data }) => {
           />
         </YAxis>
         <Tooltip content={<CustomTooltip />} />
-        <Line type="monotone" dataKey="auctionPrice" stroke="#7722FC" activeDot={{ r: 8 }} />
+        <Line type="monotone" dataKey="auctionPrice" stroke="#7722FC" activeDot={{ r: 8 }} dot={{ r: 5 }} />
       </LineChart>
     </ResponsiveContainer>
   );

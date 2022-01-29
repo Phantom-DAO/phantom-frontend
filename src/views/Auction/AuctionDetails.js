@@ -157,6 +157,7 @@ const AuctionDetails = ({
           </Grid>
           {auctionStatus === "ongoing" ? (
             <Box
+              className="root-line-chart"
               sx={{
                 width: "100%",
                 minHeight: "400px",
