@@ -13,8 +13,8 @@ const AuctionController = ({ tokenPrice, fraxBalance, onCommitTokens }) => {
   const { provider, address, chainID } = useWeb3Context();
   const [fraxCommitment, setFraxCommitment] = useState(0);
   const [sliderValue, setSliderValue] = useState(0);
-  const maxTokensCommitment = Math.round((fraxBalance / tokenPrice) * 10) / 10;
-  const tokensCommitment = Math.round((fraxCommitment / tokenPrice) * 10) / 10;
+  const maxTokensCommitment = Math.round((fraxBalance / tokenPrice) * 1000) / 1000;
+  const tokensCommitment = Math.round((fraxCommitment / tokenPrice) * 1000) / 1000;
 
   const pendingTransactions = useSelector(state => state.pendingTransactions);
   const fraxAllowance = useSelector(state => state.account.auction && state.account.auction.fraxAllowance);
