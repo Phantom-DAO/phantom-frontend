@@ -19,9 +19,7 @@ const AuctionController = ({ tokenPrice, fraxBalance, onCommitTokens }) => {
   const pendingTransactions = useSelector(state => state.pendingTransactions);
   const fraxAllowance = useSelector(state => state.account.auction && state.account.auction.fraxAllowance);
   const isAllowanceDataLoading = fraxAllowance === undefined;
-  const commitmentGwei = ethers.utils.parseUnits((Math.round((fraxCommitment || 0) * 1000) / 1000).toString(), "gwei");
-  const allowanceGwei = ethers.utils.parseUnits((Math.round((fraxAllowance || 0) * 1000) / 1000).toString(), "gwei");
-  const needsFraxApproval = commitmentGwei.gt(allowanceGwei);
+  const needsFraxApproval = fraxCommitment > fraxAllowance;
 
   const handleSliderChange = (_, value) => {
     setSliderValue(value);

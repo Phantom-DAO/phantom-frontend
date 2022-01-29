@@ -30,7 +30,7 @@ const LineChartAuction = ({ data }) => {
         }}
       >
         <XAxis dataKey="name" />
-        <YAxis tick={false} domain={[0, "dataMax"]}>
+        <YAxis tick={false} domain={[0, "dataMax + 200"]}>
           <Label value="STARTING PRICE" position="insideTopLeft" offset={70} style={{ fill: "#768299" }} />
           <Label
             value={`${data[0].auctionPrice} FRAX`}
