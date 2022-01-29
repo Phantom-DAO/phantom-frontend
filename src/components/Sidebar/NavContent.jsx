@@ -93,7 +93,6 @@ function NavContent() {
               </Link>
 
               <Link
-                disabled
                 component={NavLink}
                 id="auction-nav"
                 to="/auction"
