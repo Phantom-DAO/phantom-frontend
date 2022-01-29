@@ -125,7 +125,7 @@
         margin-right: 24px;
       }
       .phantom-gold {
-        color: #FFC768;
+        color: #ffc768;
       }
     }
   }
@@ -155,6 +155,7 @@
   height: auto !important;
   width: 75% !important;
   fill: none !important;
+  z-index: -1;
 }
 
 .mobile .show .dapp-sidebar {
