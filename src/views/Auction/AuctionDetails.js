@@ -210,7 +210,7 @@ const AuctionDetails = ({
                       Auction finished successfully
                     </Typography>
                     <Typography style={{ lineHeight: "27px" }}>
-                      You have {tokensClaimable} aPHM available to claim
+                      You have {Math.round(tokensClaimable * 100) / 100} aPHM available to claim
                     </Typography>
                   </Box>
                   <Box>
