@@ -37,7 +37,7 @@ const AuctionDetails = ({
       auctionPrice: startPrice,
     },
     {
-      name: "",
+      name: "CURRENT",
       auctionPrice: tokenPrice,
     },
     {
