@@ -41,7 +41,7 @@ const Auction = () => {
   useLayoutEffect(() => {
     // change auctionStatus only after the first load
     if (isLoading && !auctionStatus) return;
-    const status = auctionEnded && !isOpen ? "finished" : !auctionEnded && !isOpen ? "notstarted" : "ongoing";
+    const status = auctionEnded ? "finished" : !auctionEnded && !isOpen ? "notstarted" : "ongoing";
     setAuctionStatus(status);
   }, [isLoading]);
 
