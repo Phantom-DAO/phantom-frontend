@@ -55,9 +55,9 @@ export const addresses: IAddresses = {
     fPHM: "0x316a0E6c9Ada20d7C9C678589C63dC21afa27301",
     gPHM: "0x354e0Bc93d29bB1E48cF4714E1eDA6DCA4aa8828",
     sPHM: "0x418355d3601087EabC46557592C82483BD1c08e1",
-    //end
     frax: "0xdc301622e621166bd8e82f2ca0a26c13ad0be355",
-    PhantomAuction: "0x67eA2dC0D042eF1dEB62AB5e3d0f687231F11B17", // test contract
+    PhantomAuction: "0xbaa766bbb0e963b90f36ebaf193c3154460ed5c7",
+    //end
   },
   /* FTM testnet */
   4002: {
