@@ -2,6 +2,7 @@ import { ethers } from "ethers";
 import { addresses } from "../constants";
 import { abi as OlympusStakingv2ABI } from "../abi/OlympusStakingv2.json";
 import { abi as sOHMv2 } from "../abi/sOhmv2.json";
+import { abi as ierc20Abi } from "../abi/IERC20.json";
 import { setAll, getTokenPrice, getMarketPrice } from "../helpers";
 import apollo from "../lib/apolloClient.js";
 import { createSlice, createSelector, createAsyncThunk } from "@reduxjs/toolkit";
@@ -12,6 +13,7 @@ import { OlympusStakingv2, SOhmv2 } from "../typechain";
 const initialState = {
   loading: false,
   loadingMarketPrice: false,
+  currentIndex: 0,
 };
 
 export const loadAppDetails = createAsyncThunk(
@@ -36,7 +38,9 @@ export const loadAppDetails = createAsyncThunk(
       };
     }
     const currentBlock = await provider.getBlockNumber();
+    const sPHM = new ethers.Contract(addresses[networkID].sPHM as string, ierc20Abi, provider);
 
+    const [scalingFactor] = await Promise.all([sPHM.scalingFactor()]);
     // //TODO: replace with PhantomStaking and ABI
     // const stakingContract = new ethers.Contract(
     //   addresses[networkID].STAKING_ADDRESS as string,
@@ -60,10 +64,10 @@ export const loadAppDetails = createAsyncThunk(
     // const stakingAPY = Math.pow(1 + stakingRebase, 365 * 3) - 1;
 
     // Current index
-    const currentIndex = 2;
+    // const currentIndex = 2;
 
     return {
-      currentIndex: ethers.utils.formatUnits(currentIndex, "gwei"),
+      currentIndex: ethers.utils.formatUnits(scalingFactor, "gwei"),
       currentBlock,
       // fiveDayRate,
       // stakingAPY,

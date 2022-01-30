@@ -263,10 +263,10 @@ function App() {
                 <Swap />
               </Route>
 
-              {/* <Route path="/wrap">
+              <Route path="/wrap">
                 <Wrap />
               </Route>
-
+              {/*
               <Route path="/bonds">
                 {bonds.map(bond => {
                   return (
