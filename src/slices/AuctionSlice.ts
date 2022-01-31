@@ -209,10 +209,15 @@ export const changeFraxApproval = createAsyncThunk(
   },
 );
 
-export const loadAllCommitments = createAsyncThunk("app/loadAllCommitments", async () => {
+const fetchPaginatedCommitments = async (first: number, skip: number) => {
   const commitments = `
     query {
-      commitments {
+      commitments (
+        orderBy: blockNumber, 
+        orderDirection: desc, 
+        first: ${first},
+        skip: ${skip}
+      ) {
         contributor
         amountCommited
         txHash
@@ -222,12 +227,27 @@ export const loadAllCommitments = createAsyncThunk("app/loadAllCommitments", asy
   `;
 
   const graphData = await apollo(commitments);
-  if (!graphData || graphData == null) {
-    console.error("Returned a null response when querying TheGraph");
-    return { commitments: [] };
+  if (!graphData) return [];
+  return (graphData as any).data.commitments;
+};
+
+export const loadAllCommitments = createAsyncThunk("app/loadAllCommitments", async () => {
+  let commitments = [] as any[],
+    first = 200,
+    skip = 0,
+    loadMore = true;
+
+  while (loadMore) {
+    const results = await fetchPaginatedCommitments(first, skip);
+    if (results && results.length) {
+      commitments = [...commitments, ...results];
+      skip = commitments.length;
+    } else {
+      loadMore = false;
+    }
   }
 
-  return { commitments: (graphData as any).data.commitments };
+  return { commitments };
 });
 
 export const loadMyCommitments = createAsyncThunk("app/loadMyCommitments", async ({ address }: IAddressAsyncThunk) => {

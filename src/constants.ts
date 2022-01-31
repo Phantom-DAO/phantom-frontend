@@ -49,7 +49,7 @@ export const addresses: IAddresses = {
     PhantomPayments: "",
     PhantomStaking: "",
     PhantomStorage: "0xf99f229595a1fA265D04Afec41CCaBb6fbA1BE22",
-    PhantomTreasury: "0x8589B5722B6ae24B30F890E406Fa70c221Fe2Fbc",
+    PhantomTreasury: "0x401e8D11642AdE5b42DA429C0b799d3640A4ceC6",
     PhantomVault: "0xB0D87A3f3d537ef5F8b5f1ea185CED30f66a54AF",
     aPHM: "0x747d453192D8A0B2e2184738033d0A6296301476",
     fPHM: "0x316a0E6c9Ada20d7C9C678589C63dC21afa27301",
