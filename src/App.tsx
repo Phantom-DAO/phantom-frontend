@@ -263,7 +263,7 @@ function App() {
                 <Swap />
               </Route>
 
-              {/* <Route path="/wrap">
+              <Route path="/wrap">
                 <Wrap />
               </Route>
 
@@ -276,7 +276,7 @@ function App() {
                   );
                 })}
                 <ChooseBond />
-              </Route> */}
+              </Route>
 
               <Route component={NotFound} />
             </Switch>
