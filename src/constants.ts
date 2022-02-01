@@ -49,7 +49,7 @@ export const addresses: IAddresses = {
     PhantomPayments: "",
     PhantomStaking: "",
     PhantomStorage: "0xf99f229595a1fA265D04Afec41CCaBb6fbA1BE22",
-    PhantomTreasury: "0x401e8D11642AdE5b42DA429C0b799d3640A4ceC6",
+    PhantomTreasury: "", // PhantomTreasury addy is loading dynamically from PhantomStorage, do not add it here
     PhantomVault: "0xB0D87A3f3d537ef5F8b5f1ea185CED30f66a54AF",
     aPHM: "0x747d453192D8A0B2e2184738033d0A6296301476",
     fPHM: "0x316a0E6c9Ada20d7C9C678589C63dC21afa27301",
@@ -87,7 +87,7 @@ export const addresses: IAddresses = {
     PhantomPayments: "",
     PhantomStaking: "",
     PhantomStorage: "0xff37AE8A6e78f84F72f9CEF87897333D67d9399e",
-    PhantomTreasury: "0xBfd4c79a01A13B933fb9551a0f8923a28E726ca6",
+    PhantomTreasury: "", // PhantomTreasury addy is loading dynamically from PhantomStorage, do not add it here
     PhantomVault: "0x82e29fb0494339467f2f19cebe5360e92dDCC923",
     aPHM: "0x21a937d9570D3378366f838b95D584e0DA2042Ba",
     fPHM: "0x7DA73c277B0b23fCa06825891A1d5bf5dBF19219",

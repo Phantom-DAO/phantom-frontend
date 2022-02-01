@@ -1,6 +1,7 @@
-import { ethers } from "ethers";
+import { ethers, Contract } from "ethers";
 import { addresses } from "../constants";
 import { abi as OlympusStakingv2ABI } from "../abi/OlympusStakingv2.json";
+import PhantomStorageAbi from "../abi/PhantomStorage.json";
 import { abi as sOHMv2 } from "../abi/sOhmv2.json";
 import { abi as ierc20Abi } from "../abi/IERC20.json";
 import { setAll, getTokenPrice, getMarketPrice } from "../helpers";
@@ -8,13 +9,36 @@ import apollo from "../lib/apolloClient.js";
 import { createSlice, createSelector, createAsyncThunk } from "@reduxjs/toolkit";
 import { RootState } from "src/store";
 import { IBaseAsyncThunk } from "./interfaces";
-import { OlympusStakingv2, SOhmv2 } from "../typechain";
 
 const initialState = {
+  treasuryAddressPromise: "",
   loading: false,
   loadingMarketPrice: false,
   currentIndex: 0,
 };
+
+/**
+ * get phantomTreasuryAddress from app state or load it from the contract using the async thunk
+ */
+export const getOrLoadTreasuryAddress = async ({ networkID, provider }: any, { dispatch, getState }: any) => {
+  const { app: appState } = getState();
+  if (!appState?.phantomTreasuryAddress) {
+    const { phantomTreasuryAddress } = await dispatch(loadTreasuryAddress({ networkID, provider })).unwrap();
+    return phantomTreasuryAddress;
+  }
+  return appState?.phantomTreasuryAddress;
+};
+
+export const loadTreasuryAddress = createAsyncThunk(
+  "app/loadTreasuryAddress",
+  async ({ networkID, provider }: IBaseAsyncThunk) => {
+    const phantomStorage = new Contract(addresses[networkID].PhantomStorage, PhantomStorageAbi, provider.getSigner());
+    const phantomTreasuryAddress = await phantomStorage.getAddress(
+      ethers.utils.keccak256(ethers.utils.solidityPack(["string"], ["phantom.contracts.treasury"])),
+    );
+    return { phantomTreasuryAddress };
+  },
+);
 
 export const loadAppDetails = createAsyncThunk(
   "app/loadAppDetails",
@@ -37,10 +61,13 @@ export const loadAppDetails = createAsyncThunk(
         marketPrice,
       };
     }
-    const currentBlock = await provider.getBlockNumber();
-    const sPHM = new ethers.Contract(addresses[networkID].sPHM as string, ierc20Abi, provider);
 
-    const [scalingFactor] = await Promise.all([sPHM.scalingFactor()]);
+    const sPHM = new ethers.Contract(addresses[networkID].sPHM as string, ierc20Abi, provider);
+    const [scalingFactor, currentBlock, phantomTreasuryAddress] = await Promise.all([
+      sPHM.scalingFactor(),
+      provider.getBlockNumber(),
+      dispatch(loadTreasuryAddress({ networkID, provider })).unwrap(),
+    ]);
     // //TODO: replace with PhantomStaking and ABI
     // const stakingContract = new ethers.Contract(
     //   addresses[networkID].STAKING_ADDRESS as string,
@@ -69,13 +96,14 @@ export const loadAppDetails = createAsyncThunk(
     return {
       currentIndex: ethers.utils.formatUnits(scalingFactor, "gwei"),
       currentBlock,
+      phantomTreasuryAddress,
       // fiveDayRate,
       // stakingAPY,
       // stakingTVL,
       // stakingRebase,
       // marketCap,
       // marketPrice,
-    } as IAppData;
+    };
   },
 );
 
@@ -133,18 +161,6 @@ const loadMarketPrice = createAsyncThunk("app/loadMarketPrice", async ({ network
   }
   return { marketPrice };
 });
-
-interface IAppData {
-  readonly circSupply: number;
-  readonly currentIndex?: string;
-  readonly currentBlock?: number;
-  readonly fiveDayRate?: number;
-  readonly marketPrice: number;
-  readonly stakingAPY?: number;
-  readonly stakingRebase?: number;
-  // readonly stakingTVL: number;
-  readonly totalSupply: number;
-}
 
 const appSlice = createSlice({
   name: "app",
