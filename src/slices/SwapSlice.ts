@@ -49,7 +49,6 @@ export const loadSwapBalances = createAsyncThunk(
     const fPHM = new Contract(addresses[networkID].fPHM, ierc20ABI, provider.getSigner());
     const aPHM = new Contract(addresses[networkID].aPHM, ierc20ABI, provider.getSigner());
     const phantomTreasuryAddress = await getOrLoadTreasuryAddress({ networkID, provider }, { dispatch, getState });
-
     const [unlockedFPHM, fPHMBalance, fPHMAllowance, aPHMBalance, aPHMAllowance] = await Promise.all([
       phantomFounders.unclaimedBalance(address.toLowerCase()),
       fPHM.balanceOf(address),
@@ -70,13 +69,11 @@ export const loadSwapBalances = createAsyncThunk(
 
 export const approveAPHM = createAsyncThunk(
   "stake/approveAPHM",
-  async ({ provider, address, networkID, value }: IValueAsyncThunk, { dispatch }) => {
+  async ({ provider, address, networkID, value }: IValueAsyncThunk, { dispatch, getState }) => {
     const aPHM = new Contract(addresses[networkID].aPHM as string, ierc20ABI, provider.getSigner());
+    const phantomTreasuryAddress = await getOrLoadTreasuryAddress({ networkID, provider }, { dispatch, getState });
     try {
-      const tx = await aPHM.approve(
-        addresses[networkID].PhantomTreasury,
-        utils.parseEther(value.toString()).toString(),
-      );
+      const tx = await aPHM.approve(phantomTreasuryAddress, utils.parseEther(value.toString()).toString());
       if (tx) {
         await tx.wait();
       }
@@ -87,7 +84,7 @@ export const approveAPHM = createAsyncThunk(
     }
 
     // fresh allowance
-    const aPHMAllowance = await aPHM.allowance(address, addresses[networkID].PhantomTreasury);
+    const aPHMAllowance = await aPHM.allowance(address, phantomTreasuryAddress);
     return {
       aPHMAllowance: +aPHMAllowance.toString() / 1e18,
     };
@@ -96,13 +93,11 @@ export const approveAPHM = createAsyncThunk(
 
 export const approveFPHM = createAsyncThunk(
   "stake/approveFPHM",
-  async ({ provider, address, networkID, value }: IValueAsyncThunk, { dispatch }) => {
+  async ({ provider, address, networkID, value }: IValueAsyncThunk, { dispatch, getState }) => {
     const fPHM = new Contract(addresses[networkID].fPHM as string, ierc20ABI, provider.getSigner());
+    const phantomTreasuryAddress = await getOrLoadTreasuryAddress({ networkID, provider }, { dispatch, getState });
     try {
-      const tx = await fPHM.approve(
-        addresses[networkID].PhantomTreasury,
-        utils.parseEther(value.toString()).toString(),
-      );
+      const tx = await fPHM.approve(phantomTreasuryAddress, utils.parseEther(value.toString()).toString());
       if (tx) {
         await tx.wait();
       }
@@ -112,7 +107,7 @@ export const approveFPHM = createAsyncThunk(
     }
 
     // fresh allowance
-    const fPHMAllowance = await fPHM.allowance(address, addresses[networkID].PhantomTreasury);
+    const fPHMAllowance = await fPHM.allowance(address, phantomTreasuryAddress);
     return {
       fPHMAllowance: +fPHMAllowance.toString() / 1e18,
     };
