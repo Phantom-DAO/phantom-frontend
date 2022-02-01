@@ -10,7 +10,7 @@ import { RootState } from "src/store";
 import { IBaseAsyncThunk } from "./interfaces";
 
 const initialState = {
-  treasuryAddressPromise: "",
+  phantomTreasuryAddress: "",
   loading: false,
   loadingMarketPrice: false,
 };
@@ -21,22 +21,18 @@ const initialState = {
 export const getOrLoadTreasuryAddress = async ({ networkID, provider }: any, { dispatch, getState }: any) => {
   const { app: appState } = getState();
   if (!appState?.phantomTreasuryAddress) {
-    const { phantomTreasuryAddress } = await dispatch(loadTreasuryAddress({ networkID, provider })).unwrap();
-    return phantomTreasuryAddress;
+    return await loadTreasuryAddress({ networkID, provider });
   }
   return appState?.phantomTreasuryAddress;
 };
 
-export const loadTreasuryAddress = createAsyncThunk(
-  "app/loadTreasuryAddress",
-  async ({ networkID, provider }: IBaseAsyncThunk) => {
-    const phantomStorage = new Contract(addresses[networkID].PhantomStorage, PhantomStorageAbi, provider.getSigner());
-    const phantomTreasuryAddress = await phantomStorage.getAddress(
-      ethers.utils.keccak256(ethers.utils.solidityPack(["string"], ["phantom.contracts.treasury"])),
-    );
-    return { phantomTreasuryAddress };
-  },
-);
+export const loadTreasuryAddress = async ({ networkID, provider }: any) => {
+  const phantomStorage = new Contract(addresses[networkID].PhantomStorage, PhantomStorageAbi, provider.getSigner());
+  const phantomTreasuryAddress = await phantomStorage.getAddress(
+    ethers.utils.keccak256(ethers.utils.solidityPack(["string"], ["phantom.contracts.treasury"])),
+  );
+  return phantomTreasuryAddress;
+};
 
 export const loadAppDetails = createAsyncThunk(
   "app/loadAppDetails",
@@ -62,7 +58,7 @@ export const loadAppDetails = createAsyncThunk(
 
     const [currentBlock, phantomTreasuryAddress] = await Promise.all([
       provider.getBlockNumber(),
-      dispatch(loadTreasuryAddress({ networkID, provider })).unwrap(),
+      loadTreasuryAddress({ networkID, provider }),
     ]);
 
     // //TODO: replace with PhantomStaking and ABI
