@@ -8,6 +8,7 @@ import { setAll } from "../helpers";
 import { error, success } from "./MessagesSlice";
 import { IBaseAddressAsyncThunk, IValueAsyncThunk, IJsonRPCError } from "./interfaces";
 import { fetchPendingTxns, clearPendingTxn } from "./PendingTxnsSlice";
+import { getOrLoadTreasuryAddress } from "./AppSlice";
 
 export type ISwapSlice = {
   balancesLoading: boolean;
@@ -39,7 +40,7 @@ const initialState: ISwapSlice = {
 
 export const loadSwapBalances = createAsyncThunk(
   "swap/loadSwapBalances",
-  async ({ address, networkID, provider }: IBaseAddressAsyncThunk) => {
+  async ({ address, networkID, provider }: IBaseAddressAsyncThunk, { dispatch, getState }) => {
     const phantomFounders = new Contract(
       addresses[networkID].PhantomFounders,
       PhantomFoundersAbi,
@@ -47,13 +48,14 @@ export const loadSwapBalances = createAsyncThunk(
     );
     const fPHM = new Contract(addresses[networkID].fPHM, ierc20ABI, provider.getSigner());
     const aPHM = new Contract(addresses[networkID].aPHM, ierc20ABI, provider.getSigner());
+    const phantomTreasuryAddress = await getOrLoadTreasuryAddress({ networkID, provider }, { dispatch, getState });
 
     const [unlockedFPHM, fPHMBalance, fPHMAllowance, aPHMBalance, aPHMAllowance] = await Promise.all([
       phantomFounders.unclaimedBalance(address.toLowerCase()),
       fPHM.balanceOf(address),
-      fPHM.allowance(address, addresses[networkID].PhantomTreasury),
+      fPHM.allowance(address, phantomTreasuryAddress),
       aPHM.balanceOf(address),
-      aPHM.allowance(address, addresses[networkID].PhantomTreasury),
+      aPHM.allowance(address, phantomTreasuryAddress),
     ]);
 
     return {
