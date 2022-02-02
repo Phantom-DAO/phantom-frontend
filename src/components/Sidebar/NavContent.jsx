@@ -33,9 +33,9 @@ function NavContent() {
     if (currentPath.indexOf("dashboard") >= 0 && page === "dashboard") {
       return true;
     }
-    if (currentPath.indexOf("stake") >= 0 && page === "stake") {
-      return true;
-    }
+    // if (currentPath.indexOf("stake") >= 0 && page === "stake") {
+    //   return true;
+    // }
     if ((currentPath.indexOf("bonds") >= 0 || currentPath.indexOf("choose_bond") >= 0) && page === "bonds") {
       return true;
     }
@@ -108,10 +108,9 @@ function NavContent() {
               </Link>
 
               <Link
-                disabled
                 component={NavLink}
                 id="stake-nav"
-                to="/"
+                to="/stake"
                 isActive={(match, location) => {
                   return checkPage(match, location, "stake");
                 }}

@@ -239,14 +239,15 @@ function App() {
                 <TreasuryDashboard />
               </Route>
 
+             
+              
+               */}
+              <Route path="/stake">
+                <Stake />
+              </Route>
               <Route exact path="/">
                 <Redirect to="/stake" />
               </Route>
-              
-              <Route path="/stake">
-              <Stake />
-            </Route> */}
-
               <Route path="/claim">
                 <Claim />
               </Route>

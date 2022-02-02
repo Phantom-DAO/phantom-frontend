@@ -15,9 +15,10 @@ import { FuseProxy, IERC20, SOhmv2, WsOHM } from "src/typechain";
 
 interface IUserBalances {
   balances: {
-    ohm: string;
-    sohm: string;
-    fsohm: string;
+    phm: string;
+    sphm: string;
+    fphm: string;
+    gphm: string;
     wsohm: string;
     wsohmAsSohm: string;
     pool: string;
@@ -27,51 +28,28 @@ interface IUserBalances {
 export const getBalances = createAsyncThunk(
   "account/getBalances",
   async ({ address, networkID, provider }: IBaseAddressAsyncThunk) => {
-    // @todo: load FRAX balance
     const fraxContract = new ethers.Contract(addresses[networkID].frax as string, ierc20Abi, provider) as IERC20;
-    const [fraxBalance] = await Promise.all([fraxContract.balanceOf(address)]);
-    // const ohmContract = new ethers.Contract(addresses[networkID].OHM_ADDRESS as string, ierc20Abi, provider) as IERC20;
-    // const ohmBalance = await ohmContract.balanceOf(address);
-    // const sohmContract = new ethers.Contract(
-    //   addresses[networkID].SOHM_ADDRESS as string,
-    //   ierc20Abi,
-    //   provider,
-    // ) as IERC20;
-    // const sohmBalance = await sohmContract.balanceOf(address);
-    // const wsohmContract = new ethers.Contract(addresses[networkID].WSOHM_ADDRESS as string, wsOHM, provider) as WsOHM;
-    // const wsohmBalance = await wsohmContract.balanceOf(address);
-    // // NOTE (appleseed): wsohmAsSohm is wsOHM given as a quantity of sOHM
-    // const wsohmAsSohm = await wsohmContract.wOHMTosOHM(wsohmBalance);
-    // const poolTokenContract = new ethers.Contract(
-    //   addresses[networkID].PT_TOKEN_ADDRESS as string,
-    //   ierc20Abi,
-    //   provider,
-    // ) as IERC20;
-    // const poolBalance = await poolTokenContract.balanceOf(address);
+    const sPHMContract = new ethers.Contract(addresses[networkID].sPHM as string, ierc20Abi, provider) as IERC20;
+    const gPHMContract = new ethers.Contract(addresses[networkID].gPHM as string, ierc20Abi, provider) as IERC20;
+    const fPHMContract = new ethers.Contract(addresses[networkID].fPHM as string, ierc20Abi, provider) as IERC20;
+    const PHMContract = new ethers.Contract(addresses[networkID].PHM as string, ierc20Abi, provider) as IERC20;
 
-    // let fsohmBalance = BigNumber.from(0);
-    // for (const fuseAddressKey of ["FUSE_6_SOHM", "FUSE_18_SOHM"]) {
-    //   if (addresses[networkID][fuseAddressKey]) {
-    //     const fsohmContract = new ethers.Contract(
-    //       addresses[networkID][fuseAddressKey] as string,
-    //       fuseProxy,
-    //       provider.getSigner(),
-    //     ) as FuseProxy;
-    //     // fsohmContract.signer;
-    //     const balanceOfUnderlying = await fsohmContract.callStatic.balanceOfUnderlying(address);
-    //     fsohmBalance = balanceOfUnderlying.add(fsohmBalance);
-    //   }
-    // }
+    //TODO: refactor to multicall for less rpc bandwidth consumption
+    const [fraxBalance, sPHMBalance, fPHMBalance, gPHMBalance, PHMBalance] = await Promise.all([
+      fraxContract.balanceOf(address),
+      sPHMContract.balanceOf(address),
+      fPHMContract.balanceOf(address),
+      gPHMContract.balanceOf(address),
+      PHMContract.balanceOf(address),
+    ]);
 
     return {
       balances: {
         frax: Number(fraxBalance.toString()) / Math.pow(10, 18),
-        // ohm: ethers.utils.formatUnits(ohmBalance, "gwei"),
-        // sohm: ethers.utils.formatUnits(sohmBalance, "gwei"),
-        // fsohm: ethers.utils.formatUnits(fsohmBalance, "gwei"),
-        // wsohm: ethers.utils.formatEther(wsohmBalance),
-        // wsohmAsSohm: ethers.utils.formatUnits(wsohmAsSohm, "gwei"),
-        // pool: ethers.utils.formatUnits(poolBalance, "gwei"),
+        phm: Number(PHMBalance.toString()) / Math.pow(10, 18),
+        sphm: Number(sPHMBalance.toString()) / Math.pow(10, 18),
+        gphm: Number(gPHMBalance.toString()) / Math.pow(10, 18),
+        fphm: Number(fPHMBalance.toString()) / Math.pow(10, 18),
       },
     };
   },
@@ -79,8 +57,8 @@ export const getBalances = createAsyncThunk(
 
 interface IUserAccountDetails {
   staking: {
-    ohmStake: number;
-    ohmUnstake: number;
+    phmStakeAllowance: number;
+    phmUnstakeAllowance: number;
   };
   wrapping: {
     sohmWrap: number;
@@ -92,7 +70,13 @@ export const loadAccountDetails = createAsyncThunk(
   "account/loadAccountDetails",
   async ({ networkID, provider, address }: IBaseAddressAsyncThunk, { dispatch }) => {
     const fraxContract = new ethers.Contract(addresses[networkID].frax, ierc20Abi, provider);
+    const phmContract = new ethers.Contract(addresses[networkID].PHM, ierc20Abi, provider);
+    const sphmContract = new ethers.Contract(addresses[networkID].sPHM, ierc20Abi, provider);
+
     const fraxAllowance = await fraxContract.allowance(address, addresses[networkID].PhantomAuction);
+
+    const phmStakeAllowance = await phmContract.allowance(address, addresses[networkID].PhantomStaking);
+    const phmUnstakeAllowance = await sphmContract.allowance(address, addresses[networkID].PhantomStaking);
 
     const auctionContract = new ethers.Contract(addresses[networkID].PhantomAuction as string, AuctionAbi, provider);
     const tokensClaimable = await auctionContract.tokensClaimable(address);
@@ -114,10 +98,10 @@ export const loadAccountDetails = createAsyncThunk(
         fraxAllowance: bnToNum(fraxAllowance) / Math.pow(10, 18),
         tokensClaimable: bnToNum(tokensClaimable) / Math.pow(10, 18),
       },
-      // staking: {
-      //   ohmStake: +stakeAllowance,
-      //   ohmUnstake: +unstakeAllowance,
-      // },
+      staking: {
+        phmStakeAllowance: bnToNum(phmStakeAllowance) / Math.pow(10, 18),
+        phmUnstakeAllowance: bnToNum(phmUnstakeAllowance) / Math.pow(10, 18),
+      },
       // wrapping: {
       //   ohmWrap: +wrapAllowance,
       //   ohmUnwrap: +unwrapAllowance,
@@ -194,7 +178,7 @@ const initialState: IAccountSlice = {
   loading: false,
   bonds: {},
   balances: { ohm: "", sohm: "", wsohmAsSohm: "", wsohm: "", fsohm: "", pool: "" },
-  staking: { ohmStake: 0, ohmUnstake: 0 },
+  staking: { phmStakeAllowance: 0, phmUnstakeAllowance: 0 },
   wrapping: { sohmWrap: 0, wsohmUnwrap: 0 },
 };
 

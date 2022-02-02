@@ -39,7 +39,7 @@ function a11yProps(index) {
   };
 }
 
-const sOhmImg = getTokenImage("sohm");
+const sOhmImg = getTokenImage("sphm");
 const ohmImg = getOhmTokenImage(16, 16);
 
 function Stake() {
@@ -57,29 +57,27 @@ function Stake() {
   const fiveDayRate = useSelector(state => {
     return state.app.fiveDayRate;
   });
-  const ohmBalance = useSelector(state => {
-    return state.account.balances && state.account.balances.ohm;
+  const phmBalance = useSelector(state => {
+    return state.account.balances && state.account.balances.phm;
   });
-  const oldSohmBalance = useSelector(state => {
-    return state.account.balances && state.account.balances.oldsohm;
+
+  const sphmBalance = useSelector(state => {
+    return state.account.balances && state.account.balances.sphm;
   });
-  const sohmBalance = useSelector(state => {
-    return state.account.balances && state.account.balances.sohm;
-  });
-  const fsohmBalance = useSelector(state => {
+  const fsphmBalance = useSelector(state => {
     return state.account.balances && state.account.balances.fsohm;
   });
-  const wsohmBalance = useSelector(state => {
+  const wsphmBalance = useSelector(state => {
     return state.account.balances && state.account.balances.wsohm;
   });
   const wsohmAsSohm = useSelector(state => {
     return state.account.balances && state.account.balances.wsohmAsSohm;
   });
   const stakeAllowance = useSelector(state => {
-    return state.account.staking && state.account.staking.ohmStake;
+    return state.account.staking && state.account.staking.phmStakeAllowance;
   });
   const unstakeAllowance = useSelector(state => {
-    return state.account.staking && state.account.staking.ohmUnstake;
+    return state.account.staking && state.account.staking.phmUnstakeAllowance;
   });
   const stakingRebase = useSelector(state => {
     return state.app.stakingRebase;
@@ -97,9 +95,9 @@ function Stake() {
 
   const setMax = () => {
     if (view === 0) {
-      setQuantity(ohmBalance);
+      setQuantity(phmBalance);
     } else {
-      setQuantity(sohmBalance);
+      setQuantity(sphmBalance);
     }
   };
 
@@ -115,12 +113,12 @@ function Stake() {
     }
 
     // 1st catch if quantity > balance
-    let gweiValue = ethers.utils.parseUnits(quantity, "gwei");
-    if (action === "stake" && gweiValue.gt(ethers.utils.parseUnits(ohmBalance, "gwei"))) {
+    let gweiValue = ethers.utils.parseUnits(quantity.toString(), "gwei");
+    if (action === "stake" && gweiValue.gt(ethers.utils.parseUnits(phmBalance.toString(), "gwei"))) {
       return dispatch(error("You cannot stake more than your PHM balance."));
     }
 
-    if (action === "unstake" && gweiValue.gt(ethers.utils.parseUnits(sohmBalance, "gwei"))) {
+    if (action === "unstake" && gweiValue.gt(ethers.utils.parseUnits(sphmBalance.toString(), "gwei"))) {
       return dispatch(error("You cannot unstake more than your sPHM balance."));
     }
 
@@ -151,7 +149,7 @@ function Stake() {
   };
 
   const trimmedBalance = Number(
-    [sohmBalance, fsohmBalance, wsohmAsSohm]
+    [sphmBalance, fsphmBalance, wsohmAsSohm]
       .filter(Boolean)
       .map(balance => Number(balance))
       .reduce((a, b) => a + b, 0)
@@ -170,7 +168,7 @@ function Stake() {
               <Box className="card-header">
                 <Typography variant="h5">Single Stake (3, 3)</Typography>
                 {/* <RebaseTimer /> */}
-                {/* {address && oldSohmBalance > 0.01} */}
+                {/* {address && oldSphmBalance > 0.01} */}
               </Box>
             </Grid>
             <Grid item>
@@ -217,7 +215,7 @@ function Stake() {
                         Current Index
                       </Typography>
                       <Typography variant="h4">
-                        {currentIndex ? <>{trim(currentIndex, 1)} OHM</> : <Skeleton width="150px" />}
+                        {currentIndex ? <>{trim(currentIndex, 1)} PHM</> : <Skeleton width="150px" />}
                       </Typography>
                     </div>
                   </Grid>
@@ -231,7 +229,7 @@ function Stake() {
                   <div className="wallet-menu" id="wallet-menu">
                     {modalButton}
                   </div>
-                  <Typography variant="h6">Connect your wallet to stake OHM</Typography>
+                  <Typography variant="h6">Connect your wallet to stake PHM</Typography>
                 </div>
               ) : (
                 <>
@@ -254,20 +252,20 @@ function Stake() {
 
                     <Box className="stake-action-row " display="flex" alignItems="center">
                       {address && !isAllowanceDataLoading ? (
-                        (!hasAllowance("ohm") && view === 0) || (!hasAllowance("sohm") && view === 1) ? (
+                        (!hasAllowance("phm") && view === 0) || (!hasAllowance("sphm") && view === 1) ? (
                           <Box className="help-text">
                             <Typography variant="body1" className="stake-note" color="textSecondary">
                               {view === 0 ? (
                                 <>
-                                  First time staking <b>OHM</b>?
+                                  First time staking <b>PHM</b>?
                                   <br />
-                                  Please approve Phantom Dao to use your <b>OHM</b> for staking.
+                                  Please approve Phantom Dao to use your <b>PHM</b> for staking.
                                 </>
                               ) : (
                                 <>
-                                  First time unstaking <b>sOHM</b>?
+                                  First time unstaking <b>sPHM</b>?
                                   <br />
-                                  Please approve Phantom Dao to use your <b>sOHM</b> for unstaking.
+                                  Please approve Phantom Dao to use your <b>sPHM</b> for unstaking.
                                 </>
                               )}
                             </Typography>
@@ -302,7 +300,7 @@ function Stake() {
                     <TabPanel value={view} index={0} className="stake-tab-panel">
                       {isAllowanceDataLoading ? (
                         <Skeleton />
-                      ) : address && hasAllowance("ohm") ? (
+                      ) : address && hasAllowance("phm") ? (
                         <Button
                           className="stake-button"
                           variant="contained"
@@ -312,7 +310,7 @@ function Stake() {
                             onChangeStake("stake");
                           }}
                         >
-                          {txnButtonText(pendingTransactions, "staking", "Stake OHM")}
+                          {txnButtonText(pendingTransactions, "staking", "Stake PHM")}
                         </Button>
                       ) : (
                         <Button
@@ -321,7 +319,7 @@ function Stake() {
                           color="primary"
                           disabled={isPendingTxn(pendingTransactions, "approve_staking")}
                           onClick={() => {
-                            onSeekApproval("ohm");
+                            onSeekApproval("phm");
                           }}
                         >
                           {txnButtonText(pendingTransactions, "approve_staking", "Approve")}
@@ -331,7 +329,7 @@ function Stake() {
                     <TabPanel value={view} index={1} className="stake-tab-panel">
                       {isAllowanceDataLoading ? (
                         <Skeleton />
-                      ) : address && hasAllowance("sohm") ? (
+                      ) : address && hasAllowance("sphm") ? (
                         <Button
                           className="stake-button"
                           variant="contained"
@@ -341,7 +339,7 @@ function Stake() {
                             onChangeStake("unstake");
                           }}
                         >
-                          {txnButtonText(pendingTransactions, "unstaking", "Unstake OHM")}
+                          {txnButtonText(pendingTransactions, "unstaking", "Unstake PHM")}
                         </Button>
                       ) : (
                         <Button
@@ -350,7 +348,7 @@ function Stake() {
                           color="primary"
                           disabled={isPendingTxn(pendingTransactions, "approve_unstaking")}
                           onClick={() => {
-                            onSeekApproval("sohm");
+                            onSeekApproval("sphm");
                           }}
                         >
                           {txnButtonText(pendingTransactions, "approve_unstaking", "Approve")}
@@ -362,14 +360,14 @@ function Stake() {
                     <div className="data-row">
                       <Typography variant="body1">Unstaked Balance</Typography>
                       <Typography variant="body1">
-                        {isAppLoading ? <Skeleton width="80px" /> : <>{trim(ohmBalance, 4)} OHM</>}
+                        {isAppLoading ? <Skeleton width="80px" /> : <>{trim(phmBalance, 4)} PHM</>}
                       </Typography>
                     </div>
 
                     <div className="data-row">
                       <Typography variant="body1">Staked Balance</Typography>
                       <Typography variant="body1">
-                        {isAppLoading ? <Skeleton width="80px" /> : <>{trimmedBalance} sOHM</>}
+                        {isAppLoading ? <Skeleton width="80px" /> : <>{trimmedBalance} sPHM</>}
                       </Typography>
                     </div>
 
@@ -378,16 +376,7 @@ function Stake() {
                         Single Staking
                       </Typography>
                       <Typography variant="body2" color="textSecondary">
-                        {isAppLoading ? <Skeleton width="80px" /> : <>{trim(sohmBalance, 4)} sOHM</>}
-                      </Typography>
-                    </div>
-
-                    <div className="data-row" style={{ paddingLeft: "10px" }}>
-                      <Typography variant="body2" color="textSecondary">
-                        Staked Balance in Fuse
-                      </Typography>
-                      <Typography variant="body2" color="textSecondary">
-                        {isAppLoading ? <Skeleton width="80px" /> : <>{trim(fsohmBalance, 4)} fsOHM</>}
+                        {isAppLoading ? <Skeleton width="80px" /> : <>{trim(sphmBalance, 4)} sPHM</>}
                       </Typography>
                     </div>
 
@@ -396,7 +385,7 @@ function Stake() {
                         Wrapped Balance
                       </Typography>
                       <Typography variant="body2" color="textSecondary">
-                        {isAppLoading ? <Skeleton width="80px" /> : <>{trim(wsohmBalance, 4)} wsOHM</>}
+                        {isAppLoading ? <Skeleton width="80px" /> : <>{trim(wsphmBalance, 4)} wsPHM</>}
                       </Typography>
                     </div>
 
@@ -405,7 +394,7 @@ function Stake() {
                     <div className="data-row">
                       <Typography variant="subtitle1">Next Reward Amount</Typography>
                       <Typography variant="subtitle1">
-                        {isAppLoading ? <Skeleton width="80px" /> : <>{nextRewardValue} sOHM</>}
+                        {isAppLoading ? <Skeleton width="80px" /> : <>{nextRewardValue} sPHM</>}
                       </Typography>
                     </div>
 
