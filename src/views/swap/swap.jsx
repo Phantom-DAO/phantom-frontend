@@ -23,6 +23,8 @@ import { Skeleton } from "@material-ui/lab";
 import { getOhmTokenImage, getTokenImage } from "../../helpers";
 import { ReactComponent as APHMToPHM } from "../../assets/icons/aphm-to-phm.svg";
 import { ReactComponent as FPHMToGPHM } from "../../assets/icons/fphm-to-gphm.svg";
+import { ReactComponent as FRAXToAPHM } from "../../assets/icons/frax-to-aphm.svg";
+import FRAXTOAPHM from "../../assets/icons/frax-to-aphm.png";
 import { swapFPHMToGPHM, swapAPHMToPHM, approveFPHM, approveAPHM, loadSwapBalances } from "../../slices/SwapSlice";
 import MobileCard from "./MobileCard";
 import { addresses } from "../../constants";
@@ -163,6 +165,15 @@ const Swap = () => {
                     loading={approveOrSwapFPHM === "approve" ? approveFPHMLoading : FPHMToGPHMLoading}
                     onClick={approveOrSwapFPHM === "approve" ? handleApproveFPHM : handleSwapFPHM}
                   />
+                  <MobileCard
+                    icon={<FRAXToAPHM />}
+                    swapText={"fPHM to gPHM"}
+                    balance={loadingBalance(fPHMBalance)}
+                    unlocked={loadingBalance(unlockedFPHM)}
+                    buttonLabel={approveOrSwapFPHM === "approve" ? "Approve" : "Swap"}
+                    loading={approveOrSwapFPHM === "approve" ? approveFPHMLoading : FPHMToGPHMLoading}
+                    onClick={approveOrSwapFPHM === "approve" ? handleApproveFPHM : handleSwapFPHM}
+                  />
                 </>
               ) : (
                 <TableContainer>
@@ -285,6 +296,55 @@ const Swap = () => {
                           )}
                         </TableCell>
                       </TableRow>
+                      <TableRow>
+                        <TableCell width="40%" align="left">
+                          <Box className="swap-token">
+                            <img src={FRAXTOAPHM}></img>
+                            <Typography style={{ marginLeft: "5px" }} variant="h6">
+                              FRAX to aPHM
+                            </Typography>
+                          </Box>
+                        </TableCell>
+                        <TableCell width="20%" align="right">
+                          N/A
+                        </TableCell>
+                        <TableCell width="20%" align="right">
+                          {loadingBalance(unlockedFPHM)}
+                        </TableCell>
+                        <TableCell width="20%" align="right">
+                          {approveOrSwapFPHM === "swap" ? (
+                            <Button
+                              variant="outlined"
+                              color="primary"
+                              size="small"
+                              disabled={fPHMBalance === 0}
+                              onClick={handleSwapFPHM}
+                            >
+                              {FPHMToGPHMLoading && (
+                                <Box mr={1} mt={1}>
+                                  <CircularProgress size={22} />
+                                </Box>
+                              )}
+                              Swap
+                            </Button>
+                          ) : (
+                            <Button
+                              variant="outlined"
+                              color="primary"
+                              size="small"
+                              disabled={fPHMBalance === 0}
+                              onClick={handleApproveFPHM}
+                            >
+                              {approveFPHMLoading && (
+                                <Box mr={1} mt={1}>
+                                  <CircularProgress size={22} />
+                                </Box>
+                              )}
+                              Approve
+                            </Button>
+                          )}
+                        </TableCell>
+                      </TableRow>
                     </TableBody>
                   </Table>
                 </TableContainer>
@@ -313,6 +373,17 @@ const Swap = () => {
               onClick={() => handleAddToken("gPHM")}
             >
               Add gPHM to wallet
+            </Button>
+            <Button
+              variant="outlined"
+              color="secondary"
+              size="medium"
+              style={{
+                fontSize: "16px",
+              }}
+              onClick={() => handleAddToken("aPHM")}
+            >
+              Add aPHM to wallet
             </Button>
           </Box>
         </Box>
