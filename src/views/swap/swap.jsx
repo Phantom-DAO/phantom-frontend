@@ -20,10 +20,20 @@ import { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Skeleton } from "@material-ui/lab";
 
-import { getOhmTokenImage, getTokenImage } from "../../helpers";
+import { getOhmTokenImage, getTokenImage, trim } from "../../helpers";
 import { ReactComponent as APHMToPHM } from "../../assets/icons/aphm-to-phm.svg";
 import { ReactComponent as FPHMToGPHM } from "../../assets/icons/fphm-to-gphm.svg";
-import { swapFPHMToGPHM, swapAPHMToPHM, approveFPHM, approveAPHM, loadSwapBalances } from "../../slices/SwapSlice";
+import { ReactComponent as FRAXToAPHM } from "../../assets/icons/frax-to-aphm.svg";
+import FRAXTOAPHM from "../../assets/icons/frax-to-aphm.png";
+import {
+  swapFPHMToGPHM,
+  swapAPHMToPHM,
+  approveFPHM,
+  approveAPHM,
+  loadSwapBalances,
+  approveFrax,
+  purchaseAPHM,
+} from "../../slices/SwapSlice";
 import MobileCard from "./MobileCard";
 import { addresses } from "../../constants";
 import "./swap.scss";
@@ -56,6 +66,10 @@ const Swap = () => {
     aPHMBalance,
     fPHMAllowance,
     aPHMAllowance,
+    fraxAllowance,
+    purchaseAPHMLoading,
+    remainingAllotment,
+    approveFraxLoading,
     error,
   } = useSelector(state => state.swap);
 
@@ -65,6 +79,14 @@ const Swap = () => {
 
   const handleApproveAPHM = () => {
     dispatch(approveAPHM({ provider, address, value: aPHMBalance, networkID: chainID }));
+  };
+
+  const handleApproveFrax = () => {
+    dispatch(approveFrax({ provider, address, value: remainingAllotment * 50, networkID: chainID }));
+  };
+
+  const handlePurchaseAPHM = () => {
+    dispatch(purchaseAPHM({ provider, address, networkID: chainID }));
   };
 
   const handleSwapFPHM = async () => {
@@ -77,18 +99,20 @@ const Swap = () => {
 
   const handleAddToken = async token => {
     if (!window.ethereum) return;
+    const images = {
+      aPHM: "https://i.ibb.co/MG2BM9n/APHM.png",
+      gPHM: "https://i.ibb.co/VTB5xYM/Token-g-PHM-Style-Alt.png",
+      PHM: "https://i.ibb.co/HtxRm9r/Token-PHM-Style-Alt.png",
+    };
     await window.ethereum.request({
       method: "wallet_watchAsset",
       params: {
         type: "ERC20",
         options: {
-          address: token === "PHM" ? addresses[chainID].PHM : addresses[chainID].gPHM,
+          address: addresses[chainID][token],
           symbol: token,
           decimals: 18,
-          image:
-            token === "PHM"
-              ? "https://i.ibb.co/HtxRm9r/Token-PHM-Style-Alt.png"
-              : "https://i.ibb.co/VTB5xYM/Token-g-PHM-Style-Alt.png",
+          image: images[token],
         },
       },
     });
@@ -107,6 +131,7 @@ const Swap = () => {
 
   const approveOrSwapAPHM = aPHMAllowance >= aPHMBalance && aPHMBalance > 0 ? "swap" : "approve";
   const approveOrSwapFPHM = fPHMAllowance >= fPHMBalance && fPHMBalance > 0 ? "swap" : "approve";
+  const approveOrSwapFrax = fraxAllowance >= remainingAllotment * 50 && remainingAllotment > 0 ? "swap" : "approve";
   return (
     <div id="swap-view">
       <Zoom in={true}>
@@ -163,6 +188,15 @@ const Swap = () => {
                     loading={approveOrSwapFPHM === "approve" ? approveFPHMLoading : FPHMToGPHMLoading}
                     onClick={approveOrSwapFPHM === "approve" ? handleApproveFPHM : handleSwapFPHM}
                   />
+                  <MobileCard
+                    icon={<FRAXToAPHM />}
+                    swapText={"fPHM to gPHM"}
+                    balance={"N/A"}
+                    unlocked={loadingBalance(trim(remainingAllotment, 2))}
+                    buttonLabel={approveOrSwapFrax === "approve" ? "Approve" : "Swap"}
+                    loading={approveOrSwapFrax === "approve" ? approveFraxLoading : purchaseAPHMLoading}
+                    onClick={approveOrSwapFrax === "approve" ? handleApproveFrax : handlePurchaseAPHM}
+                  />
                 </>
               ) : (
                 <TableContainer>
@@ -195,7 +229,7 @@ const Swap = () => {
                           </Box>
                         </TableCell>
                         <TableCell width="20%" align="right">
-                          {loadingBalance(aPHMBalance)}
+                          N/A
                         </TableCell>
                         <TableCell width="20%" align="right">
                           {loadingBalance(aPHMBalance)}
@@ -285,6 +319,49 @@ const Swap = () => {
                           )}
                         </TableCell>
                       </TableRow>
+                      <TableRow>
+                        <TableCell width="40%" align="left">
+                          <Box className="swap-token">
+                            <img src={FRAXTOAPHM}></img>
+                            <Typography style={{ marginLeft: "5px" }} variant="h6">
+                              FRAX to aPHM
+                            </Typography>
+                          </Box>
+                        </TableCell>
+                        <TableCell width="20%" align="right">
+                          N/A
+                        </TableCell>
+                        <TableCell width="20%" align="right">
+                          {loadingBalance(trim(remainingAllotment, 2))}
+                        </TableCell>
+                        <TableCell width="20%" align="right">
+                          {approveOrSwapFrax === "swap" ? (
+                            <Button variant="outlined" color="primary" size="small" onClick={handlePurchaseAPHM}>
+                              {purchaseAPHMLoading && (
+                                <Box mr={1} mt={1}>
+                                  <CircularProgress size={22} />
+                                </Box>
+                              )}
+                              Swap
+                            </Button>
+                          ) : (
+                            <Button
+                              variant="outlined"
+                              color="primary"
+                              size="small"
+                              disabled={remainingAllotment === 0}
+                              onClick={handleApproveFrax}
+                            >
+                              {approveFraxLoading && (
+                                <Box mr={1} mt={1}>
+                                  <CircularProgress size={22} />
+                                </Box>
+                              )}
+                              Approve
+                            </Button>
+                          )}
+                        </TableCell>
+                      </TableRow>
                     </TableBody>
                   </Table>
                 </TableContainer>
@@ -313,6 +390,17 @@ const Swap = () => {
               onClick={() => handleAddToken("gPHM")}
             >
               Add gPHM to wallet
+            </Button>
+            <Button
+              variant="outlined"
+              color="secondary"
+              size="medium"
+              style={{
+                fontSize: "16px",
+              }}
+              onClick={() => handleAddToken("aPHM")}
+            >
+              Add aPHM to wallet
             </Button>
           </Box>
         </Box>
