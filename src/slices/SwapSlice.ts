@@ -74,14 +74,15 @@ export const loadSwapBalances = createAsyncThunk(
         fraxContract.allowance(address, phantomTreasuryAddress),
         auctionClaim.remainingAllotment(address),
       ]);
+
     return {
-      remainingAllotment: +remainingAllotment.toString() / 1e18,
-      unlockedFPHM: +unlockedFPHM.toString() / 1e18,
-      fPHMBalance: +fPHMBalance.toString() / 1e18,
-      fPHMAllowance: +fPHMAllowance.toString() / 1e18,
-      aPHMBalance: +aPHMBalance.toString() / 1e18,
-      aPHMAllowance: +aPHMAllowance.toString() / 1e18,
-      fraxAllowance: +fraxAllowance.toString() / 1e18,
+      remainingAllotment: remainingAllotment,
+      unlockedFPHM: unlockedFPHM,
+      fPHMBalance: fPHMBalance,
+      fPHMAllowance: fPHMAllowance,
+      aPHMBalance: aPHMBalance,
+      aPHMAllowance: aPHMAllowance,
+      fraxAllowance: fraxAllowance,
     };
   },
 );
@@ -92,7 +93,7 @@ export const approveAPHM = createAsyncThunk(
     const aPHM = new Contract(addresses[networkID].aPHM as string, ierc20ABI, provider.getSigner());
     const phantomTreasuryAddress = await getOrLoadTreasuryAddress({ networkID, provider }, { dispatch, getState });
     try {
-      const tx = await aPHM.approve(phantomTreasuryAddress, utils.parseEther(value.toString()).toString());
+      const tx = await aPHM.approve(phantomTreasuryAddress, value.toString());
       if (tx) {
         await tx.wait();
       }
@@ -105,7 +106,7 @@ export const approveAPHM = createAsyncThunk(
     // fresh allowance
     const aPHMAllowance = await aPHM.allowance(address, phantomTreasuryAddress);
     return {
-      aPHMAllowance: +aPHMAllowance.toString() / 1e18,
+      aPHMAllowance: aPHMAllowance,
     };
   },
 );
@@ -116,7 +117,7 @@ export const approveFPHM = createAsyncThunk(
     const fPHM = new Contract(addresses[networkID].fPHM as string, ierc20ABI, provider.getSigner());
     const phantomTreasuryAddress = await getOrLoadTreasuryAddress({ networkID, provider }, { dispatch, getState });
     try {
-      const tx = await fPHM.approve(phantomTreasuryAddress, utils.parseEther(value.toString()).toString());
+      const tx = await fPHM.approve(phantomTreasuryAddress, value.toString());
       if (tx) {
         await tx.wait();
       }
@@ -128,7 +129,7 @@ export const approveFPHM = createAsyncThunk(
     // fresh allowance
     const fPHMAllowance = await fPHM.allowance(address, phantomTreasuryAddress);
     return {
-      fPHMAllowance: +fPHMAllowance.toString() / 1e18,
+      fPHMAllowance: fPHMAllowance,
     };
   },
 );
@@ -138,11 +139,9 @@ export const approveFrax = createAsyncThunk(
   async ({ provider, address, networkID, value }: IValueAsyncThunk, { dispatch, getState }) => {
     const fraxContract = new Contract(addresses[networkID].frax as string, ierc20ABI, provider.getSigner());
     const phantomTreasuryAddress = await getOrLoadTreasuryAddress({ networkID, provider }, { dispatch, getState });
+
     try {
-      const approveTx = await fraxContract.approve(
-        phantomTreasuryAddress,
-        utils.parseEther(value.toString()).toString(),
-      );
+      const approveTx = await fraxContract.approve(phantomTreasuryAddress, value.toString());
       if (approveTx) {
         await approveTx.wait();
       }
@@ -155,7 +154,7 @@ export const approveFrax = createAsyncThunk(
     let fraxAllowance = await fraxContract.allowance(address, phantomTreasuryAddress);
     dispatch(success("Transaction successful"));
     dispatch(loadSwapBalances({ address, networkID, provider }));
-    return { fraxAllowance: +fraxAllowance.toString() / 1e18 };
+    return { fraxAllowance: fraxAllowance };
   },
 );
 
