@@ -20,12 +20,20 @@ import { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Skeleton } from "@material-ui/lab";
 
-import { getOhmTokenImage, getTokenImage } from "../../helpers";
+import { getOhmTokenImage, getTokenImage, trim } from "../../helpers";
 import { ReactComponent as APHMToPHM } from "../../assets/icons/aphm-to-phm.svg";
 import { ReactComponent as FPHMToGPHM } from "../../assets/icons/fphm-to-gphm.svg";
 import { ReactComponent as FRAXToAPHM } from "../../assets/icons/frax-to-aphm.svg";
 import FRAXTOAPHM from "../../assets/icons/frax-to-aphm.png";
-import { swapFPHMToGPHM, swapAPHMToPHM, approveFPHM, approveAPHM, loadSwapBalances } from "../../slices/SwapSlice";
+import {
+  swapFPHMToGPHM,
+  swapAPHMToPHM,
+  approveFPHM,
+  approveAPHM,
+  loadSwapBalances,
+  approveFrax,
+  purchaseAPHM,
+} from "../../slices/SwapSlice";
 import MobileCard from "./MobileCard";
 import { addresses } from "../../constants";
 import "./swap.scss";
@@ -58,6 +66,10 @@ const Swap = () => {
     aPHMBalance,
     fPHMAllowance,
     aPHMAllowance,
+    fraxAllowance,
+    purchaseAPHMLoading,
+    remainingAllotment,
+    approveFraxLoading,
     error,
   } = useSelector(state => state.swap);
 
@@ -67,6 +79,14 @@ const Swap = () => {
 
   const handleApproveAPHM = () => {
     dispatch(approveAPHM({ provider, address, value: aPHMBalance, networkID: chainID }));
+  };
+
+  const handleApproveFrax = () => {
+    dispatch(approveFrax({ provider, address, value: remainingAllotment * 50, networkID: chainID }));
+  };
+
+  const handlePurchaseAPHM = () => {
+    dispatch(purchaseAPHM({ provider, address, networkID: chainID }));
   };
 
   const handleSwapFPHM = async () => {
@@ -79,18 +99,20 @@ const Swap = () => {
 
   const handleAddToken = async token => {
     if (!window.ethereum) return;
+    const images = {
+      aPHM: "https://i.ibb.co/MG2BM9n/APHM.png",
+      gPHM: "https://i.ibb.co/VTB5xYM/Token-g-PHM-Style-Alt.png",
+      PHM: "https://i.ibb.co/HtxRm9r/Token-PHM-Style-Alt.png",
+    };
     await window.ethereum.request({
       method: "wallet_watchAsset",
       params: {
         type: "ERC20",
         options: {
-          address: token === "PHM" ? addresses[chainID].PHM : addresses[chainID].gPHM,
+          address: addresses[chainID][token],
           symbol: token,
           decimals: 18,
-          image:
-            token === "PHM"
-              ? "https://i.ibb.co/HtxRm9r/Token-PHM-Style-Alt.png"
-              : "https://i.ibb.co/VTB5xYM/Token-g-PHM-Style-Alt.png",
+          image: images[token],
         },
       },
     });
@@ -109,6 +131,7 @@ const Swap = () => {
 
   const approveOrSwapAPHM = aPHMAllowance >= aPHMBalance && aPHMBalance > 0 ? "swap" : "approve";
   const approveOrSwapFPHM = fPHMAllowance >= fPHMBalance && fPHMBalance > 0 ? "swap" : "approve";
+  const approveOrSwapFrax = fraxAllowance >= remainingAllotment * 50 && remainingAllotment > 0 ? "swap" : "approve";
   return (
     <div id="swap-view">
       <Zoom in={true}>
@@ -168,11 +191,11 @@ const Swap = () => {
                   <MobileCard
                     icon={<FRAXToAPHM />}
                     swapText={"fPHM to gPHM"}
-                    balance={loadingBalance(fPHMBalance)}
-                    unlocked={loadingBalance(unlockedFPHM)}
-                    buttonLabel={approveOrSwapFPHM === "approve" ? "Approve" : "Swap"}
-                    loading={approveOrSwapFPHM === "approve" ? approveFPHMLoading : FPHMToGPHMLoading}
-                    onClick={approveOrSwapFPHM === "approve" ? handleApproveFPHM : handleSwapFPHM}
+                    balance={"N/A"}
+                    unlocked={loadingBalance(trim(remainingAllotment, 2))}
+                    buttonLabel={approveOrSwapFrax === "approve" ? "Approve" : "Swap"}
+                    loading={approveOrSwapFrax === "approve" ? approveFraxLoading : purchaseAPHMLoading}
+                    onClick={approveOrSwapFrax === "approve" ? handleApproveFrax : handlePurchaseAPHM}
                   />
                 </>
               ) : (
@@ -206,7 +229,7 @@ const Swap = () => {
                           </Box>
                         </TableCell>
                         <TableCell width="20%" align="right">
-                          {loadingBalance(aPHMBalance)}
+                          N/A
                         </TableCell>
                         <TableCell width="20%" align="right">
                           {loadingBalance(aPHMBalance)}
@@ -309,18 +332,12 @@ const Swap = () => {
                           N/A
                         </TableCell>
                         <TableCell width="20%" align="right">
-                          {loadingBalance(unlockedFPHM)}
+                          {loadingBalance(trim(remainingAllotment, 2))}
                         </TableCell>
                         <TableCell width="20%" align="right">
-                          {approveOrSwapFPHM === "swap" ? (
-                            <Button
-                              variant="outlined"
-                              color="primary"
-                              size="small"
-                              disabled={fPHMBalance === 0}
-                              onClick={handleSwapFPHM}
-                            >
-                              {FPHMToGPHMLoading && (
+                          {approveOrSwapFrax === "swap" ? (
+                            <Button variant="outlined" color="primary" size="small" onClick={handlePurchaseAPHM}>
+                              {purchaseAPHMLoading && (
                                 <Box mr={1} mt={1}>
                                   <CircularProgress size={22} />
                                 </Box>
@@ -332,10 +349,10 @@ const Swap = () => {
                               variant="outlined"
                               color="primary"
                               size="small"
-                              disabled={fPHMBalance === 0}
-                              onClick={handleApproveFPHM}
+                              disabled={remainingAllotment === 0}
+                              onClick={handleApproveFrax}
                             >
-                              {approveFPHMLoading && (
+                              {approveFraxLoading && (
                                 <Box mr={1} mt={1}>
                                   <CircularProgress size={22} />
                                 </Box>
