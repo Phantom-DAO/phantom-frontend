@@ -5,7 +5,7 @@ import { abi as ierc20Abi } from "../abi/IERC20.json";
 import { addresses } from "../constants";
 import { setAll } from "../helpers";
 import { getBalances, loadAccountDetails } from "./AccountSlice";
-import { error } from "./MessagesSlice";
+import { error, success } from "./MessagesSlice";
 import { IValueAsyncThunk, IJsonRPCError } from "./interfaces";
 import { getOrLoadTreasuryAddress } from "./AppSlice";
 
@@ -41,7 +41,8 @@ export const approveSPHM = createAsyncThunk(
       return { error: err };
     }
     // refresh wrapAllowance/unwrapAllowance
-    dispatch(loadAccountDetails({ address, networkID, provider }));
+    await dispatch(loadAccountDetails({ address, networkID, provider })).unwrap();
+    dispatch(success("You have approved sPHM successfully."));
   },
 );
 
@@ -50,7 +51,7 @@ export const wrapSPHM = createAsyncThunk(
   async ({ networkID, provider, address, value }: IValueAsyncThunk, { dispatch }) => {
     try {
       const phantomFinance = new Contract(addresses[networkID].PhantomFinance, PhantomFinanceAbi, provider.getSigner());
-      const tx = await phantomFinance.wrap(utils.parseUnits(value.toString(), "gwei").toString());
+      const tx = await phantomFinance.wrap(utils.parseUnits(value.toString(), "ether").toString());
       if (tx) {
         await tx.wait();
       }
@@ -60,7 +61,8 @@ export const wrapSPHM = createAsyncThunk(
       return { error: err };
     }
     // reload sPHM/gPHM balances
-    dispatch(getBalances({ address, networkID, provider }));
+    await dispatch(getBalances({ address, networkID, provider })).unwrap();
+    dispatch(success("You have wrapped sPHM successfully."));
   },
 );
 
@@ -80,7 +82,8 @@ export const approveGPHM = createAsyncThunk(
       return { error: err };
     }
     // refresh wrapAllowance/unwrapAllowance
-    dispatch(loadAccountDetails({ address, networkID, provider }));
+    await dispatch(loadAccountDetails({ address, networkID, provider })).unwrap();
+    dispatch(success("You have approved gPHM successfully."));
   },
 );
 
@@ -89,7 +92,7 @@ export const unwrapGPHM = createAsyncThunk(
   async ({ networkID, provider, address, value }: IValueAsyncThunk, { dispatch }) => {
     try {
       const phantomFinance = new Contract(addresses[networkID].PhantomFinance, PhantomFinanceAbi, provider.getSigner());
-      const tx = await phantomFinance.unwrap(utils.parseUnits(value.toString(), "gwei").toString());
+      const tx = await phantomFinance.unwrap(utils.parseUnits(value.toString(), "ether").toString());
       if (tx) {
         await tx.wait();
       }
@@ -99,7 +102,8 @@ export const unwrapGPHM = createAsyncThunk(
       return { error: err };
     }
     // reload sPHM/gPHM balances
-    dispatch(getBalances({ address, networkID, provider }));
+    await dispatch(getBalances({ address, networkID, provider })).unwrap();
+    dispatch(success("You have unwrapped gPHM successfully."));
   },
 );
 

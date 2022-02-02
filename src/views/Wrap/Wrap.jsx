@@ -29,38 +29,20 @@ import ConnectButton from "src/components/ConnectButton";
 
 const Wrap = () => {
   const theme = useTheme();
-  const isMobileScreen = useMediaQuery("(max-width: 700px)");
-  // tab bar
-  const [activeToken, setActiveToken] = useState(0);
-  const [inputValue, setInputValue] = useState(0);
-
   const dispatch = useDispatch();
+  const isMobileScreen = useMediaQuery("(max-width: 700px)");
+  const [activeToken, setActiveToken] = useState(0);
   const { provider, chainID, address, connected } = useWeb3Context();
-  // controlled sPHM input
   const [wrapValue, setWrapValue] = useState(0);
-  // controlled gPHM input
   const [unwrapValue, setUnwrapValue] = useState(0);
+
+  const { currentIndex } = useSelector(state => state.app);
   const { wrapLoading, unwrapLoading, sPHMApprovalLoading, gPHMApprovalLoading } = useSelector(state => state.wrap);
   const { sPHM: sPHMBalance, gPHM: gPHMBalance } = useSelector(state => state.account && state.account.balances);
   const { wrapAllowance, unwrapAllowance } = useSelector(state => state.account && state.account.wrapping);
-  const needsSPHMApproval = Number(sPHMBalance) > Number(wrapAllowance);
-  const needsGPHMApproval = Number(gPHMBalance) > Number(unwrapAllowance);
+  const needsSPHMApproval = Number(sPHMBalance) > Number(wrapAllowance) && Number(sPHMBalance) > 0;
+  const needsGPHMApproval = Number(gPHMBalance) > Number(unwrapAllowance) && Number(gPHMBalance) > 0;
 
-  const { currentIndex } = useSelector(state => state.app);
-  console.log("000 ", {
-    sPHMBalance: +sPHMBalance,
-    gPHMBalance: +gPHMBalance,
-    needsSPHMApproval,
-    needsGPHMApproval,
-    wrapValue,
-    unwrapValue,
-    wrapAllowance,
-    unwrapAllowance,
-    sPHMApprovalLoading,
-    gPHMApprovalLoading,
-    wrapLoading,
-    unwrapLoading,
-  });
   const handleApproveSPHM = () => {
     dispatch(approveSPHM({ provider, networkID: chainID, address, value: sPHMBalance }));
   };
@@ -80,7 +62,10 @@ const Wrap = () => {
       return dispatch(error("You cannot wrap more than your sPHM balance."));
     }
 
-    await dispatch(wrapSPHM({ address, provider, networkID: chainID, value: wrapValue }));
+    const result = await dispatch(wrapSPHM({ address, provider, networkID: chainID, value: wrapValue })).unwrap();
+    if (!result?.error) {
+      setWrapValue(0);
+    }
   };
 
   const handleUnwrapGPHM = async () => {
@@ -96,7 +81,10 @@ const Wrap = () => {
       return dispatch(error("You cannot wrap more than your gPHM balance."));
     }
 
-    await dispatch(unwrapGPHM({ address, provider, networkID: chainID, value: unwrapValue }));
+    const result = await dispatch(unwrapGPHM({ address, provider, networkID: chainID, value: unwrapValue })).unwrap();
+    if (!result?.error) {
+      setUnwrapValue(0);
+    }
   };
 
   const ctaProps = isMobileScreen
@@ -323,8 +311,8 @@ const Wrap = () => {
                   <Typography variant="p" color="textPrimary">
                     Based on the current index of {trim(currentIndex || 1, 2)} you’ll receive{" "}
                     {activeToken === 0
-                      ? `${trim(+sPHMBalance / 1e9 / currentIndex, 2)} gPHM`
-                      : `${trim((+gPHMBalance / 1e9) * currentIndex, 2)} sPHM`}
+                      ? `${trim(wrapValue / currentIndex, 2)} gPHM`
+                      : `${trim(unwrapValue * currentIndex, 2)} sPHM`}
                   </Typography>
                 </Box>
                 {CTA}

@@ -67,7 +67,6 @@ export const loadAccountDetails = createAsyncThunk(
     ]);
 
     await dispatch(getBalances({ address, networkID, provider }));
-    console.log("111111 ", +unwrapAllowance);
     return {
       auction: {
         fraxAllowance: bnToNum(fraxAllowance) / Math.pow(10, 18),
