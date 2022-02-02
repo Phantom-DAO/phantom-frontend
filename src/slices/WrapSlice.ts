@@ -1,12 +1,13 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { Contract, utils } from "ethers";
-import PhantomFinanceAbi from "../abi/PhantomFinance.json";
+import { abi as PhantomFinanceAbi } from "../abi/PhantomFinance.json";
 import { abi as ierc20Abi } from "../abi/IERC20.json";
 import { addresses } from "../constants";
 import { setAll } from "../helpers";
 import { getBalances, loadAccountDetails } from "./AccountSlice";
 import { error } from "./MessagesSlice";
 import { IValueAsyncThunk, IJsonRPCError } from "./interfaces";
+import { getOrLoadTreasuryAddress } from "./AppSlice";
 
 export type IWrapSlice = {
   wrapLoading: boolean;
@@ -26,10 +27,11 @@ const initialState: IWrapSlice = {
 
 export const approveSPHM = createAsyncThunk(
   "stake/approveSPHM",
-  async ({ provider, address, networkID, value }: IValueAsyncThunk, { dispatch }) => {
+  async ({ provider, address, networkID, value }: IValueAsyncThunk, { dispatch, getState }) => {
     const sPHM = new Contract(addresses[networkID].sPHM as string, ierc20Abi, provider.getSigner());
+    const phantomTreasuryAddress = await getOrLoadTreasuryAddress({ networkID, provider }, { dispatch, getState });
     try {
-      const tx = await sPHM.approve(addresses[networkID].PhantomStaking, utils.parseEther(value.toString()).toString());
+      const tx = await sPHM.approve(phantomTreasuryAddress, utils.parseUnits(value.toString(), "gwei").toString());
       if (tx) {
         await tx.wait();
       }
@@ -48,7 +50,7 @@ export const wrapSPHM = createAsyncThunk(
   async ({ networkID, provider, address, value }: IValueAsyncThunk, { dispatch }) => {
     try {
       const phantomFinance = new Contract(addresses[networkID].PhantomFinance, PhantomFinanceAbi, provider.getSigner());
-      const tx = await phantomFinance.wrap(utils.parseEther(value.toString()).toString());
+      const tx = await phantomFinance.wrap(utils.parseUnits(value.toString(), "gwei").toString());
       if (tx) {
         await tx.wait();
       }
@@ -64,10 +66,11 @@ export const wrapSPHM = createAsyncThunk(
 
 export const approveGPHM = createAsyncThunk(
   "stake/approveGPHM",
-  async ({ provider, address, networkID, value }: IValueAsyncThunk, { dispatch }) => {
+  async ({ provider, address, networkID, value }: IValueAsyncThunk, { dispatch, getState }) => {
     const gPHM = new Contract(addresses[networkID].gPHM as string, ierc20Abi, provider.getSigner());
+    const phantomTreasuryAddress = await getOrLoadTreasuryAddress({ networkID, provider }, { dispatch, getState });
     try {
-      const tx = await gPHM.approve(addresses[networkID].PhantomStaking, utils.parseEther(value.toString()).toString());
+      const tx = await gPHM.approve(phantomTreasuryAddress, utils.parseUnits(value.toString(), "gwei").toString());
       if (tx) {
         await tx.wait();
       }
@@ -86,7 +89,7 @@ export const unwrapGPHM = createAsyncThunk(
   async ({ networkID, provider, address, value }: IValueAsyncThunk, { dispatch }) => {
     try {
       const phantomFinance = new Contract(addresses[networkID].PhantomFinance, PhantomFinanceAbi, provider.getSigner());
-      const tx = await phantomFinance.unstake(utils.parseEther(value.toString()).toString());
+      const tx = await phantomFinance.unwrap(utils.parseUnits(value.toString(), "gwei").toString());
       if (tx) {
         await tx.wait();
       }

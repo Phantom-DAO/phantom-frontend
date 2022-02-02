@@ -14,7 +14,7 @@ const initialState = {
   phantomTreasuryAddress: "",
   loading: false,
   loadingMarketPrice: false,
-  currentIndex: 0,
+  currentIndex: 1,
 };
 
 /**
@@ -90,7 +90,7 @@ export const loadAppDetails = createAsyncThunk(
     // const currentIndex = 2;
 
     return {
-      currentIndex: ethers.utils.formatUnits(scalingFactor, "gwei"),
+      currentIndex: ethers.utils.formatUnits(scalingFactor, "gwei") || 1,
       currentBlock,
       phantomTreasuryAddress,
       // fiveDayRate,

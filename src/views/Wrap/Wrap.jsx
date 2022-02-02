@@ -7,13 +7,14 @@ import {
   Paper,
   Tabs,
   Tab,
-  TabIndicatorProps,
+  CircularProgress,
   TextField,
   SvgIcon,
   useMediaQuery,
 } from "@material-ui/core";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { ethers } from "ethers";
 
 import { useWeb3Context } from "../../hooks/web3Context";
 import { wrapSPHM, unwrapGPHM, approveSPHM, approveGPHM } from "../../slices/WrapSlice";
@@ -22,19 +23,19 @@ import { ReactComponent as WavesLeft } from "../../assets/icons/waves-left.svg";
 import { ReactComponent as WavesRight } from "../../assets/icons/waves-right.svg";
 import { ReactComponent as SPHM } from "../../assets/icons/sPHM.svg";
 import { ReactComponent as GPHM } from "../../assets/icons/gPHM.svg";
+import { trim } from "../../helpers";
 import "./wrap.scss";
+import ConnectButton from "src/components/ConnectButton";
 
 const Wrap = () => {
   const theme = useTheme();
   const isMobileScreen = useMediaQuery("(max-width: 700px)");
   // tab bar
-  const [value, setValue] = useState(0);
+  const [activeToken, setActiveToken] = useState(0);
   const [inputValue, setInputValue] = useState(0);
-  const handleChange = newValue => {
-    setValue(newValue);
-  };
+
   const dispatch = useDispatch();
-  const { provider, chainID, address } = useWeb3Context();
+  const { provider, chainID, address, connected } = useWeb3Context();
   // controlled sPHM input
   const [wrapValue, setWrapValue] = useState(0);
   // controlled gPHM input
@@ -42,10 +43,24 @@ const Wrap = () => {
   const { wrapLoading, unwrapLoading, sPHMApprovalLoading, gPHMApprovalLoading } = useSelector(state => state.wrap);
   const { sPHM: sPHMBalance, gPHM: gPHMBalance } = useSelector(state => state.account && state.account.balances);
   const { wrapAllowance, unwrapAllowance } = useSelector(state => state.account && state.account.wrapping);
-  const needsSPHMApproval = sPHMBalance > wrapAllowance;
-  const needsGPHMApproval = gPHMBalance > unwrapAllowance;
-  const { currentIndex } = useSelector(state => state.app);
+  const needsSPHMApproval = Number(sPHMBalance) > Number(wrapAllowance);
+  const needsGPHMApproval = Number(gPHMBalance) > Number(unwrapAllowance);
 
+  const { currentIndex } = useSelector(state => state.app);
+  console.log("000 ", {
+    sPHMBalance: +sPHMBalance,
+    gPHMBalance: +gPHMBalance,
+    needsSPHMApproval,
+    needsGPHMApproval,
+    wrapValue,
+    unwrapValue,
+    wrapAllowance,
+    unwrapAllowance,
+    sPHMApprovalLoading,
+    gPHMApprovalLoading,
+    wrapLoading,
+    unwrapLoading,
+  });
   const handleApproveSPHM = () => {
     dispatch(approveSPHM({ provider, networkID: chainID, address, value: sPHMBalance }));
   };
@@ -59,7 +74,9 @@ const Wrap = () => {
       return dispatch(error("Please enter a value!"));
     }
 
-    if (wrapValue > sPHMBalance) {
+    if (
+      ethers.utils.parseUnits(wrapValue.toString(), "ether").gt(ethers.utils.parseUnits(sPHMBalance.toString(), "gwei"))
+    ) {
       return dispatch(error("You cannot wrap more than your sPHM balance."));
     }
 
@@ -67,40 +84,96 @@ const Wrap = () => {
   };
 
   const handleUnwrapGPHM = async () => {
-    if (isNaN(wrapValue) || wrapValue === 0 || wrapValue === "") {
+    if (isNaN(unwrapValue) || unwrapValue === 0 || unwrapValue === "") {
       return dispatch(error("Please enter a value!"));
     }
 
-    if (wrapValue > sPHMBalance) {
-      return dispatch(error("You cannot wrap more than your sPHM balance."));
+    if (
+      ethers.utils
+        .parseUnits(unwrapValue.toString(), "ether")
+        .gt(ethers.utils.parseUnits(gPHMBalance.toString(), "gwei"))
+    ) {
+      return dispatch(error("You cannot wrap more than your gPHM balance."));
     }
 
-    await dispatch(unwrapGPHM({ address, provider, networkID: chainID, value: wrapValue }));
+    await dispatch(unwrapGPHM({ address, provider, networkID: chainID, value: unwrapValue }));
   };
 
-  // @todo: add loaders to 'Pending...' buttons
-  return (
-    // <div>
-    //   {needsSPHMApproval ? (
-    //     <Button onClick={handleApproveSPHM} disabled={sPHMBalance === 0}>
-    //       {sPHMApprovalLoading ? "Pending..." : "Approve"}
-    //     </Button>
-    //   ) : (
-    //     <Button onClick={handleWrapSPHM} disabled={sPHMBalance === 0}>
-    //       {wrapLoading ? "Pending..." : "Wrap"}
-    //     </Button>
-    //   )}
+  const ctaProps = isMobileScreen
+    ? {
+        variant: "contained",
+        color: "primary",
+        style: { width: "100%" },
+        size: "small",
+      }
+    : {
+        variant: "contained",
+        color: "primary",
+        size: "medium",
+        style: {
+          fontSize: "16px",
+          minWidth: "100px",
+        },
+      };
 
-    //   {needsGPHMApproval ? (
-    //     <Button onClick={handleApproveGPHM} disabled={gPHMBalance === 0}>
-    //       {gPHMApprovalLoading ? "Pending..." : "Approve"}
-    //     </Button>
-    //   ) : (
-    //     <Button onClick={handleUnwrapGPHM} disabled={gPHMBalance === 0}>
-    //       {unwrapLoading ? "Pending..." : "Unwrap"}
-    //     </Button>
-    //   )}
-    // </div>
+  const wrapButton = needsSPHMApproval ? (
+    <Button {...ctaProps} disabled={+sPHMBalance === 0} onClick={handleApproveSPHM}>
+      {sPHMApprovalLoading && (
+        <Box mr={1} mt={1}>
+          <CircularProgress size={22} />
+        </Box>
+      )}
+      Approve
+    </Button>
+  ) : (
+    <Button {...ctaProps} disabled={+sPHMBalance === 0} onClick={handleWrapSPHM}>
+      {wrapLoading && (
+        <Box mr={1} mt={1}>
+          <CircularProgress size={22} />
+        </Box>
+      )}
+      Wrap
+    </Button>
+  );
+
+  const unwrapButton = needsGPHMApproval ? (
+    <Button {...ctaProps} disabled={gPHMBalance === 0} onClick={handleApproveGPHM}>
+      {gPHMApprovalLoading && (
+        <Box mr={1} mt={1}>
+          <CircularProgress size={22} />
+        </Box>
+      )}
+      Approve
+    </Button>
+  ) : (
+    <Button {...ctaProps} disabled={gPHMBalance === 0} onClick={handleUnwrapGPHM}>
+      {unwrapLoading && (
+        <Box mr={1} mt={1}>
+          <CircularProgress size={22} />
+        </Box>
+      )}
+      Unwrap
+    </Button>
+  );
+
+  const CTA = connected ? (
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        width: "90%",
+        margin: theme.spacing(2),
+      }}
+    >
+      {activeToken === 0 ? wrapButton : unwrapButton}
+    </Box>
+  ) : (
+    <Box sx={{ margin: theme.spacing(2) }}>
+      <ConnectButton />
+    </Box>
+  );
+
+  return (
     <div id="swap-view">
       <Zoom in={true}>
         <Box
@@ -153,18 +226,18 @@ const Wrap = () => {
                   }}
                 >
                   <Box
-                    className={value === 0 ? "active-tab" : ""}
+                    className={activeToken === 0 ? "active-tab" : ""}
                     sx={{ width: "50%", padding: "0px 16px" }}
-                    onClick={() => handleChange(0)}
+                    onClick={() => setActiveToken(0)}
                   >
                     <Typography variant="h6" color="textPrimary">
                       Wrap
                     </Typography>
                   </Box>
                   <Box
-                    className={value === 1 ? "active-tab" : ""}
+                    className={activeToken === 1 ? "active-tab" : ""}
                     sx={{ width: "50%", padding: "0px 16px" }}
-                    onClick={() => handleChange(1)}
+                    onClick={() => setActiveToken(1)}
                   >
                     <Typography variant="h6" color="textPrimary">
                       Unwrap
@@ -188,9 +261,9 @@ const Wrap = () => {
                       backgroundColor: "rgba(255, 255, 255, 0.09);",
                     }}
                   >
-                    {value === 0 ? <SPHM /> : <GPHM />}
+                    {activeToken === 0 ? <SPHM /> : <GPHM />}
                     <Typography style={{ marginLeft: "5px" }} variant="h6">
-                      {value === 0 ? "sPHM" : "gPHM"}
+                      {activeToken === 0 ? "sPHM" : "gPHM"}
                     </Typography>
                   </Box>
                   <Box
@@ -213,10 +286,9 @@ const Wrap = () => {
                     <Box
                       component={TextField}
                       type="number"
-                      value={inputValue}
+                      value={activeToken === 0 ? wrapValue : unwrapValue}
                       onChange={e => {
-                        // need numeric check
-                        setInputValue(e.target.value);
+                        activeToken === 0 ? setWrapValue(e.target.value) : setUnwrapValue(e.target.value);
                       }}
                     />
                     <Button
@@ -232,6 +304,9 @@ const Wrap = () => {
                         fontSize: "14px",
                         color: "white",
                       }}
+                      onClick={() => {
+                        activeToken === 0 ? setWrapValue(+sPHMBalance / 1e9) : setUnwrapValue(gPHMBalance / 1e9);
+                      }}
                     >
                       MAX
                     </Button>
@@ -246,35 +321,13 @@ const Wrap = () => {
                   }}
                 >
                   <Typography variant="p" color="textPrimary">
-                    Based on the current index of 3.33 you’ll receive 1001 gPHM
+                    Based on the current index of {trim(currentIndex || 1, 2)} you’ll receive{" "}
+                    {activeToken === 0
+                      ? `${trim(+sPHMBalance / 1e9 / currentIndex, 2)} gPHM`
+                      : `${trim((+gPHMBalance / 1e9) * currentIndex, 2)} sPHM`}
                   </Typography>
                 </Box>
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                    width: "90%",
-                    margin: theme.spacing(2),
-                  }}
-                >
-                  {!isMobileScreen ? (
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      size="medium"
-                      style={{
-                        fontSize: "16px",
-                        minWidth: "100px",
-                      }}
-                    >
-                      {value === 0 ? "Wrap" : "Unwrap"}
-                    </Button>
-                  ) : (
-                    <Button variant="contained" color="primary" style={{ width: "100%" }} size="small">
-                      {value === 0 ? "Wrap" : "Unwrap"}
-                    </Button>
-                  )}
-                </Box>
+                {CTA}
               </Box>
               {isMobileScreen ? (
                 <></>

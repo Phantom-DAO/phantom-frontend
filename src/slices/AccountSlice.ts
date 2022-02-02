@@ -2,25 +2,18 @@ import { BigNumber, BigNumberish, ethers } from "ethers";
 import { addresses } from "../constants";
 import { abi as ierc20Abi } from "../abi/IERC20.json";
 import { abi as AuctionAbi } from "../abi/auction.json";
-import { abi as sOHMv2 } from "../abi/sOhmv2.json";
-import { abi as fuseProxy } from "../abi/FuseProxy.json";
-import { abi as wsOHM } from "../abi/wsOHM.json";
-
 import { bnToNum, setAll } from "../helpers";
-
 import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "src/store";
 import { IBaseAddressAsyncThunk, ICalcUserBondDetailsAsyncThunk } from "./interfaces";
-import { FuseProxy, IERC20, SOhmv2, WsOHM } from "src/typechain";
+import { IERC20 } from "src/typechain";
+import { getOrLoadTreasuryAddress } from "./AppSlice";
 
 interface IUserBalances {
   balances: {
-    ohm: string;
-    sohm: string;
-    fsohm: string;
-    wsohm: string;
-    wsohmAsSohm: string;
-    pool: string;
+    frax: number;
+    sPHM: number;
+    gPHM: number;
   };
 }
 
@@ -39,8 +32,8 @@ export const getBalances = createAsyncThunk(
     return {
       balances: {
         frax: +fraxBalance.toString() / 1e18,
-        sPHM: +sPHMBalance.toString() / 1e18,
-        gPHM: +gPHMBalance.toString() / 1e18,
+        sPHM: ethers.utils.formatUnits(sPHMBalance, "gwei"),
+        gPHM: ethers.utils.formatUnits(gPHMBalance, "gwei"),
       },
     };
   },
@@ -59,47 +52,31 @@ interface IUserAccountDetails {
 
 export const loadAccountDetails = createAsyncThunk(
   "account/loadAccountDetails",
-  async ({ networkID, provider, address }: IBaseAddressAsyncThunk, { dispatch }) => {
+  async ({ networkID, provider, address }: IBaseAddressAsyncThunk, { dispatch, getState }) => {
     const fraxContract = new ethers.Contract(addresses[networkID].frax, ierc20Abi, provider);
     const auctionContract = new ethers.Contract(addresses[networkID].PhantomAuction as string, AuctionAbi, provider);
     const sPHM = new ethers.Contract(addresses[networkID].sPHM as string, ierc20Abi, provider);
     const gPHM = new ethers.Contract(addresses[networkID].gPHM as string, ierc20Abi, provider);
+    const phantomTreasuryAddress = await getOrLoadTreasuryAddress({ networkID, provider }, { dispatch, getState });
+
     const [fraxAllowance, tokensClaimable, wrapAllowance, unwrapAllowance] = await Promise.all([
       fraxContract.allowance(address, addresses[networkID].PhantomAuction),
       auctionContract.tokensClaimable(address),
-      sPHM.allowance(address, addresses[networkID].PhantomStaking),
-      gPHM.allowance(address, addresses[networkID].PhantomStaking),
+      sPHM.allowance(address, phantomTreasuryAddress),
+      gPHM.allowance(address, phantomTreasuryAddress),
     ]);
 
-    // const ohmContract = new ethers.Contract(addresses[networkID].OHM_ADDRESS as string, ierc20Abi, provider) as IERC20;
-    // const stakeAllowance = await ohmContract.allowance(address, addresses[networkID].STAKING_HELPER_ADDRESS);
-
-    // const sohmContract = new ethers.Contract(addresses[networkID].SOHM_ADDRESS as string, sOHMv2, provider) as SOhmv2;
-    // const unstakeAllowance = await sohmContract.allowance(address, addresses[networkID].STAKING_ADDRESS);
-    // const poolAllowance = await sohmContract.allowance(address, addresses[networkID].PT_PRIZE_POOL_ADDRESS);
-    // const wrapAllowance = await sohmContract.allowance(address, addresses[networkID].WSOHM_ADDRESS);
-
-    // const wsohmContract = new ethers.Contract(addresses[networkID].WSOHM_ADDRESS as string, wsOHM, provider) as WsOHM;
-    // const unwrapAllowance = await wsohmContract.allowance(address, addresses[networkID].WSOHM_ADDRESS);
-
     await dispatch(getBalances({ address, networkID, provider }));
-
+    console.log("111111 ", +unwrapAllowance);
     return {
       auction: {
         fraxAllowance: bnToNum(fraxAllowance) / Math.pow(10, 18),
         tokensClaimable: bnToNum(tokensClaimable) / Math.pow(10, 18),
       },
-      // staking: {
-      //   ohmStake: +stakeAllowance,
-      //   ohmUnstake: +unstakeAllowance,
-      // },
       wrapping: {
-        wrapAllowance: +wrapAllowance.toString() / 1e18,
-        unwrapAllowance: +unwrapAllowance.toString() / 1e18,
+        wrapAllowance: ethers.utils.formatUnits(wrapAllowance, "gwei"),
+        unwrapAllowance: ethers.utils.formatUnits(unwrapAllowance, "gwei"),
       },
-      // pooling: {
-      //   sohmPool: +poolAllowance,
-      // },
     };
   },
 );
@@ -168,7 +145,7 @@ interface IAccountSlice extends IUserAccountDetails, IUserBalances {
 const initialState: IAccountSlice = {
   loading: false,
   bonds: {},
-  balances: { ohm: "", sohm: "", wsohmAsSohm: "", wsohm: "", fsohm: "", pool: "" },
+  balances: { frax: 0, sPHM: 0, gPHM: 0 },
   auction: { fraxAllowance: 0, tokensClaimable: 0 },
   wrapping: { wrapAllowance: 0, unwrapAllowance: 0 },
 };
