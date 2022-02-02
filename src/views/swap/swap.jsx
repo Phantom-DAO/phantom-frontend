@@ -134,7 +134,7 @@ const Swap = () => {
 
   const fPHMAllowanceWei = ethers.utils.parseUnits(fPHMAllowance.toString(), "wei");
   const fPHMBalanceWei = ethers.utils.parseUnits(fPHMBalance.toString(), "wei");
-  const approveOrSwapFPHM = fPHMAllowanceWei.gte(fPHMBalanceWei) && +fPHMBalance > 0 ? "approve" : "approve";
+  const approveOrSwapFPHM = fPHMAllowanceWei.gte(fPHMBalanceWei) && +fPHMBalance > 0 ? "swap" : "approve";
 
   const fraxAllowanceWei = ethers.utils.parseUnits(fraxAllowance.toString(), "wei");
   const remainingAllotmentWei = ethers.utils.parseUnits(remainingAllotment.toString(), "wei");
