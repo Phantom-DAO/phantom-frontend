@@ -82,7 +82,7 @@ const Swap = () => {
   };
 
   const handleApproveFrax = () => {
-    dispatch(approveFrax({ provider, address, value: remainingAllotment * 100, networkID: chainID }));
+    dispatch(approveFrax({ provider, address, value: remainingAllotment * 51, networkID: chainID }));
   };
 
   const handlePurchaseAPHM = () => {
@@ -131,7 +131,7 @@ const Swap = () => {
 
   const approveOrSwapAPHM = aPHMAllowance >= aPHMBalance && aPHMBalance > 0 ? "swap" : "approve";
   const approveOrSwapFPHM = fPHMAllowance >= fPHMBalance && fPHMBalance > 0 ? "swap" : "approve";
-  const approveOrSwapFrax = fraxAllowance >= remainingAllotment * 100 && remainingAllotment > 0 ? "swap" : "approve";
+  const approveOrSwapFrax = fraxAllowance >= remainingAllotment * 51 && remainingAllotment > 0 ? "swap" : "approve";
   return (
     <div id="swap-view">
       <Zoom in={true}>
