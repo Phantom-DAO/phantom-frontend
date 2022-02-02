@@ -14,6 +14,7 @@ import {
   Button,
   useMediaQuery,
 } from "@material-ui/core";
+import { ethers } from "ethers";
 import { useWeb3Context } from "src/hooks/web3Context";
 // maintain state for some settings
 import { useCallback, useEffect } from "react";
@@ -37,11 +38,6 @@ import {
 import MobileCard from "./MobileCard";
 import { addresses } from "../../constants";
 import "./swap.scss";
-
-// TODO: 1 Implementation
-// add getimage to ./helpers/index.tsx
-//const aPHMImg = getaPHMTokenImage("");
-//const fPHMImg = getfPHMTokenImage("");
 
 const Swap = () => {
   const theme = useTheme();
@@ -82,7 +78,14 @@ const Swap = () => {
   };
 
   const handleApproveFrax = () => {
-    dispatch(approveFrax({ provider, address, value: remainingAllotment * 51, networkID: chainID }));
+    dispatch(
+      approveFrax({
+        provider,
+        address,
+        value: ethers.utils.parseUnits(remainingAllotment.toString(), "wei").mul(51),
+        networkID: chainID,
+      }),
+    );
   };
 
   const handlePurchaseAPHM = () => {
@@ -120,18 +123,23 @@ const Swap = () => {
 
   const loadingBalance = useCallback(
     balance => {
-      return balancesLoading ? (
-        <Skeleton width="50px" height="20px" style={{ marginLeft: "60%" }} />
-      ) : (
-        Math.round(balance * 100) / 100
-      );
+      return balancesLoading ? <Skeleton width="50px" height="20px" style={{ marginLeft: "60%" }} /> : trim(balance, 2);
     },
     [balancesLoading],
   );
 
-  const approveOrSwapAPHM = aPHMAllowance >= aPHMBalance && aPHMBalance > 0 ? "swap" : "approve";
-  const approveOrSwapFPHM = fPHMAllowance >= fPHMBalance && fPHMBalance > 0 ? "swap" : "approve";
-  const approveOrSwapFrax = fraxAllowance >= remainingAllotment * 51 && remainingAllotment > 0 ? "swap" : "approve";
+  const aPHMAllowanceWei = ethers.utils.parseUnits(aPHMAllowance.toString(), "wei");
+  const aPHMBalanceWei = ethers.utils.parseUnits(aPHMBalance.toString(), "wei");
+  const approveOrSwapAPHM = aPHMAllowanceWei.gte(aPHMBalanceWei) && +aPHMBalance > 0 ? "swap" : "approve";
+
+  const fPHMAllowanceWei = ethers.utils.parseUnits(fPHMAllowance.toString(), "wei");
+  const fPHMBalanceWei = ethers.utils.parseUnits(fPHMBalance.toString(), "wei");
+  const approveOrSwapFPHM = fPHMAllowanceWei.gte(fPHMBalanceWei) && +fPHMBalance > 0 ? "approve" : "approve";
+
+  const fraxAllowanceWei = ethers.utils.parseUnits(fraxAllowance.toString(), "wei");
+  const remainingAllotmentWei = ethers.utils.parseUnits(remainingAllotment.toString(), "wei");
+  const approveOrSwapFrax =
+    fraxAllowanceWei.gte(remainingAllotmentWei.mul(51)) && +remainingAllotment > 0 ? "swap" : "approve";
   return (
     <div id="swap-view">
       <Zoom in={true}>
@@ -182,8 +190,8 @@ const Swap = () => {
                   <MobileCard
                     icon={<FPHMToGPHM />}
                     swapText={"fPHM to gPHM"}
-                    balance={loadingBalance(fPHMBalance)}
-                    unlocked={loadingBalance(unlockedFPHM)}
+                    balance={loadingBalance(trim(+fPHMBalance / 1e18, 2))}
+                    unlocked={loadingBalance(trim(+unlockedFPHM / 1e18, 2))}
                     buttonLabel={approveOrSwapFPHM === "approve" ? "Approve" : "Swap"}
                     loading={approveOrSwapFPHM === "approve" ? approveFPHMLoading : FPHMToGPHMLoading}
                     onClick={approveOrSwapFPHM === "approve" ? handleApproveFPHM : handleSwapFPHM}
@@ -192,7 +200,7 @@ const Swap = () => {
                     icon={<FRAXToAPHM />}
                     swapText={"FRAX to aPHM"}
                     balance={"N/A"}
-                    unlocked={loadingBalance(trim(remainingAllotment, 2))}
+                    unlocked={loadingBalance(trim(+remainingAllotment / 1e18, 2))}
                     buttonLabel={approveOrSwapFrax === "approve" ? "Approve" : "Swap"}
                     loading={approveOrSwapFrax === "approve" ? approveFraxLoading : purchaseAPHMLoading}
                     onClick={approveOrSwapFrax === "approve" ? handleApproveFrax : handlePurchaseAPHM}
@@ -232,7 +240,7 @@ const Swap = () => {
                           N/A
                         </TableCell>
                         <TableCell width="20%" align="right">
-                          {loadingBalance(aPHMBalance)}
+                          {loadingBalance(trim(+aPHMBalance / 1e18, 2))}
                         </TableCell>
                         <TableCell width="20%" align="right">
                           {approveOrSwapAPHM === "swap" ? (
@@ -240,7 +248,7 @@ const Swap = () => {
                               variant="outlined"
                               color="primary"
                               size="small"
-                              // disabled={aPHMBalance === 0}
+                              // disabled={+aPHMBalance === 0}
                               disabled={true}
                               onClick={handleSwapAPHM}
                             >
@@ -256,7 +264,7 @@ const Swap = () => {
                               variant="outlined"
                               color="primary"
                               size="small"
-                              // disabled={aPHMBalance === 0}
+                              // disabled={+aPHMBalance === 0}
                               disabled={true}
                               onClick={handleApproveAPHM}
                             >
@@ -280,10 +288,10 @@ const Swap = () => {
                           </Box>
                         </TableCell>
                         <TableCell width="20%" align="right">
-                          {loadingBalance(fPHMBalance)}
+                          {loadingBalance(trim(+fPHMBalance / 1e18, 2))}
                         </TableCell>
                         <TableCell width="20%" align="right">
-                          {loadingBalance(unlockedFPHM)}
+                          {loadingBalance(trim(+unlockedFPHM / 1e18, 2))}
                         </TableCell>
                         <TableCell width="20%" align="right">
                           {approveOrSwapFPHM === "swap" ? (
@@ -291,7 +299,7 @@ const Swap = () => {
                               variant="outlined"
                               color="primary"
                               size="small"
-                              disabled={fPHMBalance === 0}
+                              disabled={+fPHMBalance === 0}
                               onClick={handleSwapFPHM}
                             >
                               {FPHMToGPHMLoading && (
@@ -306,7 +314,7 @@ const Swap = () => {
                               variant="outlined"
                               color="primary"
                               size="small"
-                              disabled={fPHMBalance === 0}
+                              disabled={+fPHMBalance === 0}
                               onClick={handleApproveFPHM}
                             >
                               {approveFPHMLoading && (
@@ -332,7 +340,7 @@ const Swap = () => {
                           N/A
                         </TableCell>
                         <TableCell width="20%" align="right">
-                          {loadingBalance(trim(remainingAllotment, 2))}
+                          {loadingBalance(trim(+remainingAllotment / 1e18, 2))}
                         </TableCell>
                         <TableCell width="20%" align="right">
                           {approveOrSwapFrax === "swap" ? (
@@ -349,7 +357,7 @@ const Swap = () => {
                               variant="outlined"
                               color="primary"
                               size="small"
-                              disabled={remainingAllotment === 0}
+                              disabled={+remainingAllotment === 0}
                               onClick={handleApproveFrax}
                             >
                               {approveFraxLoading && (
