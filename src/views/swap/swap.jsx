@@ -82,7 +82,7 @@ const Swap = () => {
   };
 
   const handleApproveFrax = () => {
-    dispatch(approveFrax({ provider, address, value: remainingAllotment * 50, networkID: chainID }));
+    dispatch(approveFrax({ provider, address, value: remainingAllotment * 51, networkID: chainID }));
   };
 
   const handlePurchaseAPHM = () => {
