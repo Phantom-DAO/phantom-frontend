@@ -74,10 +74,10 @@ export const addresses: IAddresses = {
     REDEEM_HELPER_ADDRESS: "",
     //phm contracts
     PHM: "0x845e54a78953C4b12162f3cf4d3252a39Bdee1D9",
-    PhantomAdmin: "",
+    PhantomAdmin: "0x9FE84b6523B664E167662FfBe365a22031466ce0",
     PhantomAllocator: "",
     PhantomAlphaSwap: "0xb15bef2074ED8b5F6CD860BDF6922C261fc574b2",
-    PhantomBonding: "",
+    PhantomBonding: "0x3EDd1751237738F5468205e66f065F37C75792cc",
     PhantomDexRouter: "0x7AB9Dea2176C382B5C8699Ef23f3B25bEb506981",
     PhantomExecutor: "0x87c7b0A0368D949905EC862940201860a570d599",
     PhantomFinance: "",
