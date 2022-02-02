@@ -190,7 +190,7 @@ const Swap = () => {
                   />
                   <MobileCard
                     icon={<FRAXToAPHM />}
-                    swapText={"fPHM to gPHM"}
+                    swapText={"FRAX to aPHM"}
                     balance={"N/A"}
                     unlocked={loadingBalance(trim(remainingAllotment, 2))}
                     buttonLabel={approveOrSwapFrax === "approve" ? "Approve" : "Swap"}
