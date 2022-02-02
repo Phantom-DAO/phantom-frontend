@@ -131,7 +131,7 @@ const Swap = () => {
 
   const approveOrSwapAPHM = aPHMAllowance >= aPHMBalance && aPHMBalance > 0 ? "swap" : "approve";
   const approveOrSwapFPHM = fPHMAllowance >= fPHMBalance && fPHMBalance > 0 ? "swap" : "approve";
-  const approveOrSwapFrax = fraxAllowance >= remainingAllotment * 50 && remainingAllotment > 0 ? "swap" : "approve";
+  const approveOrSwapFrax = fraxAllowance >= remainingAllotment * 51 && remainingAllotment > 0 ? "swap" : "approve";
   return (
     <div id="swap-view">
       <Zoom in={true}>
