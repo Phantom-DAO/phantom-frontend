@@ -182,7 +182,7 @@ const Swap = () => {
                     swapText={"aPHM to PHM"}
                     // balance={loadingBalance(aPHMBalance)}
                     balance={0} // disable swap temporarily
-                    unlocked={loadingBalance(aPHMBalance)}
+                    unlocked={loadingBalance(trim(+aPHMBalance / 1e18, 2))}
                     buttonLabel={approveOrSwapAPHM === "approve" ? "Approve" : "Swap"}
                     loading={approveOrSwapAPHM === "approve" ? approveAPHMLoading : APHMToPHMLoading}
                     onClick={approveOrSwapAPHM === "approve" ? handleApproveAPHM : handleSwapAPHM}
