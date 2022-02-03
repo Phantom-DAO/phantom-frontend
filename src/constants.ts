@@ -20,6 +20,8 @@ interface IAddresses {
   [key: number]: { [key: string]: string };
 }
 
+export const bondTypes: string[] = ["1 Day", "3 Day", "5 Day", "7 Day", "10 Day", "20 Day"];
+
 export const addresses: IAddresses = {
   /* FTM */
   250: {
@@ -40,6 +42,7 @@ export const addresses: IAddresses = {
     PhantomAllocator: "",
     PhantomAlphaSwap: "0xAD86f0841F3905BbbE28D5fEeCF992C573a0Ef74",
     PhantomBonding: "",
+    PhantomBondPricing: "",
     PhantomDexRouter: "",
     PhantomExecutor: "0x0d09B6C07B27C7EeD27A0649C0e4e7346C05eb59",
     PhantomFinance: "",
@@ -78,9 +81,10 @@ export const addresses: IAddresses = {
     PhantomAllocator: "",
     PhantomAlphaSwap: "0xb15bef2074ED8b5F6CD860BDF6922C261fc574b2",
     PhantomBonding: "0x3EDd1751237738F5468205e66f065F37C75792cc",
+    PhantomBondPricing: "",
     PhantomDexRouter: "0x7AB9Dea2176C382B5C8699Ef23f3B25bEb506981",
     PhantomExecutor: "0x87c7b0A0368D949905EC862940201860a570d599",
-    PhantomFinance: "",
+    PhantomFinance: "0xBF67b14a5f74C98ed36EB1BeB5916a74f5938B4e",
     PhantomFounders: "0xB1b259440E1cFd456048FFb7D519dd4540487933",
     PhantomGovernor: "0x91651AEBf40cD2b1f144BCCFB0877a5a5fde43aA",
     PhantomLaunch: "0x9dBddc5830fFD1F2B3554C63d2cb005B17bEaf53",

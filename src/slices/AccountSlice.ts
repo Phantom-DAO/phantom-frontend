@@ -10,6 +10,7 @@ import { bnToNum, setAll } from "../helpers";
 
 import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "src/store";
+import { BondHelper } from "src/helpers/BondHelper";
 import { IBaseAddressAsyncThunk, ICalcUserBondDetailsAsyncThunk } from "./interfaces";
 import { FuseProxy, IERC20, SOhmv2, WsOHM } from "src/typechain";
 
@@ -130,63 +131,66 @@ export const loadAccountDetails = createAsyncThunk(
 );
 
 export interface IUserBondDetails {
+  nonce: number;
   allowance: number;
   interestDue: number;
-  bondMaturationBlock: number;
-  pendingPayout: string; //Payout formatted in gwei.
+  vestsAtTimestamp: number;
+  isClaimable: boolean;
 }
+
 export const calculateUserBondDetails = createAsyncThunk(
   "account/calculateUserBondDetails",
-  async ({ address, bond, networkID, provider }: ICalcUserBondDetailsAsyncThunk) => {
+  async ({ address, bond, nonce, networkID, provider }: ICalcUserBondDetailsAsyncThunk) => {
     if (!address) {
       return {
         bond: "",
         displayName: "",
         bondIconSvg: "",
+        isAvailable: false,
         isLP: false,
+        nonce: 0,
         allowance: 0,
         balance: "0",
         interestDue: 0,
-        bondMaturationBlock: 0,
-        pendingPayout: "",
+        vestsAtTimestamp: 0,
+        isClaimable: false,
       };
     }
-    // dispatch(fetchBondInProgress());
 
     // Calculate bond details.
-    const bondContract = bond.getContractForBond(networkID, provider);
+    const bondHelper = new BondHelper(networkID, provider);
     const reserveContract = bond.getContractForReserve(networkID, provider);
 
-    let pendingPayout, bondMaturationBlock;
-
-    const bondDetails = await bondContract.bondInfo(address);
-    let interestDue: BigNumberish = Number(bondDetails.payout.toString()) / Math.pow(10, 9);
-    bondMaturationBlock = +bondDetails.vesting + +bondDetails.lastBlock;
-    pendingPayout = await bondContract.pendingPayoutFor(address);
+    const interestDue = (await bondHelper.remainingPayoutFor(address, nonce));
+    const vestsAtTimestamp = (await bondHelper.vestsAtTimestamp(address, nonce));
 
     let allowance,
       balance = BigNumber.from(0);
-    allowance = await reserveContract.allowance(address, bond.getAddressForBond(networkID));
+    allowance = await reserveContract.allowance(address, addresses[networkID].PhantomTreasury);
     balance = await reserveContract.balanceOf(address);
     // formatEthers takes BigNumber => String
     const balanceVal = ethers.utils.formatEther(balance);
     // balanceVal should NOT be converted to a number. it loses decimal precision
+
     return {
       bond: bond.name,
       displayName: bond.displayName,
       bondIconSvg: bond.bondIconSvg,
+      isAvailable: true,
       isLP: bond.isLP,
-      allowance: Number(allowance.toString()),
+      nonce: nonce,
+      allowance: 0,
+      // allowance: Number(allowance.toString()),
       balance: balanceVal,
-      interestDue,
-      bondMaturationBlock,
-      pendingPayout: ethers.utils.formatUnits(pendingPayout, "gwei"),
+      interestDue: interestDue,
+      vestsAtTimestamp: vestsAtTimestamp,
+      isClaimable: false, // TODO: DO THE CALC!!!
     };
   },
 );
 
 interface IAccountSlice extends IUserAccountDetails, IUserBalances {
-  bonds: { [key: string]: IUserBondDetails };
+  bonds: { [key: number]: IUserBondDetails };
   loading: boolean;
 }
 
@@ -235,8 +239,8 @@ const accountSlice = createSlice({
       })
       .addCase(calculateUserBondDetails.fulfilled, (state, action) => {
         if (!action.payload) return;
-        const bond = action.payload.bond;
-        state.bonds[bond] = action.payload;
+        const nonce = action.payload.nonce;
+        state.bonds[nonce] = action.payload;
         state.loading = false;
       })
       .addCase(calculateUserBondDetails.rejected, (state, { error }) => {

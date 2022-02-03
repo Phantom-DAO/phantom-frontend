@@ -4,6 +4,7 @@ import { ethers } from "ethers";
 import { addresses } from "../constants";
 import PhantomAdminABI from "../abi/PhantomAdmin.json";
 import PhantomStorageABI from "../abi/PhantomStorage.json";
+import { abi as PhantomFinanceABI } from "../abi/PhantomFinance.json";
 
 export class BondHelper {
   private readonly networkID: number;
@@ -15,12 +16,20 @@ export class BondHelper {
   }
 
   private adminABIContract() {
-    console.log("PhantomAdmin: " + addresses[this.networkID].PhantomAdmin);
     return new ethers.Contract(addresses[this.networkID].PhantomAdmin, PhantomAdminABI, this.provider);
   }
 
   private storageABIContract() {
     return new ethers.Contract(addresses[this.networkID].PhantomStorage, PhantomStorageABI, this.provider);
+  }
+
+  private bondPricingABIContract() {
+    // TODO: Replace abi with correct abi
+    return new ethers.Contract(addresses[this.networkID].PhantomBondPricing, PhantomStorageABI, this.provider);
+  }
+
+  private financeABIContract() {
+    return new ethers.Contract(addresses[this.networkID].PhantomFinance, PhantomFinanceABI, this.provider);
   }
 
   static bondTypeStrToBytes(bondType: string) {
@@ -47,6 +56,17 @@ export class BondHelper {
     return this.storageABIContract().getUint(
       ethers.utils.keccak256(ethers.utils.solidityPack(["string"], ["phantom.bonding.max_debt_ratio"])),
     );
+  }
+
+  valuation(tokenAddr: string, amount: number) {
+    // TODO: Implement. This is not the right code
+    return this.storageABIContract().getUint(
+      ethers.utils.keccak256(ethers.utils.solidityPack(["string"], ["phantom.bonding.max_debt_ratio"])),
+    );
+  }
+
+  bond(amount: number, tokenAddr: string, bondType: string) {
+    return this.financeABIContract().bond(amount, tokenAddr, BondHelper.bondTypeStrToBytes(bondType));
   }
 
   // User Functions

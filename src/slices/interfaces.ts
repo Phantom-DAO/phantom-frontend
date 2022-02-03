@@ -23,7 +23,7 @@ export interface IActionAsyncThunk extends IBaseAsyncThunk {
 }
 
 export interface IValueAsyncThunk extends IBaseAsyncThunk {
-  readonly value: string;
+  readonly value: number;
   readonly address: string;
 }
 
@@ -37,7 +37,9 @@ export interface IBaseAddressAsyncThunk extends IBaseAsyncThunk {
 
 // Account Slice
 
-export interface ICalcUserBondDetailsAsyncThunk extends IBaseAddressAsyncThunk, IBaseBondAsyncThunk {}
+export interface ICalcUserBondDetailsAsyncThunk extends IBaseAddressAsyncThunk, IBaseBondAsyncThunk {
+  readonly nonce: number;
+}
 
 // Bond Slice
 
@@ -50,10 +52,12 @@ export interface IApproveBondAsyncThunk extends IBaseBondAsyncThunk {
 }
 
 export interface ICalcBondDetailsAsyncThunk extends IBaseBondAsyncThunk {
-  readonly value: string;
+  readonly bondType: string;
+  readonly value: number;
 }
 
 export interface IBondAssetAsyncThunk extends IBaseBondAsyncThunk, IValueAsyncThunk {
+  readonly bondType: string;
   readonly slippage: number;
 }
 
