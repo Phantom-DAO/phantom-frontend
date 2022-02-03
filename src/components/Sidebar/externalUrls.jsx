@@ -12,14 +12,14 @@ const externalUrls = [
     icon: <SvgIcon color="primary" component={ForumIcon} />,
   },
   {
-    title: <Trans>Governance</Trans>,
-    url: "https://commonwealth.im/phantom-dao-mainnet",
-    icon: <SvgIcon color="primary" component={GovIcon} />,
-  },
-  {
     title: <Trans>Docs</Trans>,
     url: "https://www.notion.so/Phantom-Governance-01afd36a7b3c4d838d7456b84724e34e",
     icon: <SvgIcon color="primary" component={DocsIcon} />,
+  },
+  {
+    title: <Trans>Feedback</Trans>,
+    url: "https://commonwealth.im/phantom-dao-mainnet",
+    icon: <SvgIcon color="primary" component={FeedbackIcon} />,
   },
 ];
 

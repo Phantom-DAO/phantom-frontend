@@ -9,6 +9,8 @@ import { ReactComponent as BondIcon } from "../../assets/icons/bond.svg";
 import { ReactComponent as DashboardIcon } from "../../assets/icons/dashboard.svg";
 import { ReactComponent as PhantomIcon } from "../../assets/icons/phantom-nav-header.svg";
 import { ReactComponent as WavesLeftIcon } from "../../assets/icons/waves-left.svg";
+import { ReactComponent as GovIcon } from "../../assets/icons/governance.svg";
+import { ReactComponent as WrapIcon } from "../../assets/icons/wrap.svg";
 import { ReactComponent as PoolTogetherIcon } from "../../assets/icons/33-together.svg";
 import { Trans } from "@lingui/macro";
 import { trim, shorten } from "../../helpers";
@@ -46,6 +48,9 @@ function NavContent() {
       return true;
     }
     if (currentPath.indexOf("swap") >= 0 && page === "swap") {
+      return true;
+    }
+    if (currentPath.indexOf("wrap") >= 0 && page === "wrap") {
       return true;
     }
     return false;
@@ -196,6 +201,44 @@ function NavContent() {
                   <Trans>Swap</Trans>
                 </Typography>
               </Link>
+
+              <Link
+                component={NavLink}
+                id="gov-nav"
+                to="#"
+                isActive={(match, location) => {
+                  return checkPage(match, location, "");
+                }}
+                className={`button-dapp-menu ${isActive ? "active" : ""}`}
+              >
+                <Typography variant="h6">
+                  <SvgIcon color="primary" component={GovIcon} />
+                  <Trans>Governance</Trans>
+                </Typography>
+              </Link>
+
+              <div className="dapp-menu-data discounts">
+                <div className="bond-discounts">
+                  <Link
+                    component={NavLink}
+                    id="wrap-nav"
+                    to={"/wrap"}
+                    className={`gov`}
+                    isActive={(match, location) => {
+                      return checkPage(match, location, "wrap");
+                    }}
+                  >
+                    <Typography variant="body2" class="gov-list">
+                      <SvgIcon
+                        style={{ height: "15px", width: "15px", marginRight: "5px" }}
+                        color="primary"
+                        component={WrapIcon}
+                      />
+                      <Trans>Wrap to gPHM</Trans>
+                    </Typography>
+                  </Link>
+                </div>
+              </div>
             </div>
           </div>
         </div>
