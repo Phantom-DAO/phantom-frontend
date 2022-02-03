@@ -101,6 +101,7 @@ export const calcBondDetails = createAsyncThunk(
 
     try {
       bondDiscount = await bondHelper.bondingMultiplierFor(bondType, bond.reserveAddrs[networkID]);
+      bondDiscount = 1 / bondDiscount;
       bondPrice = BigNumber.from(marketPrice * bondDiscount);
       if (value === 0) {
         bondQuote = BigNumber.from(0);
@@ -147,37 +148,8 @@ export const calcBondDetails = createAsyncThunk(
 
 export const bondAsset = createAsyncThunk(
   "bonding/bondAsset",
-  async ({ value, address, bond, bondType, networkID, provider, slippage }: IBondAssetAsyncThunk, { dispatch }) => {
-    const depositorAddress = address;
-    const acceptedSlippage = slippage / 100 || 0.005; // 0.5% as default
-    // parseUnits takes String => BigNumber
-    let balance;
-    let bondPrice = BigNumber.from(0);
-    let marketPrice: number = 0;
-    // Calculate maxPremium based on premium and slippage.
-    // const calculatePremium = await bonding.calculatePremium();
-    const signer = provider.getSigner();
-
+  async ({ value, address, bond, bondType, networkID, provider }: IBondAssetAsyncThunk, { dispatch }) => {
     const bondHelper = new BondHelper(networkID, provider);
-
-    // try {
-    //   const originalPromiseResult = await dispatch(
-    //     findOrLoadMarketPrice({ networkID: networkID, provider: provider }),
-    //   ).unwrap();
-    //   marketPrice = originalPromiseResult?.marketPrice;
-    // } catch (rejectedValueOrSerializedError) {
-    //   // handle error here
-    //   console.error("Returned a null response from dispatch(loadMarketPrice)");
-    // }
-
-    // try {
-    //   const bondDiscount = await bondHelper.bondingMultiplierFor(bondType, bond.reserveAddrs[networkID]);
-    //   bondPrice = BigNumber.from(marketPrice * bondDiscount);
-    // } catch (e) {
-    //   console.log("Error getting bondDiscount", e);
-    // }
-
-    // const maxPremium = Math.round(Number(bondPrice.toString()) * (1 + acceptedSlippage));
 
     // Deposit the bond
     let bondTx;

@@ -58,7 +58,6 @@ export interface ICalcBondDetailsAsyncThunk extends IBaseBondAsyncThunk {
 
 export interface IBondAssetAsyncThunk extends IBaseBondAsyncThunk, IValueAsyncThunk {
   readonly bondType: string;
-  readonly slippage: number;
 }
 
 export interface IRedeemBondAsyncThunk extends IBaseBondAsyncThunk {

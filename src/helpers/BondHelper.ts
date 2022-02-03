@@ -5,6 +5,7 @@ import { addresses } from "../constants";
 import PhantomAdminABI from "../abi/PhantomAdmin.json";
 import PhantomStorageABI from "../abi/PhantomStorage.json";
 import { abi as PhantomFinanceABI } from "../abi/PhantomFinance.json";
+import { abi as PhantomBondPricingABI } from "../abi/PhantomBondPricing.json";
 
 export class BondHelper {
   private readonly networkID: number;
@@ -24,8 +25,7 @@ export class BondHelper {
   }
 
   private bondPricingABIContract() {
-    // TODO: Replace abi with correct abi
-    return new ethers.Contract(addresses[this.networkID].PhantomBondPricing, PhantomStorageABI, this.provider);
+    return new ethers.Contract(addresses[this.networkID].PhantomBondPricing, PhantomBondPricingABI, this.provider);
   }
 
   private financeABIContract() {
@@ -59,10 +59,7 @@ export class BondHelper {
   }
 
   valuation(tokenAddr: string, amount: number) {
-    // TODO: Implement. This is not the right code
-    return this.storageABIContract().getUint(
-      ethers.utils.keccak256(ethers.utils.solidityPack(["string"], ["phantom.bonding.max_debt_ratio"])),
-    );
+    return this.bondPricingABIContract().consult(tokenAddr, amount);
   }
 
   bond(amount: number, tokenAddr: string, bondType: string) {

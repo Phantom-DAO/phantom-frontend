@@ -13,6 +13,7 @@ import { frax_phm_lp } from "./AllBonds";
 import { JsonRpcSigner, StaticJsonRpcProvider } from "@ethersproject/providers";
 import { IBaseAsyncThunk } from "src/slices/interfaces";
 import { PairContract, RedeemHelper } from "../typechain";
+import { BondHelper } from "src/helpers/BondHelper";
 
 export async function getMarketPrice({ networkID, provider }: IBaseAsyncThunk) {
   const frax_phm_address = frax_phm_lp.getAddressForReserve(networkID);
@@ -28,9 +29,18 @@ export async function getMarketPrice({ networkID, provider }: IBaseAsyncThunk) {
  * @param tokenId STRING taken from https://www.coingecko.com/api/documentations/v3#/coins/get_coins_list
  * @returns INTEGER usd value
  */
-export async function getTokenPrice(tokenId = "olympus") {
-  //TODO: replace with onchain query
-  return 20;
+export async function getTokenPrice(networkID: number, provider: StaticJsonRpcProvider | JsonRpcSigner, tokenAddr: string, amount: number) {
+  let tokenPrice: number;
+  const bondHelper = new BondHelper(networkID, provider);
+
+  try {
+    tokenPrice = await bondHelper.valuation(tokenAddr, amount);
+  } catch (e) {
+    console.log("Error fetching token price");
+    tokenPrice = 0;
+  }
+
+  return tokenPrice;
 }
 
 export function shorten(str: string) {
