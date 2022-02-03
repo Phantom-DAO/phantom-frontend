@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { t, Trans } from "@lingui/macro";
-import { shorten, trim, prettyVestingPeriod } from "../../helpers";
+import { prettifySeconds, secondsUntilBlock, shorten, trim, prettyVestingPeriod } from "../../helpers";
 import { redeemBond } from "../../slices/BondSlice";
 import BondLogo from "../../components/BondLogo";
 import { Box, Button, Link, Paper, Typography, TableRow, TableCell, SvgIcon, Slide } from "@material-ui/core";
@@ -36,6 +36,12 @@ export function ClaimBondTableData({ userBond }) {
     return prettyVestingPeriod(currentBlock, bond.bondMaturationBlock);
   };
 
+  const vestingTerm = () => {
+    const vestingBlock = parseInt(currentBlock) + parseInt(bond.vestingTerm);
+    const seconds = secondsUntilBlock(currentBlock, vestingBlock);
+    return prettifySeconds(seconds, "day");
+  };
+
   async function onRedeem({ autostake }) {
     let currentBond = bonds.find(bnd => bnd.name === bondName);
     await dispatch(redeemBond({ address, bond: currentBond, networkID: chainID, provider, autostake }));
@@ -59,16 +65,7 @@ export function ClaimBondTableData({ userBond }) {
         {isAppLoading ? <Skeleton /> : vestingPeriod()}
       </TableCell>
       <TableCell align="right">
-        <Button
-          variant="outlined"
-          color="primary"
-          disabled={isPendingTxn(pendingTransactions, "redeem_bond_" + bondName)}
-          onClick={() => onRedeem({ autostake: false })}
-        >
-          <Typography variant="h6">
-            {txnButtonTextGeneralPending(pendingTransactions, "redeem_bond_" + bondName, "Claim")}
-          </Typography>
-        </Button>
+        <Typography variant="h6">{vestingTerm()}</Typography>
       </TableCell>
     </TableRow>
   );
@@ -96,6 +93,12 @@ export function ClaimBondCardData({ userBond }) {
     return prettyVestingPeriod(currentBlock, bond.bondMaturationBlock);
   };
 
+  const vestingTerm = () => {
+    const vestingBlock = parseInt(currentBlock) + parseInt(bond.vestingTerm);
+    const seconds = secondsUntilBlock(currentBlock, vestingBlock);
+    return prettifySeconds(seconds, "day");
+  };
+
   async function onRedeem({ autostake }) {
     let currentBond = bonds.find(bnd => bnd.name === bondName);
     await dispatch(redeemBond({ address, bond: currentBond, networkID: chainID, provider, autostake }));
@@ -121,29 +124,11 @@ export function ClaimBondCardData({ userBond }) {
       </div>
 
       <div className="data-row" style={{ marginBottom: "20px" }}>
-        <Typography>Fully Vested</Typography>
+        <Typography>Days Till Vested</Typography>
         <Typography>{vestingPeriod()}</Typography>
       </div>
       <Box display="flex" justifyContent="space-around" alignItems="center" className="claim-bond-card-buttons">
-        <Button
-          variant="outlined"
-          color="primary"
-          disabled={isPendingTxn(pendingTransactions, "redeem_bond_" + bondName)}
-          onClick={() => onRedeem({ autostake: false })}
-        >
-          <Typography variant="h5">
-            {txnButtonTextGeneralPending(pendingTransactions, "redeem_bond_" + bondName, t`Claim`)}
-          </Typography>
-        </Button>
-        <Button variant="outlined" color="primary" onClick={() => onRedeem({ autostake: true })}>
-          <Typography variant="h5">
-            {txnButtonTextGeneralPending(
-              pendingTransactions,
-              "redeem_bond_" + bondName + "_autostake",
-              t`Claim and Stake`,
-            )}
-          </Typography>
-        </Button>
+        <Typography variant="h6">{vestingTerm()}</Typography>
       </Box>
     </Box>
   );

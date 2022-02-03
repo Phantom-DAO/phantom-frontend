@@ -82,7 +82,7 @@ function ClaimBonds({ activeBonds }) {
             >
               <Box>
                 <Typography variant="h3" color="textPrimary" style={{ fontWeight: "bold", marginBottom: "4px" }}>
-                  Your Bonds (1,1)
+                  Pending Bonds (1,1)
                 </Typography>
               </Box>
             </Box>
@@ -103,9 +103,9 @@ function ClaimBonds({ activeBonds }) {
                             <Trans>Pending</Trans>
                           </TableCell>
                           <TableCell align="right">
-                            <Trans>Fully Vested</Trans>
+                            <Trans>Days Till Vested</Trans>
                           </TableCell>
-                          <TableCell align="right"></TableCell>
+                          <TableCell align="right">Vesting Term</TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>

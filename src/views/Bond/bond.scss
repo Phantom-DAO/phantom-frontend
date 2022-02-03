@@ -16,7 +16,7 @@
     }
     .ohm-modal {
       max-width: 688px;
-      min-height: 605px;
+      min-height: 550px;
     }
   }
 
@@ -34,7 +34,7 @@
       opacity: 0.9;
     }
   }
-  
+
   .ohm-card {
     max-width: 803px;
     border: 1px solid rgba(255, 255, 255, 0.5);
@@ -125,4 +125,6 @@
   }
 }
 
-.web3modal-modal-lightbox { z-index: 70 !important; }
+.web3modal-modal-lightbox {
+  z-index: 70 !important;
+}

@@ -2,21 +2,12 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { t, Trans } from "@lingui/macro";
 import { formatCurrency, trim } from "../../helpers";
-import { Backdrop, Box, Fade, Grid, Paper, Tab, Tabs, Typography } from "@material-ui/core";
-import TabPanel from "../../components/TabPanel";
+import { Backdrop, Box, Fade, Grid, Paper, Typography } from "@material-ui/core";
 import BondHeader from "./BondHeader";
-import BondRedeem from "./BondRedeem";
 import BondPurchase from "./BondPurchase";
 import "./bond.scss";
 import { useWeb3Context } from "src/hooks/web3Context";
 import { Skeleton } from "@material-ui/lab";
-
-function a11yProps(index) {
-  return {
-    id: `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`,
-  };
-}
 
 function Bond({ bond }) {
   const dispatch = useDispatch();
@@ -25,7 +16,6 @@ function Bond({ bond }) {
   const [slippage, setSlippage] = useState(0.5);
   const [recipientAddress, setRecipientAddress] = useState(address);
 
-  const [view, setView] = useState(0);
   const [quantity, setQuantity] = useState();
 
   // const isBondLoading = useSelector(state => state.bonding.loading ?? true);
@@ -45,10 +35,6 @@ function Bond({ bond }) {
   useEffect(() => {
     if (address) setRecipientAddress(address);
   }, [provider, quantity, address]);
-
-  const changeView = (event, newView) => {
-    setView(newView);
-  };
 
   return (
     <Fade in={true} mountOnEnter unmountOnExit>
@@ -82,26 +68,7 @@ function Bond({ bond }) {
                   </Typography>
                 </div>
               </Box>
-
-              <Tabs
-                centered
-                value={view}
-                textColor="primary"
-                indicatorColor="primary"
-                onChange={changeView}
-                aria-label="bond tabs"
-              >
-                <Tab aria-label="bond-tab-button" label={t`Bond`} {...a11yProps(0)} />
-                <Tab aria-label="redeem-tab-button" label={t`Redeem`} {...a11yProps(1)} />
-              </Tabs>
-
-              <TabPanel value={view} index={0}>
-                <BondPurchase bond={bond} slippage={slippage} recipientAddress={recipientAddress} />
-              </TabPanel>
-
-              <TabPanel value={view} index={1}>
-                <BondRedeem bond={bond} />
-              </TabPanel>
+              <BondPurchase bond={bond} slippage={slippage} recipientAddress={recipientAddress} />
             </Paper>
           </Fade>
         </Backdrop>

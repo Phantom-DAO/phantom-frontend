@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { t, Trans } from "@lingui/macro";
 import {
   Box,
+  useTheme,
   Button,
   FormControl,
   InputAdornment,
@@ -23,6 +24,7 @@ import ConnectButton from "../../components/ConnectButton";
 
 function BondPurchase({ bond, slippage, recipientAddress }) {
   const SECONDS_TO_REFRESH = 60;
+  const theme = useTheme();
   const dispatch = useDispatch();
   const { provider, address, chainID } = useWeb3Context();
 
@@ -136,7 +138,9 @@ function BondPurchase({ bond, slippage, recipientAddress }) {
     <Box display="flex" flexDirection="column">
       <Box display="flex" justifyContent="space-around" flexWrap="wrap">
         {!address ? (
-          <ConnectButton />
+          <Box sx={{ margin: theme.spacing(6, 0) }}>
+            <ConnectButton />
+          </Box>
         ) : (
           <>
             {isAllowanceDataLoading ? (
