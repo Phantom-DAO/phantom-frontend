@@ -151,7 +151,7 @@ function Stake() {
     <div id="stake-view">
       <Zoom in={true} onEntered={() => setZoomed(true)}>
         <Paper className={`ohm-card`}>
-          <Grid container direction="column" spacing={7}>
+          <Grid container direction="column" spacing={7} style={{ marginBottom: "30px" }}>
             <Grid item>
               <Box className="card-header">
                 <Typography variant="h5">Single Stake (3, 3)</Typography>
@@ -370,7 +370,12 @@ function Stake() {
                         )}
                       </Typography>
                     </div>
-
+                    <div className="data-row">
+                      <Typography variant="body1"></Typography>
+                      <Typography variant="body4" color="textSecondary" style={{ fontStyle: "italic" }}>
+                        (includes sPHM + gPHM + fPHM)
+                      </Typography>
+                    </div>
                     <div className="data-row" style={{ paddingLeft: "10px" }}>
                       <Typography variant="body2" color="textSecondary">
                         Single Staking
