@@ -57,27 +57,20 @@ function Stake() {
   const phmBalance = useSelector(state => {
     return state.account.balances && state.account.balances.PHM;
   });
-
   const sphmBalance = useSelector(state => {
     return state.account.balances && state.account.balances.sPHM;
   });
-  const fsphmBalance = useSelector(state => {
-    return state.account.balances && state.account.balances.fsohm;
+  const gphmBalance = useSelector(state => {
+    return state.account.balances && state.account.balances.gPHM;
   });
-  const wsphmBalance = useSelector(state => {
-    return state.account.balances && state.account.balances.wsohm;
-  });
-  const wsohmAsSohm = useSelector(state => {
-    return state.account.balances && state.account.balances.wsohmAsSohm;
+  const fphmBalance = useSelector(state => {
+    return state.account.balances && state.account.balances.fPHM;
   });
   const stakeAllowance = useSelector(state => {
     return state.account.staking && state.account.staking.phmStakeAllowance;
   });
   const unstakeAllowance = useSelector(state => {
     return state.account.staking && state.account.staking.phmUnstakeAllowance;
-  });
-  const stakingRebase = useSelector(state => {
-    return state.app.stakingRebase;
   });
   const stakingAPY = useSelector(state => {
     return state.app.apy;
@@ -92,9 +85,9 @@ function Stake() {
 
   const setMax = () => {
     if (view === 0) {
-      setQuantity(phmBalance.toString());
+      setQuantity(phmBalance > 0.00009 ? phmBalance.toString() : "0");
     } else {
-      setQuantity(sphmBalance.toString());
+      setQuantity(sphmBalance > 0.00009 ? sphmBalance.toString() : "0");
     }
   };
 
@@ -121,6 +114,7 @@ function Stake() {
     }
 
     await dispatch(changeStake({ address, action, value: quantity, provider, networkID: chainID }));
+    setQuantity(0);
   };
 
   const hasAllowance = useCallback(
@@ -146,7 +140,13 @@ function Stake() {
     setView(newView);
   };
 
-  const trimmedBalance = sphmBalance.toFixed(4);
+  const trimmedBalance = Number(
+    [sphmBalance, gphmBalance * currentIndex]
+      .filter(Boolean)
+      .map(balance => Number(balance))
+      .reduce((a, b) => a + b, 0)
+      .toFixed(4),
+  );
 
   const stakingRebasePercentage = useSelector(state => state.app.nextRewardYield);
   const nextRewardValue = useSelector(state => state.account.staking.nextRewardAmount);
@@ -360,7 +360,11 @@ function Stake() {
                     <div className="data-row">
                       <Typography variant="body1">Staked Balance</Typography>
                       <Typography variant="body1">
-                        {isAppLoading ? <Skeleton width="80px" /> : <>{trimmedBalance} sPHM</>}
+                        {isAppLoading ? (
+                          <Skeleton width="80px" />
+                        ) : (
+                          <>{trim(trimmedBalance > 0.00009 ? trimmedBalance : 0, 4)} sPHM</>
+                        )}
                       </Typography>
                     </div>
 
@@ -369,7 +373,11 @@ function Stake() {
                         Single Staking
                       </Typography>
                       <Typography variant="body2" color="textSecondary">
-                        {isAppLoading ? <Skeleton width="80px" /> : <>{trim(sphmBalance, 4)} sPHM</>}
+                        {isAppLoading ? (
+                          <Skeleton width="80px" />
+                        ) : (
+                          <>{trim(sphmBalance > 0.00009 ? sphmBalance : 0, 4)} sPHM</>
+                        )}
                       </Typography>
                     </div>
 
@@ -378,7 +386,11 @@ function Stake() {
                         Wrapped Balance
                       </Typography>
                       <Typography variant="body2" color="textSecondary">
-                        {isAppLoading ? <Skeleton width="80px" /> : <>{trim(wsphmBalance, 4)} wsPHM</>}
+                        {isAppLoading ? (
+                          <Skeleton width="80px" />
+                        ) : (
+                          <>{trim(gphmBalance > 0.00009 ? gphmBalance : 0, 4)} gPHM</>
+                        )}
                       </Typography>
                     </div>
 

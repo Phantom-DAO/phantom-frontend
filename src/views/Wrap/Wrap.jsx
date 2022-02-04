@@ -107,7 +107,7 @@ const Wrap = () => {
       };
 
   const wrapButton = needsSPHMApproval ? (
-    <Button {...ctaProps} disabled={sPHMBalance < 0.009} onClick={handleApproveSPHM}>
+    <Button {...ctaProps} disabled={sPHMBalance <= 0.00009} onClick={handleApproveSPHM}>
       {sPHMApprovalLoading && (
         <Box mr={1} mt={1}>
           <CircularProgress size={22} />
@@ -116,7 +116,7 @@ const Wrap = () => {
       Approve
     </Button>
   ) : (
-    <Button {...ctaProps} disabled={sPHMBalance < 0.009} onClick={handleWrapSPHM}>
+    <Button {...ctaProps} disabled={sPHMBalance <= 0.00009} onClick={handleWrapSPHM}>
       {wrapLoading && (
         <Box mr={1} mt={1}>
           <CircularProgress size={22} />
@@ -127,7 +127,7 @@ const Wrap = () => {
   );
 
   const unwrapButton = needsGPHMApproval ? (
-    <Button {...ctaProps} disabled={gPHMBalance < 0.009} onClick={handleApproveGPHM}>
+    <Button {...ctaProps} disabled={gPHMBalance <= 0.00009} onClick={handleApproveGPHM}>
       {gPHMApprovalLoading && (
         <Box mr={1} mt={1}>
           <CircularProgress size={22} />
@@ -136,7 +136,7 @@ const Wrap = () => {
       Approve
     </Button>
   ) : (
-    <Button {...ctaProps} disabled={gPHMBalance < 0.009} onClick={handleUnwrapGPHM}>
+    <Button {...ctaProps} disabled={gPHMBalance <= 0.00009} onClick={handleUnwrapGPHM}>
       {unwrapLoading && (
         <Box mr={1} mt={1}>
           <CircularProgress size={22} />
@@ -296,8 +296,8 @@ const Wrap = () => {
                       }}
                       onClick={() => {
                         activeToken === 0
-                          ? setWrapValue(trim(sPHMBalance > 0.0009 ? sPHMBalance : 0, 3))
-                          : setUnwrapValue(trim(gPHMBalance > 0.0009 ? gPHMBalance : 0, 3));
+                          ? setWrapValue(sPHMBalance > 0.00009 ? sPHMBalance : 0)
+                          : setUnwrapValue(gPHMBalance > 0.00009 ? gPHMBalance : 0);
                       }}
                     >
                       MAX
@@ -315,8 +315,8 @@ const Wrap = () => {
                   <Typography variant="p" color="textPrimary">
                     Based on the current index of {trim(currentIndex || 1, 2)} you’ll receive{" "}
                     {activeToken === 0
-                      ? `${trim(wrapValue / currentIndex, 2)} gPHM`
-                      : `${trim(unwrapValue * currentIndex, 2)} sPHM`}
+                      ? `${trim(wrapValue / currentIndex, 4)} gPHM`
+                      : `${trim(unwrapValue * currentIndex, 4)} sPHM`}
                   </Typography>
                 </Box>
                 {CTA}
