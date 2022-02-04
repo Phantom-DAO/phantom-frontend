@@ -314,17 +314,6 @@ const Swap = () => {
             >
               Add gPHM to wallet
             </Button>
-            <Button
-              variant="outlined"
-              color="secondary"
-              size="medium"
-              style={{
-                fontSize: "16px",
-              }}
-              onClick={() => handleAddToken("aPHM")}
-            >
-              Add aPHM to wallet
-            </Button>
           </Box>
         </Box>
       </Zoom>
