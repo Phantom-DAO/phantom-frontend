@@ -130,8 +130,8 @@ export const loadAccountDetails = createAsyncThunk(
         nextRewardAmount,
       },
       wrapping: {
-        wrapAllowance: ethers.utils.formatUnits(wrapAllowance, "gwei"),
-        unwrapAllowance: ethers.utils.formatUnits(unwrapAllowance, "gwei"),
+        wrapAllowance: +wrapAllowance.toString() / 1e18,
+        unwrapAllowance: +unwrapAllowance.toString() / 1e18,
       },
     };
   },

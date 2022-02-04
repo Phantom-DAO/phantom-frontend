@@ -57,7 +57,9 @@ const Wrap = () => {
     }
 
     if (
-      ethers.utils.parseUnits(wrapValue.toString(), "ether").gt(ethers.utils.parseUnits(sPHMBalance.toString(), "gwei"))
+      ethers.utils
+        .parseUnits(wrapValue.toString(), "ether")
+        .gt(ethers.utils.parseUnits(sPHMBalance.toString(), "ether"))
     ) {
       return dispatch(error("You cannot wrap more than your sPHM balance."));
     }
@@ -76,7 +78,7 @@ const Wrap = () => {
     if (
       ethers.utils
         .parseUnits(unwrapValue.toString(), "ether")
-        .gt(ethers.utils.parseUnits(gPHMBalance.toString(), "gwei"))
+        .gt(ethers.utils.parseUnits(gPHMBalance.toString(), "ether"))
     ) {
       return dispatch(error("You cannot wrap more than your gPHM balance."));
     }
@@ -105,7 +107,7 @@ const Wrap = () => {
       };
 
   const wrapButton = needsSPHMApproval ? (
-    <Button {...ctaProps} disabled={+sPHMBalance === 0} onClick={handleApproveSPHM}>
+    <Button {...ctaProps} disabled={sPHMBalance < 0.009} onClick={handleApproveSPHM}>
       {sPHMApprovalLoading && (
         <Box mr={1} mt={1}>
           <CircularProgress size={22} />
@@ -114,7 +116,7 @@ const Wrap = () => {
       Approve
     </Button>
   ) : (
-    <Button {...ctaProps} disabled={+sPHMBalance === 0} onClick={handleWrapSPHM}>
+    <Button {...ctaProps} disabled={sPHMBalance < 0.009} onClick={handleWrapSPHM}>
       {wrapLoading && (
         <Box mr={1} mt={1}>
           <CircularProgress size={22} />
@@ -125,7 +127,7 @@ const Wrap = () => {
   );
 
   const unwrapButton = needsGPHMApproval ? (
-    <Button {...ctaProps} disabled={gPHMBalance === 0} onClick={handleApproveGPHM}>
+    <Button {...ctaProps} disabled={gPHMBalance < 0.009} onClick={handleApproveGPHM}>
       {gPHMApprovalLoading && (
         <Box mr={1} mt={1}>
           <CircularProgress size={22} />
@@ -134,7 +136,7 @@ const Wrap = () => {
       Approve
     </Button>
   ) : (
-    <Button {...ctaProps} disabled={gPHMBalance === 0} onClick={handleUnwrapGPHM}>
+    <Button {...ctaProps} disabled={gPHMBalance < 0.009} onClick={handleUnwrapGPHM}>
       {unwrapLoading && (
         <Box mr={1} mt={1}>
           <CircularProgress size={22} />
@@ -293,7 +295,9 @@ const Wrap = () => {
                         color: "white",
                       }}
                       onClick={() => {
-                        activeToken === 0 ? setWrapValue(+sPHMBalance / 1e9) : setUnwrapValue(gPHMBalance / 1e9);
+                        activeToken === 0
+                          ? setWrapValue(trim(sPHMBalance > 0.0009 ? sPHMBalance : 0, 3))
+                          : setUnwrapValue(trim(gPHMBalance > 0.0009 ? gPHMBalance : 0, 3));
                       }}
                     >
                       MAX
