@@ -35,7 +35,7 @@ export const addresses: IAddresses = {
     LQTY: "",
     REDEEM_HELPER_ADDRESS: "",
     //phm contracts
-    PHM: "0x4Ac8a70DF1366163071457c1c6c7AdB1e46E0DA4",
+    PHM: "0xF01Ed6A2b51F97BDeD9bd0Fc841c2D4B5e28BDb2",
     PhantomAdmin: "",
     PhantomAllocator: "",
     PhantomAlphaSwap: "0xAD86f0841F3905BbbE28D5fEeCF992C573a0Ef74",

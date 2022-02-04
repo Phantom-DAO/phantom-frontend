@@ -100,10 +100,11 @@ export const loadAccountDetails = createAsyncThunk(
 
     const { account }: any = getState();
     const { balances } = account;
-    const nextRewardAmount =
-      (+rewardYield.toString() *
-        (+balances.sPHM + +balances.gPHM * +scalingFactor.toString() + +balances.fPHM * +scalingFactor.toString())) /
-      1e18;
+    const sPHMBalance = Number(balances.sPHM.toString());
+    const gPHMAsSPHM = (Number(balances.gPHM.toString()) / 1e18) * Number(scalingFactor.toString());
+    const fPHMAsSPHM = (Number(balances.fPHM.toString()) / 1e18) * Number(scalingFactor.toString());
+    const stakedBalance = sPHMBalance + gPHMAsSPHM + fPHMAsSPHM;
+    const nextRewardAmount = (rewardYield / 1e18) * stakedBalance;
 
     const auctionContract = new ethers.Contract(addresses[networkID].PhantomAuction as string, AuctionAbi, provider);
     const sPHM = new ethers.Contract(addresses[networkID].sPHM as string, ierc20Abi, provider);
@@ -128,6 +129,7 @@ export const loadAccountDetails = createAsyncThunk(
         phmStakeAllowance: bnToNum(phmStakeAllowance) / Math.pow(10, 18),
         phmUnstakeAllowance: bnToNum(phmUnstakeAllowance) / Math.pow(10, 18),
         nextRewardAmount,
+        stakedBalance,
       },
       wrapping: {
         wrapAllowance: +wrapAllowance.toString() / 1e18,
