@@ -129,6 +129,16 @@
       }
     }
   }
+  .gov {
+    display: block;
+    padding: unset;
+    margin-bottom: 24px;
+  }
+}
+
+.gov-item {
+  display: flex;
+  justify-content: flex-start;
 }
 
 .social-row {

@@ -1,18 +1,21 @@
-import { ethers, Contract } from "ethers";
-import { addresses } from "../constants";
-import { abi as OlympusStakingv2ABI } from "../abi/OlympusStakingv2.json";
-import PhantomStorageAbi from "../abi/PhantomStorage.json";
-import { abi as sOHMv2 } from "../abi/sOhmv2.json";
-import { setAll, getTokenPrice, getMarketPrice } from "../helpers";
-import apollo from "../lib/apolloClient.js";
-import { createSlice, createSelector, createAsyncThunk } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
+import { Contract, ethers } from "ethers";
 import { RootState } from "src/store";
+import { IERC20, SPHM } from "src/typechain";
+import { abi as ierc20Abi } from "../abi/IERC20.json";
+import PhantomStorageAbi from "../abi/PhantomStorage.json";
+import { abi as sPHMABI } from "../abi/sPHM.json";
+import { addresses } from "../constants";
+import { getMarketPrice, getTokenPrice, setAll } from "../helpers";
 import { IBaseAsyncThunk } from "./interfaces";
 
 const initialState = {
   phantomTreasuryAddress: "",
   loading: false,
   loadingMarketPrice: false,
+  apy: "",
+  tvl: "",
+  fiveDayRate: "",
 };
 
 /**
@@ -61,36 +64,33 @@ export const loadAppDetails = createAsyncThunk(
       loadTreasuryAddress({ networkID, provider }),
     ]);
 
-    // //TODO: replace with PhantomStaking and ABI
-    // const stakingContract = new ethers.Contract(
-    //   addresses[networkID].STAKING_ADDRESS as string,
-    //   OlympusStakingv2ABI,
-    //   provider,
-    // ) as OlympusStakingv2;
+    const sPHMContract = new ethers.Contract(addresses[networkID].sPHM as string, sPHMABI, provider) as SPHM;
+    const gPHMContract = new ethers.Contract(addresses[networkID].gPHM as string, ierc20Abi, provider) as IERC20;
+    const fPHMContract = new ethers.Contract(addresses[networkID].fPHM as string, ierc20Abi, provider) as IERC20;
+    const PHMContract = new ethers.Contract(addresses[networkID].PHM as string, ierc20Abi, provider) as IERC20;
 
-    // //TODO: replace with sPHMto and ABI
-    // const sohmMainContract = new ethers.Contract(
-    //   addresses[networkID].SOHM_ADDRESS as string,
-    //   sOHMv2,
-    //   provider,
-    // ) as SOhmv2;
+    // APY
 
-    // Calculating staking
-    // const epoch = await stakingContract.epoch();
-    // const stakingReward = epoch.distribute;
-    // const circ = await sohmMainContract.circulatingSupply();
-    // const stakingRebase = Number(stakingReward.toString()) / Number(circ.toString());
-    // const fiveDayRate = Math.pow(1 + stakingRebase, 5 * 3) - 1;
-    // const stakingAPY = Math.pow(1 + stakingRebase, 365 * 3) - 1;
+    const [apy, index, rewardYield, periodsPerYear] = await Promise.all([
+      sPHMContract.apy(),
+      sPHMContract.scalingFactor(),
+      sPHMContract.rewardYield(),
+      sPHMContract.periodsPerYear(),
+    ]);
 
-    // Current index
-    const currentIndex = 2;
+    // Five day rate
+    // Math.pow(1 + sPHM.rewardYield(), 5 * sPHM.periodsPerYear() / 365) - 1
+    const nextRewardMult = +rewardYield.toString() / 1e18;
+    const rebasesPer5days = 5 * (+periodsPerYear.toString() / 365);
+    const fiveDayRate = Math.pow(1 + nextRewardMult, rebasesPer5days) - 1;
 
     return {
-      currentIndex: ethers.utils.formatUnits(currentIndex, "gwei"),
+      currentIndex: +index.toString() / 1e18,
       currentBlock,
       phantomTreasuryAddress,
-      // fiveDayRate,
+      apy: +apy.toString() / 1e16,
+      nextRewardYield: +rewardYield.toString() / 1e16,
+      fiveDayRate: fiveDayRate * 100,
       // stakingAPY,
       // stakingTVL,
       // stakingRebase,
