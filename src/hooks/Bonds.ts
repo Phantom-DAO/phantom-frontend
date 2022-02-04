@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import allBondTypesMap from "src/helpers/AllBonds";
+import allBondTypesMap, { allBonds } from "src/helpers/AllBonds";
 import { IUserBondDetails } from "src/slices/AccountSlice";
 import { Bond } from "src/lib/Bond";
 import { IBondDetails } from "src/slices/BondSlice";

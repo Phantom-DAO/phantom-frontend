@@ -6,6 +6,7 @@ import PhantomAdminABI from "../abi/PhantomAdmin.json";
 import PhantomStorageABI from "../abi/PhantomStorage.json";
 import { abi as PhantomFinanceABI } from "../abi/PhantomFinance.json";
 import { abi as PhantomBondPricingABI } from "../abi/PhantomBondPricing.json";
+import { abi as PhantomBondingABI } from "../abi/PhantomBonding.json";
 
 export class BondHelper {
   private readonly networkID: number;
@@ -30,6 +31,10 @@ export class BondHelper {
 
   private financeABIContract() {
     return new ethers.Contract(addresses[this.networkID].PhantomFinance, PhantomFinanceABI, this.provider);
+  }
+
+  private bondingContract() {
+    return new ethers.Contract(addresses[this.networkID].PhantomBonding, PhantomBondingABI, this.provider);
   }
 
   static bondTypeStrToBytes(bondType: string) {
@@ -64,6 +69,10 @@ export class BondHelper {
 
   bond(amount: number, tokenAddr: string, bondType: string) {
     return this.financeABIContract().bond(amount, tokenAddr, BondHelper.bondTypeStrToBytes(bondType));
+  }
+
+  redeemAllBonds(inUser: string, autostake: boolean) {
+    return this.bondingContract().redeemBonds(inUser, autostake);
   }
 
   // User Functions

@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { t, Trans } from "@lingui/macro";
 import { prettifySeconds, secondsUntilBlock, shorten, trim, prettyVestingPeriod } from "../../helpers";
-import { redeemBond } from "../../slices/BondSlice";
 import BondLogo from "../../components/BondLogo";
 import { Box, Button, Link, Paper, Typography, TableRow, TableCell, SvgIcon, Slide } from "@material-ui/core";
 import { ReactComponent as ArrowUp } from "../../assets/icons/arrow-up.svg";
@@ -41,11 +40,6 @@ export function ClaimBondTableData({ userBond }) {
     const seconds = secondsUntilBlock(currentBlock, vestingBlock);
     return prettifySeconds(seconds, "day");
   };
-
-  async function onRedeem({ autostake }) {
-    let currentBond = bonds.find(bnd => bnd.name === bondName);
-    await dispatch(redeemBond({ address, bond: currentBond, networkID: chainID, provider, autostake }));
-  }
 
   return (
     <TableRow id={`${bondName}--claim`}>
@@ -98,11 +92,6 @@ export function ClaimBondCardData({ userBond }) {
     const seconds = secondsUntilBlock(currentBlock, vestingBlock);
     return prettifySeconds(seconds, "day");
   };
-
-  async function onRedeem({ autostake }) {
-    let currentBond = bonds.find(bnd => bnd.name === bondName);
-    await dispatch(redeemBond({ address, bond: currentBond, networkID: chainID, provider, autostake }));
-  }
 
   return (
     <Box id={`${bondName}--claim`} className="claim-bond-data-card bond-data-card" style={{ marginBottom: "30px" }}>

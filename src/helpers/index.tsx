@@ -29,7 +29,12 @@ export async function getMarketPrice({ networkID, provider }: IBaseAsyncThunk) {
  * @param tokenId STRING taken from https://www.coingecko.com/api/documentations/v3#/coins/get_coins_list
  * @returns INTEGER usd value
  */
-export async function getTokenPrice(networkID: number, provider: StaticJsonRpcProvider | JsonRpcSigner, tokenAddr: string, amount: number) {
+export async function getTokenPrice(
+  networkID: number,
+  provider: StaticJsonRpcProvider | JsonRpcSigner,
+  tokenAddr: string,
+  amount: number,
+) {
   let tokenPrice: number;
   const bondHelper = new BondHelper(networkID, provider);
 

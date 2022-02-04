@@ -43,7 +43,10 @@ export const changeApproval = createAsyncThunk(
     }
 
     try {
-      approveTx = await reserveContract.approve(treasuryAddr, ethers.utils.parseUnits("1000000000", "ether").toString());
+      approveTx = await reserveContract.approve(
+        treasuryAddr,
+        ethers.utils.parseUnits("1000000000", "ether").toString(),
+      );
       dispatch(
         fetchPendingTxns({
           txnHash: approveTx.hash,
@@ -78,7 +81,10 @@ export interface IBondDetails {
 
 export const calcBondDetails = createAsyncThunk(
   "bonding/calcBondDetails",
-  async ({ bond, bondType, value, provider, networkID }: ICalcBondDetailsAsyncThunk, { dispatch }): Promise<IBondDetails> => {
+  async (
+    { bond, bondType, value, provider, networkID }: ICalcBondDetailsAsyncThunk,
+    { dispatch },
+  ): Promise<IBondDetails> => {
     const bondHelper = new BondHelper(networkID, provider);
 
     let bondPrice = BigNumber.from(0),
@@ -188,50 +194,6 @@ export const bondAsset = createAsyncThunk(
   },
 );
 
-export const redeemBond = createAsyncThunk(
-  "bonding/redeemBond",
-  async ({ address, bond, networkID, provider, autostake }: IRedeemBondAsyncThunk, { dispatch }) => {
-    if (!provider) {
-      dispatch(error("Please connect your wallet!"));
-      return;
-    }
-
-    const signer = provider.getSigner();
-    const bondContract = bond.getContractForBond(networkID, signer);
-
-    let redeemTx;
-    let uaData = {
-      address: address,
-      type: "Redeem",
-      bondName: bond.displayName,
-      autoStake: autostake,
-      approved: true,
-      txHash: "",
-    };
-    try {
-      redeemTx = await bondContract.redeem(address, autostake === true);
-      const pendingTxnType = "redeem_bond_" + bond + (autostake === true ? "_autostake" : "");
-      uaData.txHash = redeemTx.hash;
-      dispatch(
-        fetchPendingTxns({ txnHash: redeemTx.hash, text: "Redeeming " + bond.displayName, type: pendingTxnType }),
-      );
-
-      await redeemTx.wait();
-      await dispatch(calculateUserBondDetails({ address, bond, networkID, provider }));
-
-      dispatch(getBalances({ address, networkID, provider }));
-    } catch (e: unknown) {
-      uaData.approved = false;
-      dispatch(error((e as IJsonRPCError).message));
-    } finally {
-      if (redeemTx) {
-        segmentUA(uaData);
-        dispatch(clearPendingTxn(redeemTx.hash));
-      }
-    }
-  },
-);
-
 export const redeemAllBonds = createAsyncThunk(
   "bonding/redeemAllBonds",
   async ({ bonds, address, networkID, provider, autostake }: IRedeemAllBondsAsyncThunk, { dispatch }) => {
@@ -239,22 +201,17 @@ export const redeemAllBonds = createAsyncThunk(
       dispatch(error("Please connect your wallet!"));
       return;
     }
-
-    const signer = provider.getSigner();
-    const redeemHelperContract = contractForRedeemHelper({ networkID, provider: signer });
-
+    const bondHelper = new BondHelper(networkID, provider);
     let redeemAllTx;
-
     try {
-      redeemAllTx = await redeemHelperContract.redeemAll(address, autostake);
+      redeemAllTx = await bondHelper.redeemAllBonds(address, autostake);
       const pendingTxnType = "redeem_all_bonds" + (autostake === true ? "_autostake" : "");
+      if (redeemAllTx) {
+        dispatch(fetchPendingTxns({ txnHash: redeemAllTx.hash, text: "Redeeming All Bonds", type: pendingTxnType }));
+        await redeemAllTx.wait();
+      }
 
-      await dispatch(
-        fetchPendingTxns({ txnHash: redeemAllTx.hash, text: "Redeeming All Bonds", type: pendingTxnType }),
-      );
-
-      await redeemAllTx.wait();
-
+      // @TODO: provide nonce
       bonds &&
         bonds.forEach(async bond => {
           dispatch(calculateUserBondDetails({ address, bond, networkID, provider }));

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { t, Trans } from "@lingui/macro";
 import { ClaimBondTableData, ClaimBondCardData } from "./ClaimRow";
 import { txnButtonText, isPendingTxn, txnButtonTextGeneralPending } from "src/slices/PendingTxnsSlice";
-import { redeemAllBonds, redeemBond } from "src/slices/BondSlice";
+import { redeemAllBonds } from "src/slices/BondSlice";
 import { calculateUserBondDetails } from "src/slices/AccountSlice";
 import CardHeader from "../../components/CardHeader/CardHeader";
 import { useWeb3Context } from "src/hooks/web3Context";
@@ -50,11 +50,7 @@ function ClaimBonds({ activeBonds }) {
   };
 
   const onRedeemAll = async ({ autostake }) => {
-    console.log("redeeming all bonds");
-
     await dispatch(redeemAllBonds({ address, bonds, networkID: chainID, provider, autostake }));
-
-    console.log("redeem all complete");
   };
 
   useEffect(() => {
@@ -125,7 +121,7 @@ function ClaimBonds({ activeBonds }) {
                   justifyContent="center"
                   className={`global-claim-buttons ${isSmallScreen ? "small" : ""}`}
                 >
-                  {numberOfBonds > 1 && (
+                  {numberOfBonds > 0 && (
                     <>
                       <Button
                         variant="contained"

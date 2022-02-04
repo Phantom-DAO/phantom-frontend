@@ -139,7 +139,7 @@ function NavContent() {
               </Link> */}
 
               <Link
-                disabled
+                // disabled
                 component={NavLink}
                 id="bond-nav"
                 to="/bonds"

@@ -175,8 +175,6 @@ export const calculateUserBondDetails = createAsyncThunk(
     const balanceVal = ethers.utils.formatEther(balance);
     // balanceVal should NOT be converted to a number. it loses decimal precision
 
-
-
     return {
       bond: bond.name,
       displayName: bond.displayName,
