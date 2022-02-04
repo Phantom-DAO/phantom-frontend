@@ -146,13 +146,7 @@ function Stake() {
     setView(newView);
   };
 
-  const trimmedBalance = Number(
-    [sphmBalance, fsphmBalance, wsohmAsSohm]
-      .filter(Boolean)
-      .map(balance => Number(balance))
-      .reduce((a, b) => a + b, 0)
-      .toFixed(4),
-  );
+  const trimmedBalance = sphmBalance.toFixed(4);
 
   const stakingRebasePercentage = useSelector(state => state.app.nextRewardYield);
   const nextRewardValue = useSelector(state => state.account.staking.nextRewardAmount);
