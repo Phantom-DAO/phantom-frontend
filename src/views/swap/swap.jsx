@@ -24,8 +24,6 @@ import { Skeleton } from "@material-ui/lab";
 import { getOhmTokenImage, getTokenImage, trim } from "../../helpers";
 import { ReactComponent as APHMToPHM } from "../../assets/icons/aphm-to-phm.svg";
 import { ReactComponent as FPHMToGPHM } from "../../assets/icons/fphm-to-gphm.svg";
-import { ReactComponent as FRAXToAPHM } from "../../assets/icons/frax-to-aphm.svg";
-import FRAXTOAPHM from "../../assets/icons/frax-to-aphm.png";
 import { swapFPHMToGPHM, swapAPHMToPHM, approveAPHM, loadSwapBalances } from "../../slices/SwapSlice";
 import MobileCard from "./MobileCard";
 import { addresses } from "../../constants";
@@ -109,8 +107,6 @@ const Swap = () => {
   const fPHMBalanceWei = ethers.utils.parseUnits(fPHMBalance.toString(), "wei");
   const approveOrSwapFPHM = fPHMAllowanceWei.gte(fPHMBalanceWei) && +fPHMBalance > 0 ? "swap" : "approve";
 
-  const fraxAllowanceWei = ethers.utils.parseUnits(fraxAllowance.toString(), "wei");
-  const remainingAllotmentWei = ethers.utils.parseUnits(remainingAllotment.toString(), "wei");
   return (
     <div id="swap-view">
       <Zoom in={true}>
