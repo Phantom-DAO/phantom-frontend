@@ -7,7 +7,7 @@ import { abi as PhantomStakingABI } from "../abi/PhantomStaking.json";
 import { abi as PhantomFinanceABI } from "../abi/PhantomFinance.json";
 import { clearPendingTxn, fetchPendingTxns, getStakingTypeText } from "./PendingTxnsSlice";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { fetchAccountSuccess, getBalances } from "./AccountSlice";
+import { fetchAccountSuccess, getBalances, loadAccountDetails } from "./AccountSlice";
 import { error, info } from "../slices/MessagesSlice";
 import { IActionValueAsyncThunk, IChangeApprovalAsyncThunk, IJsonRPCError } from "./interfaces";
 import { segmentUA } from "../helpers/userAnalyticHelpers";
@@ -104,14 +104,7 @@ export const changeApproval = createAsyncThunk(
     stakeAllowance = await phmContract.allowance(address, treasuryAddress);
     unstakeAllowance = await sphmContract.allowance(address, treasuryAddress);
 
-    return dispatch(
-      fetchAccountSuccess({
-        staking: {
-          ohmStakeAllowance: +stakeAllowance,
-          ohmUnstakeAllowance: +unstakeAllowance,
-        },
-      }),
-    );
+    return dispatch(loadAccountDetails({ address, networkID, provider }));
   },
 );
 
@@ -166,6 +159,6 @@ export const changeStake = createAsyncThunk(
         dispatch(clearPendingTxn(stakeTx.hash));
       }
     }
-    dispatch(getBalances({ address, networkID, provider }));
+    dispatch(loadAccountDetails({ address, networkID, provider }));
   },
 );
