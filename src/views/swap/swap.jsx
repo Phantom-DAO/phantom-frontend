@@ -147,8 +147,7 @@ const Swap = () => {
                   <MobileCard
                     icon={<APHMToPHM />}
                     swapText={"aPHM to PHM"}
-                    // balance={loadingBalance(aPHMBalance)}
-                    balance={0} // disable swap temporarily
+                    balance={loadingBalance(+aPHMBalance)}
                     unlocked={loadingBalance(trim(+aPHMBalance / 1e18, 2))}
                     buttonLabel={approveOrSwapAPHM === "approve" ? "Approve" : "Swap"}
                     loading={approveOrSwapAPHM === "approve" ? approveAPHMLoading : APHMToPHMLoading}
@@ -206,8 +205,7 @@ const Swap = () => {
                               variant="outlined"
                               color="primary"
                               size="small"
-                              // disabled={+aPHMBalance === 0}
-                              disabled={true}
+                              disabled={+aPHMBalance === 0}
                               onClick={handleSwapAPHM}
                             >
                               {APHMToPHMLoading && (
@@ -222,8 +220,7 @@ const Swap = () => {
                               variant="outlined"
                               color="primary"
                               size="small"
-                              // disabled={+aPHMBalance === 0}
-                              disabled={true}
+                              disabled={+aPHMBalance === 0}
                               onClick={handleApproveAPHM}
                             >
                               {approveAPHMLoading && (
