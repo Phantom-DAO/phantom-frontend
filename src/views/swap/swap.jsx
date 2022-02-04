@@ -26,12 +26,7 @@ import { ReactComponent as APHMToPHM } from "../../assets/icons/aphm-to-phm.svg"
 import { ReactComponent as FPHMToGPHM } from "../../assets/icons/fphm-to-gphm.svg";
 import { ReactComponent as FRAXToAPHM } from "../../assets/icons/frax-to-aphm.svg";
 import FRAXTOAPHM from "../../assets/icons/frax-to-aphm.png";
-import {
-  swapFPHMToGPHM,
-  swapAPHMToPHM,
-  approveAPHM,
-  loadSwapBalances,
-} from "../../slices/SwapSlice";
+import {swapFPHMToGPHM, swapAPHMToPHM, approveAPHM, loadSwapBalances } from "../../slices/SwapSlice";
 import MobileCard from "./MobileCard";
 import { addresses } from "../../constants";
 import "./swap.scss";
