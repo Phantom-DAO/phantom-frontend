@@ -72,6 +72,9 @@ function Stake() {
   const unstakeAllowance = useSelector(state => {
     return state.account.staking && state.account.staking.phmUnstakeAllowance;
   });
+  const stakedBalance = useSelector(state => {
+    return state.account.staking && state.account.staking.stakedBalance;
+  });
   const stakingAPY = useSelector(state => {
     return state.app.apy;
   });
@@ -140,14 +143,6 @@ function Stake() {
     setView(newView);
   };
 
-  const trimmedBalance = Number(
-    [sphmBalance, gphmBalance * currentIndex]
-      .filter(Boolean)
-      .map(balance => Number(balance))
-      .reduce((a, b) => a + b, 0)
-      .toFixed(4),
-  );
-
   const stakingRebasePercentage = useSelector(state => state.app.nextRewardYield);
   const nextRewardValue = useSelector(state => state.account.staking.nextRewardAmount);
   const fiveDayRate = useSelector(state => state.app.fiveDayRate);
@@ -166,8 +161,8 @@ function Stake() {
             </Grid>
             <Grid item>
               <div className="stake-top-metrics">
-                <Grid container spacing={2} alignItems="flex-end">
-                  <Grid item xs={12} sm={12} md={4} lg={4}>
+                <Grid container spacing={2} alignItems="flex-end" justifyContent="space-around">
+                  {/* <Grid item xs={12} sm={12} md={4} lg={4}>
                     <div className="stake-apy">
                       <Typography variant="h5" color="textSecondary">
                         APY
@@ -180,7 +175,7 @@ function Stake() {
                         )}
                       </Typography>
                     </div>
-                  </Grid>
+                  </Grid> */}
 
                   <Grid item xs={12} sm={12} md={4} lg={4}>
                     <div className="stake-tvl">
@@ -196,7 +191,7 @@ function Stake() {
                             minimumFractionDigits: 0,
                           }).format(stakingTVL)
                         ) : (
-                          <Skeleton width="150px" />
+                          <Skeleton width="150px" style={{ margin: "auto" }} />
                         )}
                       </Typography>
                     </div>
@@ -208,7 +203,11 @@ function Stake() {
                         Current Index
                       </Typography>
                       <Typography variant="h4">
-                        {currentIndex ? <>{trim(currentIndex, 1)} PHM</> : <Skeleton width="150px" />}
+                        {currentIndex ? (
+                          <>{trim(currentIndex, 1)} PHM</>
+                        ) : (
+                          <Skeleton width="150px" style={{ margin: "auto" }} />
+                        )}
                       </Typography>
                     </div>
                   </Grid>
@@ -353,7 +352,11 @@ function Stake() {
                     <div className="data-row">
                       <Typography variant="body1">Unstaked Balance</Typography>
                       <Typography variant="body1">
-                        {isAppLoading ? <Skeleton width="80px" /> : <>{trim(phmBalance, 4)} PHM</>}
+                        {isAppLoading ? (
+                          <Skeleton width="80px" />
+                        ) : (
+                          <>{trim(phmBalance > 0.00009 ? phmBalance : 0, 4)} PHM</>
+                        )}
                       </Typography>
                     </div>
 
@@ -363,7 +366,7 @@ function Stake() {
                         {isAppLoading ? (
                           <Skeleton width="80px" />
                         ) : (
-                          <>{trim(trimmedBalance > 0.00009 ? trimmedBalance : 0, 4)} sPHM</>
+                          <>{trim(stakedBalance > 0.00009 ? stakedBalance : 0, 4)} sPHM</>
                         )}
                       </Typography>
                     </div>
@@ -406,13 +409,13 @@ function Stake() {
                     <div className="data-row">
                       <Typography variant="subtitle1">Next Reward Yield</Typography>
                       <Typography variant="subtitle1">
-                        {isAppLoading ? <Skeleton width="80px" /> : <>{stakingRebasePercentage?.toFixed(2)}%</>}
+                        {isAppLoading ? <Skeleton width="80px" /> : <>{trim(stakingRebasePercentage, 2)}%</>}
                       </Typography>
                     </div>
                     <div className="data-row">
                       <Typography variant="subtitle1">ROI (5-Day Rate)</Typography>
                       <Typography variant="subtitle1">
-                        {isAppLoading ? <Skeleton width="80px" /> : <>{(fiveDayRate || 0).toFixed(2)}%</>}
+                        {isAppLoading ? <Skeleton width="80px" /> : <>{trim(fiveDayRate, 2)}%</>}
                       </Typography>
                     </div>
                   </div>
