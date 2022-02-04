@@ -1,16 +1,13 @@
-import { ethers, Contract } from "ethers";
-import { addresses } from "../constants";
-import { abi as OlympusStakingv2ABI } from "../abi/OlympusStakingv2.json";
-import PhantomStorageAbi from "../abi/PhantomStorage.json";
-import { abi as sOHMv2 } from "../abi/sOhmv2.json";
-import { setAll, getTokenPrice, getMarketPrice } from "../helpers";
-import apollo from "../lib/apolloClient.js";
-import { createSlice, createSelector, createAsyncThunk } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
+import { Contract, ethers } from "ethers";
 import { RootState } from "src/store";
-import { IBaseAsyncThunk } from "./interfaces";
-import { abi as ierc20Abi } from "../abi/IERC20.json";
-import { abi as sPHMABI } from "../abi/sPHM.json";
 import { IERC20, SPHM } from "src/typechain";
+import { abi as ierc20Abi } from "../abi/IERC20.json";
+import PhantomStorageAbi from "../abi/PhantomStorage.json";
+import { abi as sPHMABI } from "../abi/sPHM.json";
+import { addresses } from "../constants";
+import { getMarketPrice, getTokenPrice, setAll } from "../helpers";
+import { IBaseAsyncThunk } from "./interfaces";
 
 const initialState = {
   phantomTreasuryAddress: "",

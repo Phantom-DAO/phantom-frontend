@@ -55,11 +55,11 @@ function Stake() {
     return state.app.currentIndex;
   });
   const phmBalance = useSelector(state => {
-    return state.account.balances && state.account.balances.phm;
+    return state.account.balances && state.account.balances.PHM;
   });
 
   const sphmBalance = useSelector(state => {
-    return state.account.balances && state.account.balances.sphm;
+    return state.account.balances && state.account.balances.sPHM;
   });
   const fsphmBalance = useSelector(state => {
     return state.account.balances && state.account.balances.fsohm;

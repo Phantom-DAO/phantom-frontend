@@ -78,7 +78,7 @@ export const addresses: IAddresses = {
     PhantomAdmin: "",
     PhantomAllocator: "",
     PhantomAlphaSwap: "0xb15bef2074ED8b5F6CD860BDF6922C261fc574b2",
-    PhantomBonding: "",
+    PhantomBonding: "0x39fA28D02dbB7C42C0d98c5613C9dC228D7eF297",
     PhantomDexRouter: "0x7AB9Dea2176C382B5C8699Ef23f3B25bEb506981",
     PhantomExecutor: "0x87c7b0A0368D949905EC862940201860a570d599",
     PhantomFinance: "0xBF67b14a5f74C98ed36EB1BeB5916a74f5938B4e",

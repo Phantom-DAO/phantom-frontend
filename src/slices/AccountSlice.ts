@@ -3,27 +3,25 @@ import { addresses } from "../constants";
 import { abi as ierc20Abi } from "../abi/IERC20.json";
 import { abi as sPHMABI } from "../abi/sPHM.json";
 import { abi as AuctionAbi } from "../abi/auction.json";
-import { abi as sOHMv2 } from "../abi/sOhmv2.json";
-import { abi as fuseProxy } from "../abi/FuseProxy.json";
-import { abi as wsOHM } from "../abi/wsOHM.json";
-
 import { bnToNum, setAll } from "../helpers";
-
 import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "src/store";
 import { IBaseAddressAsyncThunk, ICalcUserBondDetailsAsyncThunk } from "./interfaces";
+
 import { FuseProxy, IERC20, SOhmv2, WsOHM } from "src/typechain";
 import { getOrLoadTreasuryAddress } from "./AppSlice";
 import { SPHM } from "src/typechain/SPHM";
 
 interface IUserBalances {
   balances: {
-    phm: string;
-    sphm: string;
-    fphm: string;
-    gphm: string;
-    wsohm: string;
-    wsohmAsSohm: string;
+    frax: number;
+    PHM: string;
+    sPHM: string;
+    fPHM: string;
+    fsphm: string;
+    gPHM: string;
+    wsphm: string;
+    wsphmAsSphm: string;
     pool: string;
   };
 }
@@ -32,6 +30,7 @@ export const getBalances = createAsyncThunk(
   "account/getBalances",
   async ({ address, networkID, provider }: IBaseAddressAsyncThunk) => {
     const fraxContract = new ethers.Contract(addresses[networkID].frax as string, ierc20Abi, provider) as IERC20;
+
     const sPHMContract = new ethers.Contract(addresses[networkID].sPHM as string, sPHMABI, provider) as SPHM;
     const gPHMContract = new ethers.Contract(addresses[networkID].gPHM as string, ierc20Abi, provider) as IERC20;
     const fPHMContract = new ethers.Contract(addresses[networkID].fPHM as string, ierc20Abi, provider) as IERC20;
@@ -49,10 +48,10 @@ export const getBalances = createAsyncThunk(
     return {
       balances: {
         frax: Number(fraxBalance.toString()) / Math.pow(10, 18),
-        phm: Number(PHMBalance.toString()) / Math.pow(10, 18),
-        sphm: Number(sPHMBalance.toString()) / Math.pow(10, 18),
-        gphm: Number(gPHMBalance.toString()) / Math.pow(10, 18),
-        fphm: Number(fPHMBalance.toString()) / Math.pow(10, 18),
+        PHM: Number(PHMBalance.toString()) / Math.pow(10, 18),
+        sPHM: Number(sPHMBalance.toString()) / Math.pow(10, 18),
+        gPHM: Number(gPHMBalance.toString()) / Math.pow(10, 18),
+        fPHM: Number(fPHMBalance.toString()) / Math.pow(10, 18),
       },
     };
   },
@@ -64,9 +63,13 @@ interface IUserAccountDetails {
     phmUnstakeAllowance: number;
     nextRewardAmount: number;
   };
+  auction: {
+    fraxAllowance: number;
+    tokensClaimable: number;
+  };
   wrapping: {
-    sohmWrap: number;
-    wsohmUnwrap: number;
+    wrapAllowance: number;
+    unwrapAllowance: number;
   };
 }
 
@@ -78,13 +81,8 @@ export const loadAccountDetails = createAsyncThunk(
     const sphmContract = new ethers.Contract(addresses[networkID].sPHM, sPHMABI, provider) as SPHM;
     const treasuryAddress = await getOrLoadTreasuryAddress({ networkID, provider }, { dispatch, getState });
 
-    const fraxAllowance = await fraxContract.allowance(address, addresses[networkID].PhantomAuction);
-
     const phmStakeAllowance = await phmContract.allowance(address, treasuryAddress);
     const phmUnstakeAllowance = await sphmContract.allowance(address, treasuryAddress);
-
-    const auctionContract = new ethers.Contract(addresses[networkID].PhantomAuction as string, AuctionAbi, provider);
-    const tokensClaimable = await auctionContract.tokensClaimable(address);
 
     await dispatch(getBalances({ address, networkID, provider }));
 
@@ -104,8 +102,22 @@ export const loadAccountDetails = createAsyncThunk(
     const { balances } = account;
     const nextRewardAmount =
       (+rewardYield.toString() *
-        (+balances.sphm + +balances.gphm * +scalingFactor.toString() + +balances.fphm * +scalingFactor.toString())) /
+        (+balances.sPHM + +balances.gPHM * +scalingFactor.toString() + +balances.fPHM * +scalingFactor.toString())) /
       1e18;
+
+    const auctionContract = new ethers.Contract(addresses[networkID].PhantomAuction as string, AuctionAbi, provider);
+    const sPHM = new ethers.Contract(addresses[networkID].sPHM as string, ierc20Abi, provider);
+    const gPHM = new ethers.Contract(addresses[networkID].gPHM as string, ierc20Abi, provider);
+    const phantomTreasuryAddress = await getOrLoadTreasuryAddress({ networkID, provider }, { dispatch, getState });
+
+    const [fraxAllowance, tokensClaimable, wrapAllowance, unwrapAllowance] = await Promise.all([
+      fraxContract.allowance(address, addresses[networkID].PhantomAuction),
+      auctionContract.tokensClaimable(address),
+      sPHM.allowance(address, phantomTreasuryAddress),
+      gPHM.allowance(address, phantomTreasuryAddress),
+    ]);
+
+    await dispatch(getBalances({ address, networkID, provider }));
 
     return {
       auction: {
@@ -117,13 +129,10 @@ export const loadAccountDetails = createAsyncThunk(
         phmUnstakeAllowance: bnToNum(phmUnstakeAllowance) / Math.pow(10, 18),
         nextRewardAmount,
       },
-      // wrapping: {
-      //   ohmWrap: +wrapAllowance,
-      //   ohmUnwrap: +unwrapAllowance,
-      // },
-      // pooling: {
-      //   sohmPool: +poolAllowance,
-      // },
+      wrapping: {
+        wrapAllowance: ethers.utils.formatUnits(wrapAllowance, "gwei"),
+        unwrapAllowance: ethers.utils.formatUnits(unwrapAllowance, "gwei"),
+      },
     };
   },
 );
@@ -192,9 +201,11 @@ interface IAccountSlice extends IUserAccountDetails, IUserBalances {
 const initialState: IAccountSlice = {
   loading: false,
   bonds: {},
-  balances: { phm: "", sphm: "", wsphmAsSphm: "", wsphm: "", fsphm: "", pool: "" },
-  staking: { phmStakeAllowance: 0, phmUnstakeAllowance: 0 },
-  wrapping: { sohmWrap: 0, wsohmUnwrap: 0 },
+  balances: { frax: 0, phm: "", sphm: "", fphm: "", gphm: "", wsphmAsSphm: "", wsphm: "", fsphm: "", pool: "" },
+  staking: { phmStakeAllowance: 0, phmUnstakeAllowance: 0, nextRewardAmount: 0 },
+
+  auction: { fraxAllowance: 0, tokensClaimable: 0 },
+  wrapping: { wrapAllowance: 0, unwrapAllowance: 0 },
 };
 
 const accountSlice = createSlice({
