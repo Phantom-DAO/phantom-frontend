@@ -31,7 +31,7 @@ export const approveSPHM = createAsyncThunk(
     const sPHM = new Contract(addresses[networkID].sPHM as string, ierc20Abi, provider.getSigner());
     const phantomTreasuryAddress = await getOrLoadTreasuryAddress({ networkID, provider }, { dispatch, getState });
     try {
-      const tx = await sPHM.approve(phantomTreasuryAddress, utils.parseUnits(value.toString(), "gwei").toString());
+      const tx = await sPHM.approve(phantomTreasuryAddress, utils.parseUnits(value.toString(), "ether").toString());
       if (tx) {
         await tx.wait();
       }
@@ -60,8 +60,11 @@ export const wrapSPHM = createAsyncThunk(
       dispatch(error(err));
       return { error: err };
     }
-    // reload sPHM/gPHM balances
-    await dispatch(getBalances({ address, networkID, provider })).unwrap();
+    // reload sPHM/gPHM balances + allowances
+    await Promise.all([
+      dispatch(getBalances({ address, networkID, provider })).unwrap(),
+      dispatch(loadAccountDetails({ address, networkID, provider })).unwrap(),
+    ]);
     dispatch(success("You have wrapped sPHM successfully."));
   },
 );
@@ -72,7 +75,7 @@ export const approveGPHM = createAsyncThunk(
     const gPHM = new Contract(addresses[networkID].gPHM as string, ierc20Abi, provider.getSigner());
     const phantomTreasuryAddress = await getOrLoadTreasuryAddress({ networkID, provider }, { dispatch, getState });
     try {
-      const tx = await gPHM.approve(phantomTreasuryAddress, utils.parseUnits(value.toString(), "gwei").toString());
+      const tx = await gPHM.approve(phantomTreasuryAddress, utils.parseUnits(value.toString(), "ether").toString());
       if (tx) {
         await tx.wait();
       }
@@ -102,7 +105,11 @@ export const unwrapGPHM = createAsyncThunk(
       return { error: err };
     }
     // reload sPHM/gPHM balances
-    await dispatch(getBalances({ address, networkID, provider })).unwrap();
+    // reload sPHM/gPHM balances + allowances
+    await Promise.all([
+      dispatch(getBalances({ address, networkID, provider })).unwrap(),
+      dispatch(loadAccountDetails({ address, networkID, provider })).unwrap(),
+    ]);
     dispatch(success("You have unwrapped gPHM successfully."));
   },
 );

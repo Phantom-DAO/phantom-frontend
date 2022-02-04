@@ -3,13 +3,16 @@ import { addresses } from "../constants";
 import { abi as ierc20ABI } from "../abi/IERC20.json";
 import { abi as OlympusStakingABI } from "../abi/OlympusStakingv2.json";
 import { abi as StakingHelperABI } from "../abi/StakingHelper.json";
+import { abi as PhantomStakingABI } from "../abi/PhantomStaking.json";
+import { abi as PhantomFinanceABI } from "../abi/PhantomFinance.json";
 import { clearPendingTxn, fetchPendingTxns, getStakingTypeText } from "./PendingTxnsSlice";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { fetchAccountSuccess, getBalances } from "./AccountSlice";
+import { fetchAccountSuccess, getBalances, loadAccountDetails } from "./AccountSlice";
 import { error, info } from "../slices/MessagesSlice";
 import { IActionValueAsyncThunk, IChangeApprovalAsyncThunk, IJsonRPCError } from "./interfaces";
 import { segmentUA } from "../helpers/userAnalyticHelpers";
-import { IERC20, OlympusStakingv2, StakingHelper } from "src/typechain";
+import { IERC20, PhantomStaking, PhantomFinance } from "src/typechain";
+import { getOrLoadTreasuryAddress } from "./AppSlice";
 
 interface IUAData {
   address: string;
@@ -25,9 +28,9 @@ function alreadyApprovedToken(token: string, stakeAllowance: BigNumber, unstakeA
   let applicableAllowance = bigZero;
 
   // determine which allowance to check
-  if (token === "ohm") {
+  if (token === "phm") {
     applicableAllowance = stakeAllowance;
-  } else if (token === "sohm") {
+  } else if (token === "sphm") {
     applicableAllowance = unstakeAllowance;
   }
 
@@ -39,18 +42,20 @@ function alreadyApprovedToken(token: string, stakeAllowance: BigNumber, unstakeA
 
 export const changeApproval = createAsyncThunk(
   "stake/changeApproval",
-  async ({ token, provider, address, networkID }: IChangeApprovalAsyncThunk, { dispatch }) => {
+  async ({ token, provider, address, networkID }: IChangeApprovalAsyncThunk, { dispatch, getState }) => {
     if (!provider) {
       dispatch(error("Please connect your wallet!"));
       return;
     }
 
+    const treasuryAddress = await getOrLoadTreasuryAddress({ networkID, provider }, { dispatch, getState });
+
     const signer = provider.getSigner();
-    const ohmContract = new ethers.Contract(addresses[networkID].OHM_ADDRESS as string, ierc20ABI, signer) as IERC20;
-    const sohmContract = new ethers.Contract(addresses[networkID].SOHM_ADDRESS as string, ierc20ABI, signer) as IERC20;
+    const phmContract = new ethers.Contract(addresses[networkID].PHM as string, ierc20ABI, signer) as IERC20;
+    const sphmContract = new ethers.Contract(addresses[networkID].sPHM as string, ierc20ABI, signer) as IERC20;
     let approveTx;
-    let stakeAllowance = await ohmContract.allowance(address, addresses[networkID].STAKING_HELPER_ADDRESS);
-    let unstakeAllowance = await sohmContract.allowance(address, addresses[networkID].STAKING_ADDRESS);
+    let stakeAllowance = await phmContract.allowance(address, treasuryAddress);
+    let unstakeAllowance = await sphmContract.allowance(address, treasuryAddress);
 
     // return early if approval has already happened
     if (alreadyApprovedToken(token, stakeAllowance, unstakeAllowance)) {
@@ -66,21 +71,21 @@ export const changeApproval = createAsyncThunk(
     }
 
     try {
-      if (token === "ohm") {
+      if (token === "phm") {
         // won't run if stakeAllowance > 0
-        approveTx = await ohmContract.approve(
-          addresses[networkID].STAKING_HELPER_ADDRESS,
-          ethers.utils.parseUnits("1000000000", "gwei").toString(),
+        approveTx = await phmContract.approve(
+          treasuryAddress,
+          ethers.utils.parseUnits("1000000000", "ether").toString(),
         );
-      } else if (token === "sohm") {
-        approveTx = await sohmContract.approve(
-          addresses[networkID].STAKING_ADDRESS,
-          ethers.utils.parseUnits("1000000000", "gwei").toString(),
+      } else if (token === "sphm") {
+        approveTx = await sphmContract.approve(
+          treasuryAddress,
+          ethers.utils.parseUnits("1000000000", "ether").toString(),
         );
       }
 
-      const text = "Approve " + (token === "ohm" ? "Staking" : "Unstaking");
-      const pendingTxnType = token === "ohm" ? "approve_staking" : "approve_unstaking";
+      const text = "Approve " + (token === "phm" ? "Staking" : "Unstaking");
+      const pendingTxnType = token === "phm" ? "approve_staking" : "approve_unstaking";
       if (approveTx) {
         dispatch(fetchPendingTxns({ txnHash: approveTx.hash, text, type: pendingTxnType }));
 
@@ -96,17 +101,10 @@ export const changeApproval = createAsyncThunk(
     }
 
     // go get fresh allowances
-    stakeAllowance = await ohmContract.allowance(address, addresses[networkID].STAKING_HELPER_ADDRESS);
-    unstakeAllowance = await sohmContract.allowance(address, addresses[networkID].STAKING_ADDRESS);
+    stakeAllowance = await phmContract.allowance(address, treasuryAddress);
+    unstakeAllowance = await sphmContract.allowance(address, treasuryAddress);
 
-    return dispatch(
-      fetchAccountSuccess({
-        staking: {
-          ohmStake: +stakeAllowance,
-          ohmUnstake: +unstakeAllowance,
-        },
-      }),
-    );
+    return dispatch(loadAccountDetails({ address, networkID, provider }));
   },
 );
 
@@ -120,15 +118,10 @@ export const changeStake = createAsyncThunk(
 
     const signer = provider.getSigner();
     const staking = new ethers.Contract(
-      addresses[networkID].STAKING_ADDRESS as string,
-      OlympusStakingABI,
+      addresses[networkID].PhantomFinance as string,
+      PhantomFinanceABI,
       signer,
-    ) as OlympusStakingv2;
-    const stakingHelper = new ethers.Contract(
-      addresses[networkID].STAKING_HELPER_ADDRESS as string,
-      StakingHelperABI,
-      signer,
-    ) as StakingHelper;
+    ) as PhantomFinance;
 
     let stakeTx;
     let uaData: IUAData = {
@@ -141,10 +134,10 @@ export const changeStake = createAsyncThunk(
     try {
       if (action === "stake") {
         uaData.type = "stake";
-        stakeTx = await stakingHelper.stake(ethers.utils.parseUnits(value, "gwei"));
+        stakeTx = await staking.stake(ethers.utils.parseUnits(value, "ether").toString());
       } else {
         uaData.type = "unstake";
-        stakeTx = await staking.unstake(ethers.utils.parseUnits(value, "gwei"), true);
+        stakeTx = await staking.unstake(ethers.utils.parseUnits(value, "ether").toString());
       }
       const pendingTxnType = action === "stake" ? "staking" : "unstaking";
       uaData.txHash = stakeTx.hash;
@@ -166,6 +159,6 @@ export const changeStake = createAsyncThunk(
         dispatch(clearPendingTxn(stakeTx.hash));
       }
     }
-    dispatch(getBalances({ address, networkID, provider }));
+    dispatch(loadAccountDetails({ address, networkID, provider }));
   },
 );

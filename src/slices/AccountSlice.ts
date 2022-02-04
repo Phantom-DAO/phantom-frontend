@@ -1,19 +1,28 @@
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { addresses } from "../constants";
 import { abi as ierc20Abi } from "../abi/IERC20.json";
+import { abi as sPHMABI } from "../abi/sPHM.json";
 import { abi as AuctionAbi } from "../abi/auction.json";
 import { bnToNum, setAll } from "../helpers";
 import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "src/store";
 import { IBaseAddressAsyncThunk, ICalcUserBondDetailsAsyncThunk } from "./interfaces";
-import { IERC20 } from "src/typechain";
+
+import { FuseProxy, IERC20, SOhmv2, WsOHM } from "src/typechain";
 import { getOrLoadTreasuryAddress } from "./AppSlice";
+import { SPHM } from "src/typechain/SPHM";
 
 interface IUserBalances {
   balances: {
     frax: number;
-    sPHM: number;
-    gPHM: number;
+    PHM: string;
+    sPHM: string;
+    fPHM: string;
+    fsphm: string;
+    gPHM: string;
+    wsphm: string;
+    wsphmAsSphm: string;
+    pool: string;
   };
 }
 
@@ -21,25 +30,39 @@ export const getBalances = createAsyncThunk(
   "account/getBalances",
   async ({ address, networkID, provider }: IBaseAddressAsyncThunk) => {
     const fraxContract = new ethers.Contract(addresses[networkID].frax as string, ierc20Abi, provider) as IERC20;
-    const sPHM = new ethers.Contract(addresses[networkID].sPHM as string, ierc20Abi, provider) as IERC20;
-    const gPHM = new ethers.Contract(addresses[networkID].gPHM as string, ierc20Abi, provider) as IERC20;
-    const [fraxBalance, sPHMBalance, gPHMBalance] = await Promise.all([
+
+    const sPHMContract = new ethers.Contract(addresses[networkID].sPHM as string, sPHMABI, provider) as SPHM;
+    const gPHMContract = new ethers.Contract(addresses[networkID].gPHM as string, ierc20Abi, provider) as IERC20;
+    const fPHMContract = new ethers.Contract(addresses[networkID].fPHM as string, ierc20Abi, provider) as IERC20;
+    const PHMContract = new ethers.Contract(addresses[networkID].PHM as string, ierc20Abi, provider) as IERC20;
+
+    //TODO: refactor to multicall for less rpc bandwidth consumption
+    const [fraxBalance, sPHMBalance, fPHMBalance, gPHMBalance, PHMBalance] = await Promise.all([
       fraxContract.balanceOf(address),
-      sPHM.balanceOf(address),
-      gPHM.balanceOf(address),
+      sPHMContract.balanceOf(address),
+      fPHMContract.balanceOf(address),
+      gPHMContract.balanceOf(address),
+      PHMContract.balanceOf(address),
     ]);
 
     return {
       balances: {
-        frax: +fraxBalance.toString() / 1e18,
-        sPHM: ethers.utils.formatUnits(sPHMBalance, "gwei"),
-        gPHM: ethers.utils.formatUnits(gPHMBalance, "gwei"),
+        frax: Number(fraxBalance.toString()) / Math.pow(10, 18),
+        PHM: Number(PHMBalance.toString()) / Math.pow(10, 18),
+        sPHM: Number(sPHMBalance.toString()) / Math.pow(10, 18),
+        gPHM: Number(gPHMBalance.toString()) / Math.pow(10, 18),
+        fPHM: Number(fPHMBalance.toString()) / Math.pow(10, 18),
       },
     };
   },
 );
 
 interface IUserAccountDetails {
+  staking: {
+    phmStakeAllowance: number;
+    phmUnstakeAllowance: number;
+    nextRewardAmount: number;
+  };
   auction: {
     fraxAllowance: number;
     tokensClaimable: number;
@@ -54,6 +77,34 @@ export const loadAccountDetails = createAsyncThunk(
   "account/loadAccountDetails",
   async ({ networkID, provider, address }: IBaseAddressAsyncThunk, { dispatch, getState }) => {
     const fraxContract = new ethers.Contract(addresses[networkID].frax, ierc20Abi, provider);
+    const phmContract = new ethers.Contract(addresses[networkID].PHM, ierc20Abi, provider);
+    const sphmContract = new ethers.Contract(addresses[networkID].sPHM, sPHMABI, provider) as SPHM;
+    const treasuryAddress = await getOrLoadTreasuryAddress({ networkID, provider }, { dispatch, getState });
+
+    const phmStakeAllowance = await phmContract.allowance(address, treasuryAddress);
+    const phmUnstakeAllowance = await sphmContract.allowance(address, treasuryAddress);
+
+    await dispatch(getBalances({ address, networkID, provider }));
+
+    /*
+    Next Reward Amount (in accounts)
+      sPHM.rewardYield() * (
+        sPHM.balanceOf(user) +
+        gPHM.balanceOf(user) * sPHM.scalingFactor() +
+      	fPHM.balanceOf(user) * sPHM.scalingFactor()
+      )
+    */
+
+    const rewardYield = await sphmContract.rewardYield();
+    const scalingFactor = await sphmContract.scalingFactor();
+
+    const { account }: any = getState();
+    const { balances } = account;
+    const nextRewardAmount =
+      (+rewardYield.toString() *
+        (+balances.sPHM + +balances.gPHM * +scalingFactor.toString() + +balances.fPHM * +scalingFactor.toString())) /
+      1e18;
+
     const auctionContract = new ethers.Contract(addresses[networkID].PhantomAuction as string, AuctionAbi, provider);
     const sPHM = new ethers.Contract(addresses[networkID].sPHM as string, ierc20Abi, provider);
     const gPHM = new ethers.Contract(addresses[networkID].gPHM as string, ierc20Abi, provider);
@@ -67,14 +118,20 @@ export const loadAccountDetails = createAsyncThunk(
     ]);
 
     await dispatch(getBalances({ address, networkID, provider }));
+
     return {
       auction: {
         fraxAllowance: bnToNum(fraxAllowance) / Math.pow(10, 18),
         tokensClaimable: bnToNum(tokensClaimable) / Math.pow(10, 18),
       },
+      staking: {
+        phmStakeAllowance: bnToNum(phmStakeAllowance) / Math.pow(10, 18),
+        phmUnstakeAllowance: bnToNum(phmUnstakeAllowance) / Math.pow(10, 18),
+        nextRewardAmount,
+      },
       wrapping: {
-        wrapAllowance: ethers.utils.formatUnits(wrapAllowance, "gwei"),
-        unwrapAllowance: ethers.utils.formatUnits(unwrapAllowance, "gwei"),
+        wrapAllowance: +wrapAllowance.toString() / 1e18,
+        unwrapAllowance: +unwrapAllowance.toString() / 1e18,
       },
     };
   },
@@ -131,7 +188,7 @@ export const calculateUserBondDetails = createAsyncThunk(
       balance: balanceVal,
       interestDue,
       bondMaturationBlock,
-      pendingPayout: ethers.utils.formatUnits(pendingPayout, "gwei"),
+      pendingPayout: ethers.utils.formatUnits(pendingPayout, "ether"),
     };
   },
 );
@@ -144,7 +201,9 @@ interface IAccountSlice extends IUserAccountDetails, IUserBalances {
 const initialState: IAccountSlice = {
   loading: false,
   bonds: {},
-  balances: { frax: 0, sPHM: 0, gPHM: 0 },
+  balances: { frax: 0, phm: "", sphm: "", fphm: "", gphm: "", wsphmAsSphm: "", wsphm: "", fsphm: "", pool: "" },
+  staking: { phmStakeAllowance: 0, phmUnstakeAllowance: 0, nextRewardAmount: 0 },
+
   auction: { fraxAllowance: 0, tokensClaimable: 0 },
   wrapping: { wrapAllowance: 0, unwrapAllowance: 0 },
 };
