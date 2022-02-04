@@ -54,9 +54,6 @@ function Stake() {
   const currentIndex = useSelector(state => {
     return state.app.currentIndex;
   });
-  const fiveDayRate = useSelector(state => {
-    return state.app.fiveDayRate;
-  });
   const phmBalance = useSelector(state => {
     return state.account.balances && state.account.balances.phm;
   });
@@ -83,7 +80,7 @@ function Stake() {
     return state.app.stakingRebase;
   });
   const stakingAPY = useSelector(state => {
-    return state.app.stakingAPY;
+    return state.app.apy;
   });
   const stakingTVL = useSelector(state => {
     return state.app.stakingTVL;
@@ -95,9 +92,9 @@ function Stake() {
 
   const setMax = () => {
     if (view === 0) {
-      setQuantity(phmBalance);
+      setQuantity(phmBalance.toString());
     } else {
-      setQuantity(sphmBalance);
+      setQuantity(sphmBalance.toString());
     }
   };
 
@@ -113,16 +110,17 @@ function Stake() {
     }
 
     // 1st catch if quantity > balance
-    let gweiValue = ethers.utils.parseUnits(quantity.toString(), "gwei");
-    if (action === "stake" && gweiValue.gt(ethers.utils.parseUnits(phmBalance.toString(), "gwei"))) {
+    let gweiValue = ethers.utils.parseUnits(quantity.toString(), "ether");
+
+    if (action === "stake" && gweiValue.gt(ethers.utils.parseUnits(phmBalance.toString(), "ether"))) {
       return dispatch(error("You cannot stake more than your PHM balance."));
     }
 
-    if (action === "unstake" && gweiValue.gt(ethers.utils.parseUnits(sphmBalance.toString(), "gwei"))) {
+    if (action === "unstake" && gweiValue.gt(ethers.utils.parseUnits(sphmBalance.toString(), "ether"))) {
       return dispatch(error("You cannot unstake more than your sPHM balance."));
     }
 
-    await dispatch(changeStake({ address, action, value: quantity.toString(), provider, networkID: chainID }));
+    await dispatch(changeStake({ address, action, value: quantity, provider, networkID: chainID }));
   };
 
   const hasAllowance = useCallback(
@@ -155,9 +153,10 @@ function Stake() {
       .reduce((a, b) => a + b, 0)
       .toFixed(4),
   );
-  const trimmedStakingAPY = trim(stakingAPY * 100, 1);
-  const stakingRebasePercentage = trim(stakingRebase * 100, 4);
-  const nextRewardValue = trim((stakingRebasePercentage / 100) * trimmedBalance, 4);
+
+  const stakingRebasePercentage = useSelector(state => state.app.nextRewardYield);
+  const nextRewardValue = useSelector(state => state.account.staking.nextRewardAmount);
+  const fiveDayRate = useSelector(state => state.app.fiveDayRate);
 
   return (
     <div id="stake-view">
@@ -181,7 +180,7 @@ function Stake() {
                       </Typography>
                       <Typography variant="h4">
                         {stakingAPY ? (
-                          <>{new Intl.NumberFormat("en-US").format(trimmedStakingAPY)}%</>
+                          <>{new Intl.NumberFormat("en-US").format(stakingAPY)}%</>
                         ) : (
                           <Skeleton width="150px" />
                         )}
@@ -394,20 +393,20 @@ function Stake() {
                     <div className="data-row">
                       <Typography variant="subtitle1">Next Reward Amount</Typography>
                       <Typography variant="subtitle1">
-                        {isAppLoading ? <Skeleton width="80px" /> : <>{nextRewardValue} sPHM</>}
+                        {isAppLoading ? <Skeleton width="80px" /> : <>{nextRewardValue?.toFixed(4)} sPHM</>}
                       </Typography>
                     </div>
 
                     <div className="data-row">
                       <Typography variant="subtitle1">Next Reward Yield</Typography>
                       <Typography variant="subtitle1">
-                        {isAppLoading ? <Skeleton width="80px" /> : <>{stakingRebasePercentage}%</>}
+                        {isAppLoading ? <Skeleton width="80px" /> : <>{stakingRebasePercentage?.toFixed(2)}%</>}
                       </Typography>
                     </div>
                     <div className="data-row">
                       <Typography variant="subtitle1">ROI (5-Day Rate)</Typography>
                       <Typography variant="subtitle1">
-                        {isAppLoading ? <Skeleton width="80px" /> : <>{trim(fiveDayRate * 100, 4)}%</>}
+                        {isAppLoading ? <Skeleton width="80px" /> : <>{(fiveDayRate || 0).toFixed(2)}%</>}
                       </Typography>
                     </div>
                   </div>

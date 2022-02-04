@@ -1,6 +1,7 @@
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { addresses } from "../constants";
 import { abi as ierc20Abi } from "../abi/IERC20.json";
+import { abi as sPHMABI } from "../abi/sPHM.json";
 import { abi as AuctionAbi } from "../abi/auction.json";
 import { abi as sOHMv2 } from "../abi/sOhmv2.json";
 import { abi as fuseProxy } from "../abi/FuseProxy.json";
@@ -12,6 +13,8 @@ import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit"
 import { RootState } from "src/store";
 import { IBaseAddressAsyncThunk, ICalcUserBondDetailsAsyncThunk } from "./interfaces";
 import { FuseProxy, IERC20, SOhmv2, WsOHM } from "src/typechain";
+import { getOrLoadTreasuryAddress } from "./AppSlice";
+import { SPHM } from "src/typechain/SPHM";
 
 interface IUserBalances {
   balances: {
@@ -29,7 +32,7 @@ export const getBalances = createAsyncThunk(
   "account/getBalances",
   async ({ address, networkID, provider }: IBaseAddressAsyncThunk) => {
     const fraxContract = new ethers.Contract(addresses[networkID].frax as string, ierc20Abi, provider) as IERC20;
-    const sPHMContract = new ethers.Contract(addresses[networkID].sPHM as string, ierc20Abi, provider) as IERC20;
+    const sPHMContract = new ethers.Contract(addresses[networkID].sPHM as string, sPHMABI, provider) as SPHM;
     const gPHMContract = new ethers.Contract(addresses[networkID].gPHM as string, ierc20Abi, provider) as IERC20;
     const fPHMContract = new ethers.Contract(addresses[networkID].fPHM as string, ierc20Abi, provider) as IERC20;
     const PHMContract = new ethers.Contract(addresses[networkID].PHM as string, ierc20Abi, provider) as IERC20;
@@ -59,6 +62,7 @@ interface IUserAccountDetails {
   staking: {
     phmStakeAllowance: number;
     phmUnstakeAllowance: number;
+    nextRewardAmount: number;
   };
   wrapping: {
     sohmWrap: number;
@@ -68,30 +72,40 @@ interface IUserAccountDetails {
 
 export const loadAccountDetails = createAsyncThunk(
   "account/loadAccountDetails",
-  async ({ networkID, provider, address }: IBaseAddressAsyncThunk, { dispatch }) => {
+  async ({ networkID, provider, address }: IBaseAddressAsyncThunk, { dispatch, getState }) => {
     const fraxContract = new ethers.Contract(addresses[networkID].frax, ierc20Abi, provider);
     const phmContract = new ethers.Contract(addresses[networkID].PHM, ierc20Abi, provider);
-    const sphmContract = new ethers.Contract(addresses[networkID].sPHM, ierc20Abi, provider);
+    const sphmContract = new ethers.Contract(addresses[networkID].sPHM, sPHMABI, provider) as SPHM;
+    const treasuryAddress = await getOrLoadTreasuryAddress({ networkID, provider }, { dispatch, getState });
 
     const fraxAllowance = await fraxContract.allowance(address, addresses[networkID].PhantomAuction);
 
-    const phmStakeAllowance = await phmContract.allowance(address, addresses[networkID].PhantomStaking);
-    const phmUnstakeAllowance = await sphmContract.allowance(address, addresses[networkID].PhantomStaking);
+    const phmStakeAllowance = await phmContract.allowance(address, treasuryAddress);
+    const phmUnstakeAllowance = await sphmContract.allowance(address, treasuryAddress);
 
     const auctionContract = new ethers.Contract(addresses[networkID].PhantomAuction as string, AuctionAbi, provider);
     const tokensClaimable = await auctionContract.tokensClaimable(address);
-    // const ohmContract = new ethers.Contract(addresses[networkID].OHM_ADDRESS as string, ierc20Abi, provider) as IERC20;
-    // const stakeAllowance = await ohmContract.allowance(address, addresses[networkID].STAKING_HELPER_ADDRESS);
-
-    // const sohmContract = new ethers.Contract(addresses[networkID].SOHM_ADDRESS as string, sOHMv2, provider) as SOhmv2;
-    // const unstakeAllowance = await sohmContract.allowance(address, addresses[networkID].STAKING_ADDRESS);
-    // const poolAllowance = await sohmContract.allowance(address, addresses[networkID].PT_PRIZE_POOL_ADDRESS);
-    // const wrapAllowance = await sohmContract.allowance(address, addresses[networkID].WSOHM_ADDRESS);
-
-    // const wsohmContract = new ethers.Contract(addresses[networkID].WSOHM_ADDRESS as string, wsOHM, provider) as WsOHM;
-    // const unwrapAllowance = await wsohmContract.allowance(address, addresses[networkID].WSOHM_ADDRESS);
 
     await dispatch(getBalances({ address, networkID, provider }));
+
+    /*
+    Next Reward Amount (in accounts)
+      sPHM.rewardYield() * (
+        sPHM.balanceOf(user) +
+        gPHM.balanceOf(user) * sPHM.scalingFactor() +
+      	fPHM.balanceOf(user) * sPHM.scalingFactor()
+      )
+    */
+
+    const rewardYield = await sphmContract.rewardYield();
+    const scalingFactor = await sphmContract.scalingFactor();
+
+    const { account }: any = getState();
+    const { balances } = account;
+    const nextRewardAmount =
+      (+rewardYield.toString() *
+        (+balances.sphm + +balances.gphm * +scalingFactor.toString() + +balances.fphm * +scalingFactor.toString())) /
+      1e18;
 
     return {
       auction: {
@@ -101,6 +115,7 @@ export const loadAccountDetails = createAsyncThunk(
       staking: {
         phmStakeAllowance: bnToNum(phmStakeAllowance) / Math.pow(10, 18),
         phmUnstakeAllowance: bnToNum(phmUnstakeAllowance) / Math.pow(10, 18),
+        nextRewardAmount,
       },
       // wrapping: {
       //   ohmWrap: +wrapAllowance,
@@ -164,7 +179,7 @@ export const calculateUserBondDetails = createAsyncThunk(
       balance: balanceVal,
       interestDue,
       bondMaturationBlock,
-      pendingPayout: ethers.utils.formatUnits(pendingPayout, "gwei"),
+      pendingPayout: ethers.utils.formatUnits(pendingPayout, "ether"),
     };
   },
 );
@@ -177,7 +192,7 @@ interface IAccountSlice extends IUserAccountDetails, IUserBalances {
 const initialState: IAccountSlice = {
   loading: false,
   bonds: {},
-  balances: { ohm: "", sohm: "", wsohmAsSohm: "", wsohm: "", fsohm: "", pool: "" },
+  balances: { phm: "", sphm: "", wsphmAsSphm: "", wsphm: "", fsphm: "", pool: "" },
   staking: { phmStakeAllowance: 0, phmUnstakeAllowance: 0 },
   wrapping: { sohmWrap: 0, wsohmUnwrap: 0 },
 };
