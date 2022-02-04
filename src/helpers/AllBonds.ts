@@ -36,11 +36,10 @@ export const gohm = new CustomBond({
     [NetworkID.Testnet]: "0x8af3d16056706294e1f0bd586e5df08e0ac2d8df",
   },
   customTreasuryBalanceFunc: async function (this: CustomBond, networkID, provider) {
-    let gOHMPrice: number = await getTokenPrice();
     const token = this.getContractForReserve(networkID, provider);
-    let gOHMAmount: BigNumberish = await token.balanceOf(addresses[networkID].TREASURY_ADDRESS);
-    gOHMAmount = Number(gOHMAmount.toString()) / Math.pow(10, 18);
-    return gOHMAmount * gOHMPrice;
+    let amount: BigNumberish = await token.balanceOf(addresses[networkID].TREASURY_ADDRESS);
+    amount = Number(amount.toString()) / Math.pow(10, 18);
+    return await getTokenPrice(networkID, provider, this.getAddressForReserve(networkID), amount);
   },
 });
 
@@ -57,11 +56,10 @@ export const ftm = new CustomBond({
     [NetworkID.Testnet]: "0xfa743d3ea980ec8697d516097d77f91fa5561ebe",
   },
   customTreasuryBalanceFunc: async function (this: CustomBond, networkID, provider) {
-    let wFTMPrice: number = await getTokenPrice();
     const token = this.getContractForReserve(networkID, provider);
-    let wFTMAmount: BigNumberish = await token.balanceOf(addresses[networkID].TREASURY_ADDRESS);
-    wFTMAmount = Number(wFTMAmount.toString()) / Math.pow(10, 18);
-    return wFTMAmount * wFTMPrice;
+    let amount: BigNumberish = await token.balanceOf(addresses[networkID].TREASURY_ADDRESS);
+    amount = Number(amount.toString()) / Math.pow(10, 18);
+    return await getTokenPrice(networkID, provider, this.getAddressForReserve(networkID), amount);
   },
 });
 
@@ -78,11 +76,10 @@ export const lqdr = new CustomBond({
     [NetworkID.Testnet]: "0xfa743d3ea980ec8697d516097d77f91fa5561ebe",
   },
   customTreasuryBalanceFunc: async function (this: CustomBond, networkID, provider) {
-    let lqdrPrice: number = await getTokenPrice();
     const token = this.getContractForReserve(networkID, provider);
-    let lqdrAmount: BigNumberish = await token.balanceOf(addresses[networkID].TREASURY_ADDRESS);
-    lqdrAmount = Number(lqdrAmount.toString()) / Math.pow(10, 18);
-    return lqdrAmount * lqdrPrice;
+    let amount: BigNumberish = await token.balanceOf(addresses[networkID].TREASURY_ADDRESS);
+    amount = Number(amount.toString()) / Math.pow(10, 18);
+    return await getTokenPrice(networkID, provider, this.getAddressForReserve(networkID), amount);
   },
 });
 
@@ -99,11 +96,10 @@ export const spirit = new CustomBond({
     [NetworkID.Testnet]: "0xfa743d3ea980ec8697d516097d77f91fa5561ebe",
   },
   customTreasuryBalanceFunc: async function (this: CustomBond, networkID, provider) {
-    let spiritPrice: number = await getTokenPrice();
     const token = this.getContractForReserve(networkID, provider);
-    let spiritAmount: BigNumberish = await token.balanceOf(addresses[networkID].TREASURY_ADDRESS);
-    spiritAmount = Number(spiritAmount.toString()) / Math.pow(10, 18);
-    return spiritAmount * spiritPrice;
+    let amount: BigNumberish = await token.balanceOf(addresses[networkID].TREASURY_ADDRESS);
+    amount = Number(amount.toString()) / Math.pow(10, 18);
+    return await getTokenPrice(networkID, provider, this.getAddressForReserve(networkID), amount);
   },
 });
 

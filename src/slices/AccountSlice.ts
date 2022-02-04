@@ -161,8 +161,11 @@ export const calculateUserBondDetails = createAsyncThunk(
     const bondHelper = new BondHelper(networkID, provider);
     const reserveContract = bond.getContractForReserve(networkID, provider);
 
-    const interestDue = (await bondHelper.remainingPayoutFor(address, nonce));
-    const vestsAtTimestamp = (await bondHelper.vestsAtTimestamp(address, nonce));
+    const interestDue = await bondHelper.remainingPayoutFor(address, nonce);
+    const vestsAtTimestamp = await bondHelper.vestsAtTimestamp(address, nonce);
+    const blockNo = await provider.getBlockNumber();
+    const block = await provider.getBlock(blockNo);
+    const isClaimable = vestsAtTimestamp >= block.timestamp;
 
     let allowance,
       balance = BigNumber.from(0);
@@ -171,6 +174,8 @@ export const calculateUserBondDetails = createAsyncThunk(
     // formatEthers takes BigNumber => String
     const balanceVal = ethers.utils.formatEther(balance);
     // balanceVal should NOT be converted to a number. it loses decimal precision
+
+
 
     return {
       bond: bond.name,
@@ -183,7 +188,7 @@ export const calculateUserBondDetails = createAsyncThunk(
       balance: balanceVal,
       interestDue: interestDue,
       vestsAtTimestamp: vestsAtTimestamp,
-      isClaimable: false, // TODO: DO THE CALC!!!
+      isClaimable: isClaimable,
     };
   },
 );
