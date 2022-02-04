@@ -31,7 +31,7 @@ export const approveSPHM = createAsyncThunk(
     const sPHM = new Contract(addresses[networkID].sPHM as string, ierc20Abi, provider.getSigner());
     const phantomTreasuryAddress = await getOrLoadTreasuryAddress({ networkID, provider }, { dispatch, getState });
     try {
-      const tx = await sPHM.approve(phantomTreasuryAddress, utils.parseUnits(value.toString(), "ether").toString());
+      const tx = await sPHM.approve(phantomTreasuryAddress, utils.parseUnits("10000000", "ether").toString());
       if (tx) {
         await tx.wait();
       }
@@ -75,7 +75,7 @@ export const approveGPHM = createAsyncThunk(
     const gPHM = new Contract(addresses[networkID].gPHM as string, ierc20Abi, provider.getSigner());
     const phantomTreasuryAddress = await getOrLoadTreasuryAddress({ networkID, provider }, { dispatch, getState });
     try {
-      const tx = await gPHM.approve(phantomTreasuryAddress, utils.parseUnits(value.toString(), "ether").toString());
+      const tx = await gPHM.approve(phantomTreasuryAddress, utils.parseUnits("10000000", "ether").toString());
       if (tx) {
         await tx.wait();
       }
