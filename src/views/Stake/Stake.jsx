@@ -204,7 +204,7 @@ function Stake() {
                       </Typography>
                       <Typography variant="h4">
                         {currentIndex ? (
-                          <>{trim(currentIndex, 1)} PHM</>
+                          <>{trim(currentIndex, 2)} PHM</>
                         ) : (
                           <Skeleton width="150px" style={{ margin: "auto" }} />
                         )}
