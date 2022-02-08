@@ -13,15 +13,13 @@ const AuctionController = ({ tokenPrice, fraxBalance, onCommitTokens }) => {
   const { provider, address, chainID } = useWeb3Context();
   const [fraxCommitment, setFraxCommitment] = useState(0);
   const [sliderValue, setSliderValue] = useState(0);
-  const maxTokensCommitment = Math.round((fraxBalance / tokenPrice) * 10) / 10;
-  const tokensCommitment = Math.round((fraxCommitment / tokenPrice) * 10) / 10;
+  const maxTokensCommitment = Math.round((fraxBalance / tokenPrice) * 1000) / 1000;
+  const tokensCommitment = Math.round((fraxCommitment / tokenPrice) * 1000) / 1000;
 
   const pendingTransactions = useSelector(state => state.pendingTransactions);
   const fraxAllowance = useSelector(state => state.account.auction && state.account.auction.fraxAllowance);
   const isAllowanceDataLoading = fraxAllowance === undefined;
-  const commitmentGwei = ethers.utils.parseUnits((Math.round((fraxCommitment || 0) * 1000) / 1000).toString(), "gwei");
-  const allowanceGwei = ethers.utils.parseUnits((Math.round((fraxAllowance || 0) * 1000) / 1000).toString(), "gwei");
-  const needsFraxApproval = commitmentGwei.gt(allowanceGwei);
+  const needsFraxApproval = fraxCommitment > fraxAllowance;
 
   const handleSliderChange = (_, value) => {
     setSliderValue(value);

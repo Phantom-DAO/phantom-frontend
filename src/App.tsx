@@ -239,14 +239,15 @@ function App() {
                 <TreasuryDashboard />
               </Route>
 
+             
+              
+               */}
+              <Route path="/stake">
+                <Stake />
+              </Route>
               <Route exact path="/">
                 <Redirect to="/stake" />
               </Route>
-              
-              <Route path="/stake">
-              <Stake />
-            </Route> */}
-
               <Route path="/claim">
                 <Claim />
               </Route>
@@ -266,7 +267,7 @@ function App() {
               <Route path="/wrap">
                 <Wrap />
               </Route>
-
+              {/*
               <Route path="/bonds">
                 {bonds.map(bond => {
                   return (
@@ -277,7 +278,7 @@ function App() {
                 })}
                 <ChooseBond />
               </Route>
-
+              */}
               <Route component={NotFound} />
             </Switch>
           </div>

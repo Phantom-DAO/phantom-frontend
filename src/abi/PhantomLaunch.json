@@ -45,6 +45,13 @@
   },
   {
     "inputs": [],
+    "name": "claimAPHM",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "claimFPHM",
     "outputs": [],
     "stateMutability": "nonpayable",

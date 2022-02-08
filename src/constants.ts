@@ -37,7 +37,7 @@ export const addresses: IAddresses = {
     LQTY: "",
     REDEEM_HELPER_ADDRESS: "",
     //phm contracts
-    PHM: "0x4Ac8a70DF1366163071457c1c6c7AdB1e46E0DA4",
+    PHM: "0xF01Ed6A2b51F97BDeD9bd0Fc841c2D4B5e28BDb2",
     PhantomAdmin: "",
     PhantomAllocator: "",
     PhantomAlphaSwap: "0xAD86f0841F3905BbbE28D5fEeCF992C573a0Ef74",
@@ -45,19 +45,20 @@ export const addresses: IAddresses = {
     PhantomBondPricing: "",
     PhantomDexRouter: "",
     PhantomExecutor: "0x0d09B6C07B27C7EeD27A0649C0e4e7346C05eb59",
-    PhantomFinance: "",
+    PhantomFinance: "0xd46Cf59668880fd478Ef5eAe05DcA3B96CE6416B",
     PhantomFounders: "0x412FA39551a0BEf9dB9eD3427402941eF78C8209",
     PhantomGovernor: "0xd7b00DD460B5f81e7C638442603B7038756131B3",
-    PhantomLaunch: "0x7714CDE16F7Ad77e8155Ca6434289cf85756c8C7",
+    PhantomLaunch: "0x8C1038B54188ad5663a1C4fb9506F4Ec1699CC5b",
     PhantomPayments: "",
-    PhantomStaking: "",
+    PhantomStaking: "0x9D397cd593e31506bF65E4d8eCE15F5d520007F2",
     PhantomStorage: "0xf99f229595a1fA265D04Afec41CCaBb6fbA1BE22",
-    PhantomTreasury: "0x8589B5722B6ae24B30F890E406Fa70c221Fe2Fbc",
+    PhantomTreasury: "", // PhantomTreasury addy is loading dynamically from PhantomStorage, do not add it here
     PhantomVault: "0xB0D87A3f3d537ef5F8b5f1ea185CED30f66a54AF",
-    aPHM: "0x747d453192D8A0B2e2184738033d0A6296301476",
+    aPHM: "0xeFCD0759b236362f5A5Fa0D73d1cBD4ea7662c1f",
     fPHM: "0x316a0E6c9Ada20d7C9C678589C63dC21afa27301",
     gPHM: "0x354e0Bc93d29bB1E48cF4714E1eDA6DCA4aa8828",
     sPHM: "0x418355d3601087EabC46557592C82483BD1c08e1",
+    PhantomAuctionClaim: "0x313FB512700aF4193331373bcB3568c9dBCA7319",
     frax: "0xdc301622e621166bd8e82f2ca0a26c13ad0be355",
     PhantomAuction: "0xbaa766bbb0e963b90f36ebaf193c3154460ed5c7",
     //end
@@ -80,25 +81,26 @@ export const addresses: IAddresses = {
     PhantomAdmin: "0x9FE84b6523B664E167662FfBe365a22031466ce0",
     PhantomAllocator: "",
     PhantomAlphaSwap: "0xb15bef2074ED8b5F6CD860BDF6922C261fc574b2",
-    PhantomBonding: "0x3EDd1751237738F5468205e66f065F37C75792cc",
+    PhantomBonding: "0xC739D0D166c10a1DFf012fF6A57aFd74c12ad1d2",
     PhantomBondPricing: "",
     PhantomDexRouter: "0x7AB9Dea2176C382B5C8699Ef23f3B25bEb506981",
     PhantomExecutor: "0x87c7b0A0368D949905EC862940201860a570d599",
     PhantomFinance: "0xBF67b14a5f74C98ed36EB1BeB5916a74f5938B4e",
     PhantomFounders: "0xB1b259440E1cFd456048FFb7D519dd4540487933",
     PhantomGovernor: "0x91651AEBf40cD2b1f144BCCFB0877a5a5fde43aA",
-    PhantomLaunch: "0x9dBddc5830fFD1F2B3554C63d2cb005B17bEaf53",
+    PhantomLaunch: "0xF7295e0Cd0d9Ee3E4031803D60Ee4d93B434eC13",
     PhantomPayments: "",
-    PhantomStaking: "",
+    PhantomStaking: "0x43b3b6db98AE48235eD007E182AC8Db45DbE81C8",
     PhantomStorage: "0xff37AE8A6e78f84F72f9CEF87897333D67d9399e",
-    PhantomTreasury: "0xBfd4c79a01A13B933fb9551a0f8923a28E726ca6",
+    PhantomTreasury: "", // PhantomTreasury addy is loading dynamically from PhantomStorage, do not add it here
     PhantomVault: "0x82e29fb0494339467f2f19cebe5360e92dDCC923",
     aPHM: "0x21a937d9570D3378366f838b95D584e0DA2042Ba",
     fPHM: "0x7DA73c277B0b23fCa06825891A1d5bf5dBF19219",
     gPHM: "0x4975CC49D7f4045dF96a75e4C567Ad6506D71cc0",
     sPHM: "0x9Ae3485beE56175528a4d1AB460cE85e7497d17a",
+    PhantomAuctionClaim: "0x77780B6b95f6ed78dd2FF8EfDe9Cb23E1CE16327",
     //end
-    frax: "0xfafedb041c0dd4fa2dc0d87a6b0979ee6fa7af5f", // LINK address, kept name same as prod for ease
+    frax: "0xd73c5eca030f6ff6b46faa727621087d36fde23f", // LINK address, kept name same as prod for ease
 
     /*PhantomAuction: "0xe57da0f3e0db8abc47e984d317938028aa0e0b70", // ended */
     PhantomAuction: "0x8588762f41169425c233931ba306abf247013832", // 20jan-30jan (ongoing)
