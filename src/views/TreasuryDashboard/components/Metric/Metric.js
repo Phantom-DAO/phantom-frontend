@@ -33,19 +33,18 @@ export const MarketCap = () => {
     <Metric className="market">
       <Metric.Title>MARKET CAP</Metric.Title>
       <Metric.Value>{marketCap && formatCurrency(marketCap, 0)}</Metric.Value>
-      <Metric.Shift>14%</Metric.Shift>
+      {/* <Metric.Shift>14%</Metric.Shift> */}
     </Metric>
   );
 };
 
-export const OHMPrice = () => {
+export const PHMPrice = () => {
   const marketPrice = useSelector(state => state.app.marketPrice);
-
   return (
     <Metric className="price">
       <Metric.Title>PHM PRICE</Metric.Title>
       <Metric.Value>{marketPrice && formatCurrency(marketPrice, 2)}</Metric.Value>
-      <Metric.Shift>14%</Metric.Shift>
+      {/* <Metric.Shift>14%</Metric.Shift> */}
     </Metric>
   );
 };
@@ -60,19 +59,7 @@ export const CircSupply = () => {
     <Metric className="circ">
       <Metric.Title>CIRCULATING SUPPLY (TOTAL)</Metric.Title>
       <Metric.Value>{isDataLoaded && parseInt(circSupply) + " / " + parseInt(totalSupply)}</Metric.Value>
-      <Metric.Shift>14%</Metric.Shift>
-    </Metric>
-  );
-};
-
-export const BackingPerOHM = () => {
-  const backingPerOhm = useSelector(state => state.app.treasuryMarketValue / state.app.circSupply);
-
-  return (
-    <Metric className="bpo">
-      <Metric.Title>BACKING PER PHM</Metric.Title>
-      <Metric.Value>{!isNaN(backingPerOhm) && formatCurrency(backingPerOhm, 2)}</Metric.Value>
-      <Metric.Shift>14%</Metric.Shift>
+      {/* <Metric.Shift>14%</Metric.Shift> */}
     </Metric>
   );
 };
@@ -84,29 +71,10 @@ export const CurrentIndex = () => {
     <Metric className="index">
       <Metric.Title>
         CURRENT INDEX
-        <InfoTooltip message="The current index tracks the amount of sOHM accumulated since the beginning of staking. Basically, how much sOHM one would have if they staked and held a single OHM from day 1." />
+        <InfoTooltip message="The current index tracks the amount of sPHM accumulated since the beginning of staking. Basically, how much sPHM one would have if they staked and held a single PHM from day 1." />
       </Metric.Title>
-      <Metric.Value>{currentIndex && trim(currentIndex, 2) + " sOHM"}</Metric.Value>
-      <Metric.Shift>14%</Metric.Shift>
-    </Metric>
-  );
-};
-
-export const WSOHMPrice = () => {
-  const wsOhmPrice = useSelector(state => state.app.marketPrice * state.app.currentIndex);
-
-  return (
-    <Metric className="wsoprice">
-      <Metric.Title>
-        wsPHM PRICE
-        <InfoTooltip
-          message={
-            "wsOHM = sOHM * index\n\nThe price of wsOHM is equal to the price of OHM multiplied by the current index"
-          }
-        />
-      </Metric.Title>
-      <Metric.Value>{wsOhmPrice && formatCurrency(wsOhmPrice, 2)}</Metric.Value>
-      <Metric.Shift>14%</Metric.Shift>
+      <Metric.Value>{currentIndex && trim(currentIndex, 2) + " sPHM"}</Metric.Value>
+      {/* <Metric.Shift>14%</Metric.Shift> */}
     </Metric>
   );
 };

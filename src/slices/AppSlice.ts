@@ -1,13 +1,15 @@
 import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
 import { Contract, ethers } from "ethers";
 import { RootState } from "src/store";
-import { IERC20, SPHM } from "src/typechain";
+import { IERC20 } from "src/typechain";
 import { abi as ierc20Abi } from "../abi/IERC20.json";
 import PhantomStorageAbi from "../abi/PhantomStorage.json";
 import { abi as sPHMABI } from "../abi/sPHM.json";
-import { addresses } from "../constants";
+import { addresses, NetworkId } from "../constants";
 import { getMarketPrice, getTokenPrice, setAll } from "../helpers";
+import { NodeHelper } from "../helpers/NodeHelper";
 import { IBaseAsyncThunk } from "./interfaces";
+import apollo from "../lib/apolloClient";
 
 const initialState = {
   phantomTreasuryAddress: "",
@@ -37,34 +39,77 @@ export const loadTreasuryAddress = async ({ networkID, provider }: any) => {
   return phantomTreasuryAddress;
 };
 
+export const loadStaticAppDetails = createAsyncThunk("app/loadStaticAppDetails", async ({}, { dispatch }) => {
+  const protocolMetricsQuery = `
+    query {
+      _meta {
+        block {
+          number
+        }
+      }
+      protocolMetrics(first: 2, orderBy: timestamp, orderDirection: desc) {
+        timestamp
+        phmCirculatingSupply
+        sPhmCirculatingSupply
+        totalSupply
+        phmPrice
+        marketCap
+        totalValueLocked
+        treasuryMarketValue
+        nextEpochRebase
+        nextDistributedPhm
+      }
+    }
+  `;
+
+  // const provider = NodeHelper.getMainnetStaticProvider();
+  // const networkID = NetworkId.MAINNET;
+  const graphData = await apollo(protocolMetricsQuery);
+
+  if (!graphData || graphData == null) {
+    console.error("Returned a null response when querying TheGraph");
+    return;
+  }
+
+  const stakingTVL = parseFloat(graphData.data.protocolMetrics[0].totalValueLocked);
+  // NOTE (appleseed): marketPrice from Graph was delayed, so get CoinGecko price
+  // const marketPrice = parseFloat(graphData.data.protocolMetrics[0].phmPrice);
+  let marketPrice;
+  try {
+    // const originalPromiseResult = await dispatch(
+    //   loadMarketPrice({ networkID: networkID, provider: provider }),
+    // ).unwrap();
+    // marketPrice = originalPromiseResult?.marketPrice;
+    marketPrice = await getTokenPrice("phantamdao");
+  } catch (rejectedValueOrSerializedError) {
+    console.error("Returned a null response from dispatch(loadMarketPrice)");
+    return;
+  }
+
+  const marketCap = parseFloat(graphData.data.protocolMetrics[0].marketCap);
+  const circSupply = parseFloat(graphData.data.protocolMetrics[0].phmCirculatingSupply);
+  const totalSupply = parseFloat(graphData.data.protocolMetrics[0].totalSupply);
+  const treasuryMarketValue = parseFloat(graphData.data.protocolMetrics[0].treasuryMarketValue);
+
+  return {
+    stakingTVL,
+    marketPrice,
+    marketCap,
+    circSupply,
+    totalSupply,
+    treasuryMarketValue,
+  };
+});
+
 export const loadAppDetails = createAsyncThunk(
   "app/loadAppDetails",
   async ({ networkID, provider }: IBaseAsyncThunk, { dispatch }) => {
-    let marketPrice;
-    try {
-      // const originalPromiseResult = await dispatch(
-      //   loadMarketPrice({ networkID: networkID, provider: provider }),
-      // ).unwrap();
-      // marketPrice = originalPromiseResult?.marketPrice;
-    } catch (rejectedValueOrSerializedError) {
-      // handle error here
-      console.error("Returned a null response from dispatch(loadMarketPrice)");
-      return;
-    }
-
-    if (!provider) {
-      console.error("failed to connect to provider, please connect your wallet");
-      return {
-        marketPrice,
-      };
-    }
-
     const [currentBlock, phantomTreasuryAddress] = await Promise.all([
       provider.getBlockNumber(),
       loadTreasuryAddress({ networkID, provider }),
     ]);
 
-    const sPHMContract = new ethers.Contract(addresses[networkID].sPHM as string, sPHMABI, provider) as SPHM;
+    const sPHMContract = new ethers.Contract(addresses[networkID].sPHM as string, sPHMABI, provider);
     const gPHMContract = new ethers.Contract(addresses[networkID].gPHM as string, ierc20Abi, provider) as IERC20;
     const fPHMContract = new ethers.Contract(addresses[networkID].fPHM as string, ierc20Abi, provider) as IERC20;
     const PHMContract = new ethers.Contract(addresses[networkID].PHM as string, ierc20Abi, provider) as IERC20;
@@ -148,9 +193,9 @@ const loadMarketPrice = createAsyncThunk("app/loadMarketPrice", async ({ network
   let marketPrice: number;
   try {
     marketPrice = await getMarketPrice({ networkID, provider });
-    marketPrice = marketPrice / Math.pow(10, 9);
+    marketPrice = marketPrice / 1e18;
   } catch (e) {
-    marketPrice = await getTokenPrice("olympus");
+    marketPrice = await getTokenPrice("phantamdao");
   }
   return { marketPrice };
 });
@@ -160,16 +205,28 @@ const appSlice = createSlice({
   initialState,
   reducers: {
     fetchAppSuccess(state, action) {
-      setAll(state, action.payload);
+      setAll(state, action.payload || {});
     },
   },
   extraReducers: builder => {
     builder
+      .addCase(loadStaticAppDetails.pending, state => {
+        state.loading = true;
+      })
+      .addCase(loadStaticAppDetails.fulfilled, (state, action) => {
+        setAll(state, action.payload || {});
+        state.loading = false;
+      })
+      .addCase(loadStaticAppDetails.rejected, (state, { error }) => {
+        state.loading = false;
+        console.log("loadStaticAppDetails error: ", { error });
+        console.error(error.name, error.message, error.stack);
+      })
       .addCase(loadAppDetails.pending, state => {
         state.loading = true;
       })
       .addCase(loadAppDetails.fulfilled, (state, action) => {
-        setAll(state, action.payload);
+        setAll(state, action.payload || {});
         state.loading = false;
       })
       .addCase(loadAppDetails.rejected, (state, { error }) => {
@@ -180,7 +237,7 @@ const appSlice = createSlice({
         state.loadingMarketPrice = true;
       })
       .addCase(loadMarketPrice.fulfilled, (state, action) => {
-        setAll(state, action.payload);
+        setAll(state, action.payload || {});
         state.loadingMarketPrice = false;
       })
       .addCase(loadMarketPrice.rejected, (state, { error }) => {

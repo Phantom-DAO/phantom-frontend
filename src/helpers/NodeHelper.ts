@@ -1,8 +1,8 @@
 import { StaticJsonRpcProvider } from "@ethersproject/providers";
 
 export class NodeHelper {
-  static getFantomMainnetStaticProvider = () => {
-    return new StaticJsonRpcProvider("https://rpc.testnet.fantom.network/");
+  static getMainnetStaticProvider = () => {
+    return new StaticJsonRpcProvider("https://rpc.ftm.tools/");
   };
 
   static getNodesUris = () => {

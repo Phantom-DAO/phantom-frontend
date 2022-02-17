@@ -6,42 +6,27 @@ query {
   protocolMetrics(first: 100, orderBy: timestamp, orderDirection: desc) {
     id
     timestamp
-    ohmCirculatingSupply
-    sOhmCirculatingSupply
+    phmCirculatingSupply
+    sPhmCirculatingSupply
     totalSupply
-    ohmPrice
+    phmPrice
     marketCap
     totalValueLocked
-    treasuryRiskFreeValue
     treasuryMarketValue
     nextEpochRebase
-    nextDistributedOhm
-    treasuryDaiRiskFreeValue
-    treasuryFraxMarketValue
-    treasuryDaiMarketValue
-    treasuryFraxRiskFreeValue
-    treasuryXsushiMarketValue
-    treasuryWETHMarketValue
-    treasuryLusdRiskFreeValue
-    treasuryLusdMarketValue
+    nextDistributedPhm
     currentAPY
-    runway10k
-    runway20k
-    runway50k
-    runway7dot5k
-    runway5k
-    runway2dot5k
-    runwayCurrent
     holders
-    treasuryOhmDaiPOL
-    treasuryOhmFraxPOL
+    treasuryFraxMarketValue
+    treasuryPhmFraxPOL
   }
 }
 `;
 
+// rebases(where: {contract: "0xd46Cf59668880fd478Ef5eAe05DcA3B96CE6416B"}, orderBy: timestamp, first: 1000, orderDirection: desc) {
 export const rebasesDataQuery = `
 query {
-  rebases(where: {contract: "0xfd31c7d00ca47653c6ce64af53c1571f9c36566a"}, orderBy: timestamp, first: 1000, orderDirection: desc) {
+  rebases(orderBy: timestamp, first: 1000, orderDirection: desc) {
     percentage
     timestamp
   }
@@ -169,23 +154,23 @@ export const bulletpoints = {
 
 export const tooltipItems = {
   tvl: ["Total Value Deposited"],
-  coin: ["DAI", "FRAX", "ETH", "SUSHI", "LUSD"],
-  rfv: ["DAI", "FRAX", "LUSD"],
-  holder: ["OHMies"],
+  coin: ["FRAX"],
+  rfv: ["FRAX"],
+  holder: ["PHMies"],
   apy: ["APY"],
   runway: ["Current", "7.5K APY", "5K APY", "2.5K APY"],
   pol: ["SLP Treasury", "Market SLP"],
 };
 
 export const tooltipInfoMessages = {
-  tvl: "Total Value Deposited, is the dollar amount of all OHM staked in the protocol. This metric is often used as growth or health indicator in DeFi projects.",
+  tvl: "Total Value Deposited, is the dollar amount of all PHM staked in the protocol. This metric is often used as growth or health indicator in DeFi projects.",
   mvt: "Market Value of Treasury Assets, is the sum of the value (in dollars) of all assets held by the treasury.",
-  rfv: "Risk Free Value, is the amount of funds the treasury guarantees to use for backing OHM.",
+  rfv: "Risk Free Value, is the amount of funds the treasury guarantees to use for backing PHM.",
   pol: "Protocol Owned Liquidity, is the amount of LP the treasury owns and controls. The more POL the better for the protocol and its users.",
-  holder: "Holders, represents the total number of Ohmies (sOHM holders)",
-  staked: "OHM Staked, is the ratio of sOHM to OHM (staked vs unstaked)",
+  holder: "Holders, represents the total number of Phmies (sPHM holders)",
+  staked: "PHM Staked, is the ratio of sPHM to PHM (staked vs unstaked)",
   apy: "Annual Percentage Yield, is the normalized representation of an interest rate, based on a compounding period over one year. Note that APYs provided are rather ballpark level indicators and not so much precise future results.",
-  runway: "Runway, is the number of days sOHM emissions can be sustained at a given rate. Lower APY = longer runway",
+  runway: "Runway, is the number of days sPHM emissions can be sustained at a given rate. Lower APY = longer runway",
 };
 
 export const itemType = {

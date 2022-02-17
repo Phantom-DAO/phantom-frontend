@@ -12,6 +12,8 @@ export const POOL_GRAPH_URLS = {
 };
 
 export enum NetworkId {
+  MAINNET = 250,
+  TESTNET = 4002,
   FANTOM = 250,
   FANTOM_TESTNET = 4002,
 }
@@ -42,12 +44,12 @@ export const addresses: IAddresses = {
     PhantomBonding: "",
     PhantomDexRouter: "",
     PhantomExecutor: "0x0d09B6C07B27C7EeD27A0649C0e4e7346C05eb59",
-    PhantomFinance: "",
+    PhantomFinance: "0xd46Cf59668880fd478Ef5eAe05DcA3B96CE6416B",
     PhantomFounders: "0x412FA39551a0BEf9dB9eD3427402941eF78C8209",
     PhantomGovernor: "0xd7b00DD460B5f81e7C638442603B7038756131B3",
     PhantomLaunch: "0x8C1038B54188ad5663a1C4fb9506F4Ec1699CC5b",
     PhantomPayments: "",
-    PhantomStaking: "",
+    PhantomStaking: "0x9D397cd593e31506bF65E4d8eCE15F5d520007F2",
     PhantomStorage: "0xf99f229595a1fA265D04Afec41CCaBb6fbA1BE22",
     PhantomTreasury: "", // PhantomTreasury addy is loading dynamically from PhantomStorage, do not add it here
     PhantomVault: "0xB0D87A3f3d537ef5F8b5f1ea185CED30f66a54AF",
@@ -58,6 +60,7 @@ export const addresses: IAddresses = {
     PhantomAuctionClaim: "0x313FB512700aF4193331373bcB3568c9dBCA7319",
     frax: "0xdc301622e621166bd8e82f2ca0a26c13ad0be355",
     PhantomAuction: "0xbaa766bbb0e963b90f36ebaf193c3154460ed5c7",
+    PHMFRAX_SPIRIT_LP: "0xbd1e1007825602ceC3266d4EF9Ca493b6FFb4D69",
     //end
   },
   /* FTM testnet */

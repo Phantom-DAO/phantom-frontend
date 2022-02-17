@@ -2,14 +2,14 @@ import { memo } from "react";
 import "./treasury-dashboard.scss";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { Paper, Grid, Box, Zoom, Container, useMediaQuery } from "@material-ui/core";
-import { MarketCap, OHMPrice, WSOHMPrice, CircSupply, BackingPerOHM, CurrentIndex } from "./components/Metric/Metric";
+import { MarketCap, PHMPrice, CircSupply, CurrentIndex } from "./components/Metric/Metric";
 
 import {
   TotalValueDepositedGraph,
   MarketValueGraph,
   RiskFreeValueGraph,
   ProtocolOwnedLiquidityGraph,
-  OHMStakedGraph,
+  PHMStakedGraph,
   APYOverTimeGraph,
   RunwayAvailableGraph,
 } from "./components/Graph/Graph";
@@ -30,10 +30,10 @@ const TreasuryDashboard = memo(() => {
           <Box className="ohm-card">
             <Box display="flex" flexWrap="wrap" justifyContent="space-between">
               <MarketCap />
-              <OHMPrice />
-              <WSOHMPrice />
+              <PHMPrice />
+              {/* <WSOHMPrice /> */}
               <CircSupply />
-              <BackingPerOHM />
+              {/* <BackingPerOHM /> */}
               <CurrentIndex />
             </Box>
           </Box>
@@ -53,11 +53,11 @@ const TreasuryDashboard = memo(() => {
               </Paper>
             </Grid>
 
-            <Grid item lg={6} md={6} sm={12} xs={12}>
+            {/* <Grid item lg={6} md={6} sm={12} xs={12}>
               <Paper className="ohm-card ohm-chart-card">
                 <RiskFreeValueGraph />
               </Paper>
-            </Grid>
+            </Grid> */}
 
             <Grid item lg={6} md={6} sm={12} xs={12}>
               <Paper className="ohm-card">
@@ -86,7 +86,7 @@ const TreasuryDashboard = memo(() => {
 
             <Grid item lg={6} md={6} sm={12} xs={12}>
               <Paper className="ohm-card">
-                <OHMStakedGraph />
+                <PHMStakedGraph />
               </Paper>
             </Grid>
 
@@ -96,11 +96,11 @@ const TreasuryDashboard = memo(() => {
               </Paper>
             </Grid>
 
-            <Grid item lg={6} md={6} sm={12} xs={12}>
+            {/* <Grid item lg={6} md={6} sm={12} xs={12}>
               <Paper className="ohm-card">
                 <RunwayAvailableGraph />
               </Paper>
-            </Grid>
+            </Grid> */}
           </Grid>
         </Zoom>
       </Container>

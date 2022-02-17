@@ -22,11 +22,13 @@ import "./sidebar.scss";
 
 // TODO: Fake bond data import
 import { fakeBonds } from "src/helpers/FakeBonds";
+import useENS from "src/hooks/useENS";
 
 function NavContent() {
   const [isActive] = useState();
   const address = useAddress();
   const { chainID } = useWeb3Context();
+  const { ensName, ensAvatar } = useENS(address);
   // const { bonds } = useBonds(chainID);
   const bonds = fakeBonds;
 
@@ -72,8 +74,9 @@ function NavContent() {
 
             {address && (
               <div className="wallet-link">
+                {ensAvatar && <img src={ensAvatar} alt="Avatar" />}
                 <Link href={`https://ftmscan.com/address/${address}`} target="_blank">
-                  {shorten(address)}
+                  {ensName || shorten(address)}
                 </Link>
               </div>
             )}
@@ -82,7 +85,7 @@ function NavContent() {
           <div className="dapp-menu-links">
             <div className="dapp-nav" id="navbarNav">
               <Link
-                disabled
+                // disabled
                 component={NavLink}
                 id="dash-nav"
                 to="/dashboard"
