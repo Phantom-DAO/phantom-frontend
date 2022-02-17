@@ -36,13 +36,7 @@ export const MarketValueGraph = () => {
     <Chart
       type="stack"
       data={data}
-      dataKey={[
-        "treasuryDaiMarketValue",
-        "treasuryFraxMarketValue",
-        "treasuryWETHMarketValue",
-        "treasuryXsushiMarketValue",
-        "treasuryLusdMarketValue",
-      ]}
+      dataKey={["treasuryFraxMarketValue"]}
       stopColor={[
         ["#F5AC37", "#EA9276"],
         ["#768299", "#98B3E9"],
@@ -51,7 +45,8 @@ export const MarketValueGraph = () => {
         ["#ff758f", "#c9184a"],
       ]}
       headerText="Market Value of Treasury Assets"
-      headerSubText={`${data && formatCurrency(data[0].treasuryMarketValue)}`}
+      // headerSubText={`${data && formatCurrency(data[0].treasuryMarketValue)}`}
+      headerSubText={`${data && formatCurrency(data[0].treasuryFraxMarketValue)}`}
       bulletpointColors={bulletpoints.coin}
       itemNames={tooltipItems.coin}
       itemType={itemType.dollar}
@@ -61,66 +56,37 @@ export const MarketValueGraph = () => {
   );
 };
 
-export const RiskFreeValueGraph = () => {
-  const theme = useTheme();
-  const { data } = useTreasuryMetrics({ refetchOnMount: false });
-
-  return (
-    <Chart
-      type="stack"
-      data={data}
-      format="currency"
-      dataKey={["treasuryDaiRiskFreeValue", "treasuryFraxRiskFreeValue", "treasuryLusdRiskFreeValue"]}
-      stopColor={[
-        ["#F5AC37", "#EA9276"],
-        ["#768299", "#98B3E9"],
-        ["#ff758f", "#c9184a"],
-        ["#000", "#fff"],
-        ["#000", "#fff"],
-      ]}
-      headerText="Risk Free Value of Treasury Assets"
-      headerSubText={`${data && formatCurrency(data[0].treasuryRiskFreeValue)}`}
-      bulletpointColors={bulletpoints.rfv}
-      itemNames={tooltipItems.rfv}
-      itemType={itemType.dollar}
-      infoTooltipMessage={tooltipInfoMessages.rfv}
-      expandedGraphStrokeColor={theme.palette.graphStrokeColor}
-    />
-  );
-};
-
 export const ProtocolOwnedLiquidityGraph = () => {
   const theme = useTheme();
   const { data } = useTreasuryMetrics({ refetchOnMount: false });
-
+  const filtered = data && data.filter(metric => metric.treasuryPhmFraxPOL > 50);
   return (
     <Chart
       isPOL
       type="area"
-      data={data}
+      data={filtered}
       dataFormat="percent"
       itemNames={tooltipItems.pol}
       itemType={itemType.percentage}
-      dataKey={["treasuryOhmDaiPOL"]}
+      dataKey={["treasuryPhmFraxPOL"]}
       bulletpointColors={bulletpoints.pol}
       infoTooltipMessage={tooltipInfoMessages.pol}
-      headerText="Protocol Owned Liquidity OHM-DAI"
+      headerText="Protocol Owned Liquidity PHM-FRAX"
       expandedGraphStrokeColor={theme.palette.graphStrokeColor}
-      headerSubText={`${data && trim(data[0].treasuryOhmDaiPOL, 2)}% `}
+      headerSubText={`${filtered && trim(filtered[0].treasuryPhmFraxPOL, 2)}% `}
       stopColor={[["rgba(128, 204, 131, 1)", "rgba(128, 204, 131, 0)"]]}
     />
   );
 };
 
-export const OHMStakedGraph = () => {
+export const PHMStakedGraph = () => {
   const theme = useTheme();
   const { data } = useTreasuryMetrics({ refetchOnMount: false });
-
   const staked =
     data &&
     data
       .map(metric => ({
-        staked: (metric.sOhmCirculatingSupply / metric.ohmCirculatingSupply) * 100,
+        staked: (metric.sPhmCirculatingSupply / metric.phmCirculatingSupply) * 100,
         timestamp: metric.timestamp,
       }))
       .filter(metric => metric.staked < 100);
@@ -132,7 +98,7 @@ export const OHMStakedGraph = () => {
       data={staked}
       dataKey={["staked"]}
       dataFormat="percent"
-      headerText="OHM Staked"
+      headerText="PHM Staked"
       stopColor={[["#55EBC7", "#47ACEB"]]}
       bulletpointColors={bulletpoints.staked}
       infoTooltipMessage={tooltipInfoMessages.staked}
@@ -145,15 +111,13 @@ export const OHMStakedGraph = () => {
 export const APYOverTimeGraph = () => {
   const theme = useTheme();
   const { data } = useTreasuryRebases({ refetchOnMount: false });
-
   let apy =
     data &&
-    data
-      .map(entry => ({
-        timestamp: entry.timestamp,
-        apy: Math.pow(parseFloat(entry.percentage) + 1, 365 * 3) * 100,
-      }))
-      .filter(pm => pm.apy < 300000);
+    data.map(entry => ({
+      timestamp: entry.timestamp,
+      apy: Math.pow(parseFloat(entry.percentage) + 1, 365 * 3) * 100,
+    }));
+  // .filter(pm => pm.apy < 300000);
 
   return (
     <Chart
@@ -169,36 +133,7 @@ export const APYOverTimeGraph = () => {
       bulletpointColors={bulletpoints.apy}
       stroke={[theme.palette.text.primary]}
       infoTooltipMessage={tooltipInfoMessages.apy}
-      headerSubText={`${data && trim(apy[0].apy, 2)}%`}
-      expandedGraphStrokeColor={theme.palette.graphStrokeColor}
-    />
-  );
-};
-
-export const RunwayAvailableGraph = () => {
-  const theme = useTheme();
-  const { data } = useTreasuryMetrics({ refetchOnMount: false });
-
-  const runway = data && data.filter(metric => metric.runway10k > 5);
-
-  const [current, ...others] = bulletpoints.runway;
-  const runwayBulletpoints = [{ ...current, background: theme.palette.text.primary }, ...others];
-  const colors = runwayBulletpoints.map(b => b.background);
-
-  return (
-    <Chart
-      type="multi"
-      data={runway}
-      dataKey={["runwayCurrent", "runway7dot5k", "runway5k", "runway2dot5k"]}
-      color={theme.palette.text.primary}
-      stroke={colors}
-      headerText="Runway Available"
-      headerSubText={`${data && trim(data[0].runwayCurrent, 1)} Days`}
-      dataFormat="days"
-      bulletpointColors={runwayBulletpoints}
-      itemNames={tooltipItems.runway}
-      itemType={""}
-      infoTooltipMessage={tooltipInfoMessages.runway}
+      // headerSubText={`${data && trim(apy[0].apy, 2)}%`}
       expandedGraphStrokeColor={theme.palette.graphStrokeColor}
     />
   );

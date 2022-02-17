@@ -13,7 +13,7 @@ import { segmentUA } from "./helpers/userAnalyticHelpers";
 import { shouldTriggerSafetyCheck } from "./helpers";
 
 import { calcBondDetails } from "./slices/BondSlice";
-import { loadAppDetails } from "./slices/AppSlice";
+import { loadStaticAppDetails, loadAppDetails } from "./slices/AppSlice";
 import { loadAccountDetails, calculateUserBondDetails } from "./slices/AccountSlice";
 import { loadAuctionDetails, loadMyCommitments } from "./slices/AuctionSlice";
 import { info } from "./slices/MessagesSlice";
@@ -152,6 +152,7 @@ function App() {
   // ... if we don't wait we'll ALWAYS fire API calls via JsonRpc because provider has not
   // ... been reloaded within App.
   useEffect(() => {
+    dispatch(loadStaticAppDetails({}));
     if (hasCachedProvider()) {
       // then user DOES have a wallet
       connect().then(() => {
@@ -235,13 +236,9 @@ function App() {
 
           <div className={`${classes.content} ${isSmallerScreen && classes.contentShift}`}>
             <Switch>
-              {/* <Route exact path="/dashboard">
+              <Route exact path="/dashboard">
                 <TreasuryDashboard />
               </Route>
-
-             
-              
-               */}
               <Route path="/stake">
                 <Stake />
               </Route>

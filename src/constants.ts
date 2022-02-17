@@ -12,6 +12,8 @@ export const POOL_GRAPH_URLS = {
 };
 
 export enum NetworkId {
+  MAINNET = 250,
+  TESTNET = 4002,
   FANTOM = 250,
   FANTOM_TESTNET = 4002,
 }
@@ -58,6 +60,7 @@ export const addresses: IAddresses = {
     PhantomAuctionClaim: "0x313FB512700aF4193331373bcB3568c9dBCA7319",
     frax: "0xdc301622e621166bd8e82f2ca0a26c13ad0be355",
     PhantomAuction: "0xbaa766bbb0e963b90f36ebaf193c3154460ed5c7",
+    PHMFRAX_SPIRIT_LP: "0xbd1e1007825602ceC3266d4EF9Ca493b6FFb4D69",
     //end
   },
   /* FTM testnet */

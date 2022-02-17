@@ -85,7 +85,7 @@ function NavContent() {
           <div className="dapp-menu-links">
             <div className="dapp-nav" id="navbarNav">
               <Link
-                disabled
+                // disabled
                 component={NavLink}
                 id="dash-nav"
                 to="/dashboard"

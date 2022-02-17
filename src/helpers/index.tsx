@@ -9,17 +9,15 @@ import { SvgIcon } from "@material-ui/core";
 import { ReactComponent as OhmImg } from "../assets/tokens/token_OHM.svg";
 import { ReactComponent as SOhmImg } from "../assets/tokens/token_sOHM.svg";
 
-import { ohm_weth } from "./AllBonds";
 import { JsonRpcSigner, StaticJsonRpcProvider } from "@ethersproject/providers";
 import { IBaseAsyncThunk } from "src/slices/interfaces";
 import { PairContract, RedeemHelper } from "../typechain";
 
 export async function getMarketPrice({ networkID, provider }: IBaseAsyncThunk) {
-  const ohm_dai_address = ohm_weth.getAddressForReserve(networkID);
-  const pairContract = new ethers.Contract(ohm_dai_address, PairContractABI, provider) as PairContract;
+  const phm_frax_address = addresses[networkID].PHMFRAX_SPIRIT_LP;
+  const pairContract = new ethers.Contract(phm_frax_address, PairContractABI, provider) as PairContract;
   const reserves = await pairContract.getReserves();
   const marketPrice = Number(reserves[1].toString()) / Number(reserves[0].toString());
-
   return marketPrice;
 }
 
@@ -28,9 +26,18 @@ export async function getMarketPrice({ networkID, provider }: IBaseAsyncThunk) {
  * @param tokenId STRING taken from https://www.coingecko.com/api/documentations/v3#/coins/get_coins_list
  * @returns INTEGER usd value
  */
-export async function getTokenPrice(tokenId = "olympus") {
-  //TODO: replace with onchain query
-  return 20;
+export async function getTokenPrice(tokenId = "phantomdao") {
+  try {
+    const resp = (await axios.get(
+      `https://api.coingecko.com/api/v3/simple/price?ids=${tokenId}&vs_currencies=usd`,
+    )) as {
+      data: { [id: string]: { usd: number } };
+    };
+    const tokenPrice: number = resp.data[tokenId].usd;
+    return tokenPrice;
+  } catch (e) {
+    return 0;
+  }
 }
 
 export function shorten(str: string) {
